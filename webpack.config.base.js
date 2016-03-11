@@ -1,4 +1,3 @@
-/* eslint strict: 0 */
 'use strict';
 const path = require('path')
 
@@ -27,4 +26,4 @@ module.exports = {
     },
     plugins: [],
     externals: []
-};
+}
