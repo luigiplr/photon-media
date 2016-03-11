@@ -1,37 +1,48 @@
-body {
-    position: relative;
-    color: white;
-    height: 100vh;
-    background-color: #232C39;
-    background-image: linear-gradient(45deg, rgba(0, 216, 255, .5) 10%, rgba(0, 1, 127, .7));
-    font-family: Arial, Helvetica, Helvetica Neue;
-    overflow-y: hidden;
-}
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
-h2 {
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
     margin: 0;
-    font-size: 2.25rem;
-    font-weight: bold;
-    letter-spacing: -.025em;
-    color: #fff;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
-
-p {
-    font-size: 24px;
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
 }
-
-li {
+body {
+    line-height: 1;
+}
+ol, ul {
     list-style: none;
 }
-
-a {
-    color: white;
-    opacity: .75;
-    text-decoration: none;
+blockquote, q {
+    quotes: none;
 }
-
-a:hover {
-    opacity: 1;
-    text-decoration: none;
-    cursor: pointer;
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
 }

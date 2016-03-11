@@ -1,5 +1,5 @@
 // for babel-plugin-webpack-loaders
-const devConfigs = require('./webpack.config.development');
+const devConfigs = require('./webpack.config.development')
 
 module.exports = {
   output: {
@@ -8,4 +8,4 @@ module.exports = {
   module: {
     loaders: devConfigs.module.loaders.slice(1)  // remove babel-loader
   }
-};
+}
