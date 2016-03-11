@@ -41,7 +41,6 @@
     "asar": "^0.10.0",
     "postcss": "^5.0.18",
     "babel-core": "^6.6.0",
-    "babel-eslint": "^5.0.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-plugin-webpack-loaders": "^0.3.7",
