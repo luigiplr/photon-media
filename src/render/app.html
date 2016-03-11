@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Photon Media</title>
+    <!-- Begin Paper Elements -->
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../bower_components/paper-button/paper-button.html">
+    <link rel="import" href="../bower_components/paper-input/paper-input.html">
+    <!-- End Paper Elements -->
+    <script>
+    (function() {
+        if (!process.env.HOT) {
+            const link = document.createElement('link')
+            link.rel = 'stylesheet'
+            link.href = '../dist/style.css'
+            document.write(link.outerHTML)
+        }
+    }());
+    </script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+    (function() {
+        const script = document.createElement('script')
+        script.src = (process.env.HOT) ? 'http://localhost:3000/dist/bundle.js' : '../dist/bundle.js'
+        document.write(script.outerHTML)
+    }());
+    </script>
+</body>
+
+</html>
