@@ -33,6 +33,7 @@
   "keywords": [],
   "homepage": "",
   "dependencies": {
+    "get-port": "^2.1.0",
     "jade": "^1.11.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",

@@ -1,5 +1,7 @@
 import { crashReporter, BrowserWindow, app } from 'electron'
 import jade from 'jade'
+
+import initWorkers from './initWorkers'
 import jadeINDEX from './index.jade'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
@@ -26,6 +28,8 @@ app.on('ready', () => {
         frame: true,
         show: false
     })
+
+    const workers = new initWorkers()
 
     mainWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(jade.render(jadeINDEX).toString())}`);
 
