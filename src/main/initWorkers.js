@@ -38,18 +38,5 @@ export default class initWorkers {
     trakt() {
         this.traktWorker = new Worker(path.join(__dirname, 'workers', 'trakt.worker.js'), true)
         this.traktWorker.postMessage(this.port)
-        this.traktWorker.onmessage = ({ data }) => {
-            const { type, message } = data
-
-            switch (type) {
-                case 'info':
-                case 'log':
-                    console.log('Trakt Worker log:', message)
-                    break
-                case 'error':
-                    console.error('Trakt Worker error:', message)
-                    break
-            }
-        }
     }
 }
