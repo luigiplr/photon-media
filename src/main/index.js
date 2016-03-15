@@ -5,12 +5,12 @@ import initWorkers from './initWorkers'
 import jadeINDEX from './index.jade'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
-
-crashReporter.start({
-    productName: 'Photon Media',
-    companyName: 'Magics'
-})
-
+    /*
+    crashReporter.start({
+        productName: 'Photon Media',
+        companyName: 'Magics'
+    })
+    */
 if (process.env.NODE_ENV === 'development') require('electron-debug')({
     showDevTools: true
 })

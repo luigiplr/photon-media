@@ -1,4 +1,6 @@
 import getPort from 'get-port'
+import express from 'express'
+import { createServer } from 'http'
 import socketIO from 'socket.io'
 import path from 'path'
 import Worker from 'workerjs'
@@ -7,19 +9,30 @@ import Worker from 'workerjs'
 
 export default class initWorkers {
     constructor() {
-        getPort().then(port => {
-            this.port = port
-            this.initSocketServer()
-            this.trakt()
-        })
+        getPort()
+            .then(port => this.port = port)
+            .then(() => this.initSocketServer())
+            .then(() => this.initSocketEvents())
+            .then(() => {
+                this.trakt()
+            })
+            .catch(console.error)
     }
 
     initSocketServer() {
-        this.socketServer = socketIO()
-        this.socketServer.on('connection', socket => {
-           // console.log(socket)
+        return new Promise((resolve, reject) => {
+            this.express = express()
+            this.http = createServer(this.expressServer)
+            this.socket = socketIO(this.http)
+            console.log(`Socket Server running @ port ${this.port}`)
+            this.http.listen(this.port, resolve)
         })
-        this.socketServer.listen(this.port)
+    }
+
+    initSocketEvents() {
+        this.socket.on('connection', socket => {
+            socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
+        })
     }
 
     trakt() {
