@@ -5,19 +5,21 @@
   "description": "",
   "main": "main.js",
   "scripts": {
+    "babel-build-electron": "babel ./src/main --out-dir ./build/main --source-maps",
     "hot-server": "node server.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.production.js --progress --profile --colors",
     "start": "cross-env NODE_ENV=production electron ./src/main",
-    "start-hot": "cross-env HOT=1 NODE_ENV=development electron ./src/main",
+    "start-hot": "npm run babel-build-electron && cross-env HOT=1 NODE_ENV=development electron ./build/main",
     "postinstall": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
     "dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\""
   },
   "bin": {
+    "babel": "./node_modules/.bin/babel",
     "electron": "./node_modules/.bin/electron"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/"
+    "url": "git+"
   },
   "author": {
     "name": "Luigi Poole",
@@ -31,15 +33,14 @@
   "keywords": [],
   "homepage": "",
   "dependencies": {
-    "css-modules-require-hook": "^3.0.0",
-    "electron-debug": "^0.5.2",
+    "jade": "^1.11.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
-    "react-polymer": "^1.1.0"
+    "workerjs": "^0.1.1"
   },
   "devDependencies": {
     "asar": "^0.10.0",
-    "postcss": "^5.0.18",
+    "babel-cli": "^6.6.5",
     "babel-core": "^6.6.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.1.2",
@@ -49,6 +50,7 @@
     "babel-preset-react-hmre": "^1.0.1",
     "babel-preset-stage-0": "^6.3.13",
     "bower": "^1.7.7",
+    "css-modules-require-hook": "^3.0.0",
     "concurrently": "^2.0.0",
     "cross-env": "^1.0.7",
     "css-loader": "^0.23.1",
@@ -61,7 +63,9 @@
     "fbjs-scripts": "^0.5.0",
     "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
+    "electron-debug": "^0.5.2",
     "node-libs-browser": "^1.0.0",
+    "postcss": "^5.0.18",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.14",
     "webpack-dev-middleware": "^1.2.0",

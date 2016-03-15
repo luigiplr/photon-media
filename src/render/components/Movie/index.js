@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import Styles from './styles.css'
 
 export default class Framework extends Component {
     componentWillMount() {
@@ -13,8 +13,6 @@ export default class Framework extends Component {
     render() {
         return (
             <div>
-        		<paper-button>Flat button</paper-button>
-                <paper-button raised>Raised button</paper-button>
         	</div>
         )
     }

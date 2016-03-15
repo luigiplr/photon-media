@@ -1,17 +1,18 @@
-import { crashReporter, BrowserWindow, app } from 'electron'
-import jade from 'jade'
-import jadeINDEX from './index.jade'
+'use strict'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
-crashReporter.start({
-    productName: 'Photon Media',
-    companyName: 'Magics'
-})
+const electron = require('electron')
 
-if (process.env.NODE_ENV === 'development') require('electron-debug')({
-    showDevTools: true
-})
+const BrowserWindow = electron.BrowserWindow
+const crashReporter = electron.crashReporter
+const app = electron.app
+
+
+crashReporter.start()
+
+if (process.env.NODE_ENV === 'development') require('electron-debug')()
+
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
@@ -22,15 +23,16 @@ app.on('ready', () => {
         resizable: true,
         title: 'Photon Media',
         center: true,
-        'auto-hide-menu-bar': true,
         frame: true,
         show: false
     })
 
-    mainWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(jade.render(jadeINDEX).toString())}`);
+    mainWindow.loadURL(`file://${__dirname}/../render/app.html`);
 
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.show()
         mainWindow.focus()
     })
+
+    if (process.env.NODE_ENV === 'development') mainWindow.openDevTools()
 })

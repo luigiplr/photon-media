@@ -32,4 +32,5 @@ bower_components
 
 # App packaged
 dist
+build
 release
