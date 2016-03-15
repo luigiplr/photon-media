@@ -1,4 +1,3 @@
-console.log('i am in a worker');
-self.onmessage = function(msg) {
-    self.postMessage('received ' + msg.data);
-};
+self.onmessage = ({ data }) => {
+    self.postMessage('received ' + data)
+}
