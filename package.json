@@ -36,6 +36,7 @@
     "express": "^4.13.4",
     "get-port": "^2.1.0",
     "jade": "^1.11.0",
+    "peerflix": "^0.32.4",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "socket.io": "^1.4.5",

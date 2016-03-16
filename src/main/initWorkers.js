@@ -15,6 +15,7 @@ export default class initWorkers {
             .then(() => this.initSocketEvents())
             .then(() => {
                 this.trakt()
+                this.torrentEngine()
             })
             .catch(console.error)
     }
@@ -33,6 +34,11 @@ export default class initWorkers {
         this.socket.on('connection', socket => {
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
         })
+    }
+
+    torrentEngine() {
+        this.torrentEngineWorker = new Worker(path.join(__dirname, 'workers', 'torrentEngine.worker.js'), true)
+        this.torrentEngineWorker.postMessage(this.port)
     }
 
     trakt() {
