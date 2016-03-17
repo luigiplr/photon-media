@@ -1,19 +1,14 @@
 import { crashReporter, BrowserWindow, app } from 'electron'
-import jade from 'jade'
 
 import initWorkers from './initWorkers'
-import jadeINDEX from './index.jade'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
-    /*
-    crashReporter.start({
-        productName: 'Photon Media',
-        companyName: 'Magics'
-    })
-    */
+
 if (process.env.NODE_ENV === 'development') require('electron-debug')({
     showDevTools: true
 })
+
+app.commandLine.appendSwitch('allow-file-access-from-files', true)
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
@@ -31,7 +26,7 @@ app.on('ready', () => {
 
     const workers = new initWorkers()
 
-    mainWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(jade.render(jadeINDEX).toString())}`);
+    mainWindow.loadURL(`file://${__dirname}/app.html`);
 
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.show()
