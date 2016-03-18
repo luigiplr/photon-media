@@ -1,0 +1,130 @@
+header {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100vw;
+}
+
+header span {
+    width: 100vw;
+    top: 10px;
+    position: absolute;
+    text-align: center;
+    color: #f0f8ff;
+    opacity: 0.9;
+}
+
+header .os-controls {
+    -webkit-app-region: no-drag;
+    margin-top: 11px;
+    z-index: 11;
+    position: absolute;
+}
+
+header .os-controls div {
+    cursor: pointer;
+    color: #fff;
+}
+
+header .os-controls:not(.darwin) {
+    margin-right: 11px;
+    right: 0px;
+}
+
+header .os-controls:not(.darwin) div {
+    margin-right: 6px;
+    opacity: 0.6;
+    height: 16px;
+    width: 16px;
+    float: right;
+}
+
+header .os-controls:not(.darwin) div:hover {
+    opacity: 0.9;
+}
+
+header .os-controls:not(.darwin) .minimize {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    top: -2px;
+    color: #fff;
+    opacity: 0.6;
+}
+
+header .os-controls:not(.darwin) .maximize {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    width: 17px;
+    height: 18px;
+    margin-right: 10px;
+    top: -2px;
+    color: #fff;
+    opacity: 0.6;
+}
+
+header .os-controls:not(.darwin) .close {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    width: 22px;
+    height: 22px;
+    margin-right: 5px;
+    top: -2px;
+    color: #fff;
+    opacity: 0.6;
+}
+
+header .os-controls.darwin {
+    margin-left: 13px;
+    left: 0;
+}
+
+header .os-controls.darwin div {
+    margin-right: 8px;
+    border-radius: 20px;
+    opacity: 1;
+    height: 12px;
+    width: 12px;
+    float: left;
+    background-image: url("../images/icons/topbar_sprite.png");
+    background-size: auto 12px;
+    background-position: -9999px center;
+    background-repeat: no-repeat;
+}
+
+header .os-controls.darwin div i {
+    display: none;
+}
+
+header .os-controls.darwin div:hover {
+    opacity: 1;
+}
+
+header .os-controls.darwin .max {
+    background-color: #2ed147;
+}
+
+header .os-controls.darwin .max:hover {
+    background-position: -52px center;
+}
+
+header .os-controls.darwin .min {
+    background-color: #fcbc42;
+}
+
+header .os-controls.darwin .min:hover {
+    background-position: -39px center;
+}
+
+header .os-controls.darwin .close {
+    background-color: #fb605b;
+}
+
+header .os-controls.darwin .close:hover {
+    background-position: -65px center;
+}

@@ -5,17 +5,25 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,300italic,400italic,500italic,100,700,700italic,100italic' rel='stylesheet' type='text/css' />
     <title>Photon Media</title>
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+
+    <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+    <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+    <link rel="import" href="../bower_components/paper-item/paper-item.html">
+
     <link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+    <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+    <link rel="import" href="../bower_components/paper-material/paper-material.html">
+
+    <link rel="stylesheet" type="text/css" href="css/vender.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
 
 <body>
     <div id="app"></div>
-    <script type="text/javascript">
-    if (process.env.NODE_ENV === 'development') {
-        require('electron-connect').client.create()
-    }
-    </script>
-    <script src="js/render.js"></script>
+    <script src="js/render/app.js"></script>
 </body>
 
 </html>

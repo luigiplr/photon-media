@@ -24,7 +24,7 @@ gulp.task('build-core', () => {
         .pipe(gulp.dest('build/js/workers'))
 })
 
-gulp.task('build-render', () => gulp.src('src/render/**/*.js').pipe(babel()).pipe(concat('render.js')).pipe(gulp.dest('build/js')))
+gulp.task('build-render', () => gulp.src('src/render/**/*.js').pipe(babel()).pipe(gulp.dest('build/js/render')))
 
 gulp.task('build-styles', () => {
     gulp.src('src/styles/app/**/*.css')

@@ -1,7 +1,8 @@
 import React, { Component } from 'React'
+import Header from './Header'
+import Search from './Search'
 
-
-class Framework extends Component {
+export default class Framework extends Component {
     componentWillMount() {
 
     }
@@ -12,9 +13,9 @@ class Framework extends Component {
 
     render() {
         return (
-            <div>
-                <paper-button>Flat button</paper-button>
-                <paper-button raised>Raised button</paper-button>
+            <div className='app-framework'>
+                <Header />
+                <Search />
             </div>
         )
     }

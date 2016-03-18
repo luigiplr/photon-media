@@ -35,4 +35,9 @@ app.on('ready', () => {
         mainWindow.show()
         mainWindow.focus()
     })
+
+    if (process.env.NODE_ENV === 'development') {
+        const client = require('electron-connect').client
+        client.create(mainWindow)
+    }
 })
