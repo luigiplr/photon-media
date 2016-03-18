@@ -3,6 +3,8 @@ header {
     top: 0;
     z-index: 100;
     width: 100vw;
+    height: 40px;
+    -webkit-app-region: drag;
 }
 
 header span {
@@ -24,6 +26,7 @@ header .os-controls {
 header .os-controls div {
     cursor: pointer;
     color: #fff;
+      -webkit-app-region: no-drag;
 }
 
 header .os-controls:not(.darwin) {

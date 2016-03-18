@@ -22,8 +22,7 @@ app.on('ready', () => {
         resizable: true,
         title: 'Photon Media',
         center: true,
-        'auto-hide-menu-bar': true,
-        frame: true,
+        frame: false,
         show: true
     })
 
