@@ -8,9 +8,8 @@ import runSequence from 'run-sequence'
 import { server as electronConnect } from 'electron-connect'
 
 /* setup electron connect server for live reloading */
-const electronDev = electronConnect.create({
-    path: 'build'
-})
+const electronDev = electronConnect.create({ path: 'build' })
+
 
 
 /* Build Tasks */
@@ -25,10 +24,7 @@ gulp.task('build-core', () => {
         .pipe(gulp.dest('build/js/workers'))
 })
 
-gulp.task('build-render', () => gulp.src('src/render/**/*.js')
-    .pipe(babel())
-    .pipe(concat('render.js'))
-    .pipe(gulp.dest('build/js')))
+gulp.task('build-render', () => gulp.src('src/render/**/*.js').pipe(babel()).pipe(concat('render.js')).pipe(gulp.dest('build/js')))
 
 gulp.task('build-styles', () => {
     gulp.src('src/styles/app/**/*.css')
@@ -63,11 +59,13 @@ gulp.task('watch-styles', () => gulp.watch('src/styles/**/*.css', ['build-styles
 gulp.task('watch-static-assets', () => gulp.watch(['package.json', 'src/main/app.html, src/images/**/*'], ['build-static-assets', electronDev.reload]))
 
 
+
 /* npm tasks */
 
 gulp.task('start', callback => runSequence('clean-build', ['build-core', 'build-render', 'build-styles', 'build-static-assets'], 'electron-start', callback))
 
 gulp.task('start-dev', callback => runSequence('clean-build', ['build-core', 'build-render', 'build-styles', 'build-static-assets'], ['watch-core', 'watch-render', 'watch-styles', 'watch-static-assets'], 'electron-start-dev', callback))
+
 
 
 /* Electron Tasks */
