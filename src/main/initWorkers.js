@@ -32,8 +32,6 @@ class initWorkers {
     initSocketEvents() {
         this.socket.on('connection', socket => {
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
-            socket.on('trakt:trending', type => socket.broadcast('trakt:trending', type))
-
         })
     }
 
