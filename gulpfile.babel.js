@@ -76,3 +76,8 @@ gulp.task('electron-start-dev', callback => electronDev.start(['--dev'], callbac
 
 
 process.on('uncaughtException', console.error)
+
+process.on('SIGINT', () => {
+    electronDev.stop()
+    process.exit(1)
+})
