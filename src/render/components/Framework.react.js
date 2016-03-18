@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'React'
 
 
-export default class Framework extends Component {
+class Framework extends Component {
     componentWillMount() {
 
     }
@@ -13,9 +13,9 @@ export default class Framework extends Component {
     render() {
         return (
             <div>
-        		<paper-button>Flat button</paper-button>
+                <paper-button>Flat button</paper-button>
                 <paper-button raised>Raised button</paper-button>
-        	</div>
+            </div>
         )
     }
 }

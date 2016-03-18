@@ -1,8 +1,11 @@
 import { crashReporter, BrowserWindow, app } from 'electron'
+import minimist from 'minimist'
+import path from 'path'
 
-import initWorkers from './initWorkers'
+const args = minimist(process.argv.slice(2))
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'production'
+process.env.NODE_ENV = minimist(process.argv.slice(2)).dev ? 'development' : 'production'
+
 
 if (process.env.NODE_ENV === 'development') require('electron-debug')({
     showDevTools: true
@@ -21,12 +24,12 @@ app.on('ready', () => {
         center: true,
         'auto-hide-menu-bar': true,
         frame: true,
-        show: false
+        show: true
     })
 
     const workers = new initWorkers()
 
-    mainWindow.loadURL(`file://${__dirname}/app.html`);
+    mainWindow.loadURL(`file://${path.join(__dirname, '../', 'app.html')}`)
 
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.show()

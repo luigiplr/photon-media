@@ -6,8 +6,7 @@ import path from 'path'
 import Worker from 'workerjs'
 
 
-
-export default class initWorkers {
+class initWorkers {
     constructor() {
         getPort()
             .then(port => this.port = port)
