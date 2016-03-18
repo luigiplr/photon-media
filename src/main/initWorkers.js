@@ -7,7 +7,7 @@ import Worker from 'workerjs'
 
 
 class initWorkers {
-    constructor() {
+    constructor(webContents) {
         getPort()
             .then(port => this.port = port)
             .then(() => this.initSocketServer())
@@ -15,6 +15,10 @@ class initWorkers {
             .then(() => {
                 this.trakt()
                 this.torrentEngine()
+            })
+            .then(() => {
+                process.env.WORKERS_PORT = this.port
+                webContents.send('workers:port', this.port)
             })
             .catch(console.error)
     }

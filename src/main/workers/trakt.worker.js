@@ -1,4 +1,5 @@
 import socketClient from 'socket.io-client'
+import request from 'request'
 
 self.onmessage = ({ data }) => new trakt(data) // init socket connection when we get the message (port)
 
@@ -20,6 +21,10 @@ class trakt {
 
     initEvents() {
         this.socket.on('trakt:fetch', ({ type, data }) => {
+
+        })
+
+        this.socket.on('trakt:authed', ({ traktToken, traktTokenRefresh, traktTokenTTL }) => {
 
         })
     }
