@@ -1,6 +1,11 @@
 import socketClient from 'socket.io-client'
+import webtorrent from 'webtorrent'
+
+const webtorrentInstance = new webtorrent()
+
 
 self.onmessage = ({ data }) => new torrentEngine(data) // init socket connection when we get the message (port)
+
 
 class torrentEngine {
     constructor(port) {
@@ -19,7 +24,16 @@ class torrentEngine {
     });
 
     initEvents() {
-        this.socket.on('torrentEngine:stats', ({ type, data }) => {
+        this.socket.on('torrentEngine:stats', ({ infohash, target = 'all' }) => {
+
+        })
+
+        this.socket.on('torrentEngine:add', infohash => webtorrentInstance.add(infohash, (torrent) => {
+            this.log(`Client is downloading: ${torrent.infoHash}`)
+
+        }))
+
+        this.socket.on('torrentEngine:remove', infohash => {
 
         })
     }

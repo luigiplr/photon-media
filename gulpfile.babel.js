@@ -73,3 +73,6 @@ gulp.task('start-dev', callback => runSequence('clean-build', ['build-core', 'bu
 gulp.task('electron-start', electronDev.start)
 
 gulp.task('electron-start-dev', callback => electronDev.start(['--dev'], callback))
+
+
+process.on('uncaughtException', console.error)

@@ -14,6 +14,7 @@ class photonSocketClient extends EventEmitter {
     }
 
     initSockets(port) {
+        this.socketPort = port
         this.socket = socketClient(`http://localhost:${port}`)
 
         this.socket.on('connect', () => console.info('Connected to main sockets'))
