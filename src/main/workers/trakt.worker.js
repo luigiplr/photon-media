@@ -29,8 +29,20 @@ class trakt {
 
         })
 
-        this.socket.on('trakt:authed', ({ traktToken, traktTokenRefresh, traktTokenTTL }) => {
-
+        this.socket.on('trakt:trending', (type = 'all') => {
+            switch (type) {
+                case 'movies':
+                    this.log('test')
+                    this.trakt.movieTrending().then(data => {
+                        this.log(data)
+                    })
+                    break
+                case 'shows':
+                    break
+                case 'all':
+                    break
+            }
         })
     }
+
 }

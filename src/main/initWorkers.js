@@ -5,9 +5,8 @@ import socketIO from 'socket.io'
 import path from 'path'
 import Worker from 'workerjs'
 
-
 class initWorkers {
-    constructor(webContents) {
+    constructor() {
         getPort()
             .then(port => this.port = port)
             .then(() => this.initSocketServer())
@@ -16,10 +15,7 @@ class initWorkers {
                 this.trakt()
                 this.torrentEngine()
             })
-            .then(() => {
-                process.env.WORKERS_PORT = this.port
-                webContents.send('workers:port', this.port)
-            })
+            .then(() => process.env.WORKERS_PORT = this.port)
             .catch(console.error)
     }
 
@@ -36,6 +32,8 @@ class initWorkers {
     initSocketEvents() {
         this.socket.on('connection', socket => {
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
+            socket.on('trakt:trending', type => socket.broadcast('trakt:trending', type))
+
         })
     }
 
@@ -49,3 +47,5 @@ class initWorkers {
         this.traktWorker.postMessage(this.port)
     }
 }
+
+new initWorkers()

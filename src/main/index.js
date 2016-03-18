@@ -36,8 +36,6 @@ app.on('ready', () => {
 
     mainWindowState.manage(mainWindow)
 
-    const workers = new initWorkers(mainWindow)
-
     mainWindow.loadURL(`file://${path.join(__dirname, '../', 'app.html')}`)
 
     mainWindow.webContents.on('did-finish-load', () => {
