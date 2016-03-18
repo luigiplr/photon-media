@@ -14,7 +14,7 @@ export default class Framework extends Component {
     }
 
     componentDidMount() {
-        console.log(socketClient)
+        
     }
 
     render() {
