@@ -1,6 +1,6 @@
 import socketClient from 'socket.io-client'
 import vibrant from 'node-vibrant'
-import _ from 'lodash'
+import { forEach } from 'lodash'
 
 
 self.onmessage = ({ data }) => new color(data) // init socket connection when we get the message (port)
@@ -27,7 +27,7 @@ class color {
             colorCount: 100,
             quality: 10
         }).getPalette((err, palette) => {
-            _.forEach(palette, swatch => {
+            forEach(palette, swatch => {
                 swatch.hex = swatch.getHex()
                 swatch.population = swatch.getPopulation()
                 swatch.titleTextColor = swatch.getTitleTextColor()
