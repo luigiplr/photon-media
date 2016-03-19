@@ -5,7 +5,8 @@ import Backdrop from './backdrop.react'
 export default class Search extends Component {
 
     state = {
-        color: void 0
+        color: void 0,
+        type: 'url'
     };
 
     componentWillMount() {
@@ -54,8 +55,15 @@ export default class Search extends Component {
 
                 <div style={{textAlign: 'center'}}>
                     <paper-material className="search-box-contain" elevation="1">
+                        <paper-menu-button>
+                            <paper-icon-button style={{color: this.state.color}} icon="more-vert" className="dropdown-trigger"/>
+                            <paper-menu className="dropdown-content">
+                                <paper-item onClick={() => this.setState({type: 'url'})}>URL</paper-item>
+                                <paper-item onClick={() => this.setState({type: 'file'})}>File</paper-item>
+                            </paper-menu>
+                        </paper-menu-button>
                         <input className="searchtext" />
-                        <paper-icon-button style={{color: this.state.color}} className="search-btn" icon="link"/>
+                        <paper-icon-button style={{color: this.state.color}} className="search-btn" icon={(this.state.type === 'url' ? 'link' : 'folder')}/>
                     </paper-material>
                 </div>
             </div>
