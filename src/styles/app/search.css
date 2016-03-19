@@ -75,7 +75,7 @@
 
 .search-container .transition-container{
     display: inline-block;
-    position: fixed;
+    position: absolute !important;
 }
 
 .search-container .search-container-backdrop {
