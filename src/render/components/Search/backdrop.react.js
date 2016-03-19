@@ -1,6 +1,6 @@
 import React, { Component } from 'React'
 import ReactCSSTransitionReplace from 'react-css-transition-replace'
-import { delay } from 'lodash'
+import { delay, defer } from 'lodash'
 import { v4 as uuid } from 'node-uuid'
 
 
@@ -8,9 +8,7 @@ export default class Backdrop extends Component {
 
     state = {
         backdrop: {
-            title: '',
-            image: '',
-            date: ''
+            image: ''
         }
     };
 
@@ -28,7 +26,7 @@ export default class Backdrop extends Component {
 
     _getNewBackdrop = () => {
         if (!this.mounted) return
-            
+
         const { sockets } = this.props.workers.socket
         const requestID = uuid()
         sockets.emit('trakt:get:trending', { id: requestID, type: 'all' })
@@ -42,7 +40,7 @@ export default class Backdrop extends Component {
             sockets.emit(`trakt:get:${type}`, { id: requestID, imdb: item[type].ids.imdb })
 
             this.props.workers.once(requestID, ({ images, certification = 'Unrated', title, year, homepage }) => {
-                const backdropImage = new Image()
+                let backdropImage = new Image()
                 backdropImage.onload = () => {
                     if (!this.mounted) return
                     this.setState({
@@ -55,6 +53,7 @@ export default class Backdrop extends Component {
                         }
                     })
                     delay(this._getNewBackdrop, 10000)
+                    defer(() => backdropImage = null)
                 }
                 backdropImage.src = images.fanart.full
             })
@@ -68,7 +67,7 @@ export default class Backdrop extends Component {
                     <div style={{backgroundImage: `url(${this.state.backdrop.image})`}} className="search-container-backdrop"/>
                     <div className="bottom-info-container">
                         <h1 className="title">{this.state.backdrop.title}</h1><span className="year">{this.state.backdrop.year}</span>
-                        <p className="rating">{this.state.backdrop.certification}</p>
+                        <p className="rating">{(this.state.backdrop.certification ? (this.state.backdrop.certification.trim().length === 0 ? 'Unrated' : this.state.backdrop.certification) : '')}</p>
                     </div>
                 </div>
             </ReactCSSTransitionReplace>
