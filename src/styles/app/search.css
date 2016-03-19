@@ -1,5 +1,5 @@
 .search-container {
-    background-color: #F9F9F9;
+    background-color: black;
     height: 100vh;
     width: 100vw;
     top: 0;
@@ -49,6 +49,33 @@
     padding: 5px;
     margin-left: 10px;
     color: rgba(255, 255, 255, 0.8);
+}
+
+.search-container .cross-fade-leave {
+    opacity: 1;
+}
+
+.search-container .cross-fade-leave.cross-fade-leave-active {
+    opacity: 0;
+    transition: opacity 0.7s ease-in;
+}
+
+.search-container .cross-fade-enter {
+    opacity: 0;
+}
+
+.search-container .cross-fade-enter.cross-fade-enter-active {
+    opacity: 1;
+    transition: opacity 0.7s ease-in;
+}
+
+.search-container .cross-fade-height {
+    transition: height .5s ease-in-out;
+}
+
+.search-container .transition-container{
+    display: inline-block;
+    position: fixed;
 }
 
 .search-container .search-container-backdrop {
