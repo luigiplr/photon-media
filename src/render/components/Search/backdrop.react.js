@@ -38,7 +38,7 @@ export default class Backdrop extends Component {
 
             const type = item.show ? 'show' : 'movie'
 
-            sockets.emit(`trakt:get:${type}`, { id: requestID, imdb: item[type].ids.imdb })
+            sockets.emit(`trakt:get:${type}`, { id: requestID, ...item[type].ids })
 
             this.props.workers.once(requestID, ({ images, certification = 'Unrated', title, year, homepage }) => {
                 let backdropImage = new Image()
