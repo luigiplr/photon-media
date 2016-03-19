@@ -47,7 +47,12 @@ export default class Backdrop extends Component {
         const requestID = uuid()
         sockets.emit('trakt:get:trending', { id: requestID, type: 'all' })
         this.props.workers.once(requestID, ({ movies, shows }) => {
-            this.setState({ trending: movies.concat(shows) })
+            let trending = movies.concat(shows)
+
+            if (this.state.backdrop.title)
+                trending = _.filter(trending, ({ show, movie }) => !((show || movie).title === this.state.backdrop.title)) //Filter out current (cached) backdrop from list
+
+            this.setState({ trending })
             this.backdropTimeout = setTimeout(this._getNewBackdrop, delay)
         })
     };
