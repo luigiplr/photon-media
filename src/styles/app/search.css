@@ -97,7 +97,7 @@
     background-repeat: no-repeat;
     background-position: top center;
     margin: -5px;
-    -webkit-filter: blur(3px) brightness(45%);
+    -webkit-filter: blur(2px) brightness(45%);
 }
 
 .search-container .search-box-contain {
