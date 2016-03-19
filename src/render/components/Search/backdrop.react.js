@@ -6,6 +6,7 @@ import { v4 as uuid } from 'node-uuid'
 import localforage from 'localforage'
 
 const defaultDelay = 30000
+const initialDelay = 10000
 
 export default class Backdrop extends Component {
 
@@ -26,7 +27,7 @@ export default class Backdrop extends Component {
             .then(lastItem => {
                 let delay = 0
                 if (lastItem) {
-                    delay = defaultDelay
+                    delay = initialDelay
                     this._loadBackdrop(lastItem).then(() => {
                         this.setState({ backdrop: lastItem })
                         if (lastItem.palette)
