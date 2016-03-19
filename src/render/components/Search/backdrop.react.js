@@ -3,6 +3,7 @@ import ReactCSSTransitionReplace from 'react-css-transition-replace'
 import { shell } from 'electron'
 import _ from 'lodash'
 import { v4 as uuid } from 'node-uuid'
+import localforage from 'localforage'
 
 
 export default class Backdrop extends Component {
@@ -20,20 +21,29 @@ export default class Backdrop extends Component {
     }
 
     componentDidMount() {
+        localforage.getItem('last-search-backdrop')
+            .then(lastItem => {
+                let delay = 0
+                if (lastItem) {
+                    delay = 30000
+                    this._loadBackdrop(lastItem).then(() => this.setState({ backdrop: lastItem }))
+                }
+                if (this.props.workers.initiated)
+                    this._getTrending(delay)
+                else
+                    this.props.workers.once('workers:initiated', () => this._getTrending(delay))
+            })
+            .catch(console.error)
         this.mounted = true
-        if (this.props.workers.initiated)
-            this._getTrending()
-        else
-            this.props.workers.once('workers:initiated', this._getTrending)
     }
 
-    _getTrending = () => {
+    _getTrending = (delay = 0) => {
         const { sockets } = this.props.workers.socket
         const requestID = uuid()
         sockets.emit('trakt:get:trending', { id: requestID, type: 'all' })
         this.props.workers.once(requestID, ({ movies, shows }) => {
             this.setState({ trending: movies.concat(shows) })
-            _.defer(this._getNewBackdrop)
+            this.backdropTimeout = setTimeout(this._getNewBackdrop, delay)
         })
     };
 
@@ -50,23 +60,33 @@ export default class Backdrop extends Component {
         sockets.emit(`trakt:get:${itmeType}`, { id: requestID, ...trendingItem[itmeType].ids })
 
         this.props.workers.once(requestID, ({ images, certification = 'Unrated', title, year, homepage }) => {
-            let backdropImage = new Image()
-            backdropImage.onload = () => {
+            const backdrop = {
+                homepage,
+                image: images.fanart.full,
+                certification: certification.length > 0 ? certification : 'Unrated',
+                title,
+                year
+            }
+            this._loadBackdrop(backdrop).then(() => {
                 if (!this.mounted) return
                 this.setState({
                     trending: _.filter(trending, item => !_.isEqual(item, trendingItem)),
-                    backdrop: {
-                        homepage,
-                        image: images.fanart.full,
-                        certification: certification.length > 0 ? certification : 'Unrated',
-                        title,
-                        year
-                    }
+                    backdrop
                 })
+                localforage.setItem('last-search-backdrop', backdrop)
                 this.backdropTimeout = setTimeout(this._getNewBackdrop, 30000)
+            })
+        })
+    };
+
+    _loadBackdrop = ({ image }) => {
+        return new Promise(resolve => {
+            let backdropImage = new Image()
+            backdropImage.onload = () => {
+                resolve()
                 _.defer(() => backdropImage = null)
             }
-            backdropImage.src = images.fanart.full
+            backdropImage.src = image
         })
     };
 
@@ -87,6 +107,6 @@ export default class Backdrop extends Component {
                     </div> 
                 </div> 
             </ReactCSSTransitionReplace>
-         )
+        )
     }
 }
