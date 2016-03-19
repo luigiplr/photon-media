@@ -24,8 +24,8 @@ class color {
 
     initEvents() {
         this.socket.on('color:get', ({ id, image }) => vibrant.from(image, {
-            colorCount: 70,
-            quality: 7
+            colorCount: 100,
+            quality: 10
         }).getPalette((err, palette) => {
             _.forEach(palette, swatch => {
                 swatch.hex = swatch.getHex()
