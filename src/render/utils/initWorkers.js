@@ -15,7 +15,6 @@ export default class initWorkers extends EventEmitter {
         getPort()
             .then(port => this.port = port)
             .then(() => this.initSocketServer())
-            .then(() => this.initSocketEvents())
             .then(() => {
                 const workerDir = path.join(__dirname, '../', 'workers')
                 this.workers = [
@@ -25,6 +24,7 @@ export default class initWorkers extends EventEmitter {
                     new Worker(path.join(workerDir, 'urlParser.worker.js'), true).postMessage(this.port)
                 ]
             })
+            .then(() => this.initSocketEvents())
             .catch(console.error)
     }
 
