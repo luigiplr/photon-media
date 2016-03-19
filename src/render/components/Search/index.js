@@ -38,12 +38,9 @@ export default class Search extends Component {
 
             sockets.emit(`trakt:get:${type}`, { id: requestID, imdb: item[type].ids.imdb })
 
-            this.props.workers.once(requestID, ({ images, certification, title, year, homepage }) => {
-
+            this.props.workers.once(requestID, ({ images, certification = 'Unrated', title, year, homepage }) => {
                 const backdropImage = new Image()
-
                 backdropImage.onload = () => {
-
                     this.setState({
                         backdrop: {
                             homepage,
@@ -55,9 +52,7 @@ export default class Search extends Component {
                     })
                     delay(this._getNewBackdrop, 10000)
                 }
-
                 backdropImage.src = images.fanart.full
-
             })
         })
     };
