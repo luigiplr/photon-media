@@ -11,8 +11,8 @@ class torrentEngine {
     constructor(port) {
         this.socket = socketClient(`http://localhost:${port}`)
 
-        this.socket.on('connect', () => this.log('Socket Connected!'))
-        this.socket.on('disconnect', () => this.log('Socket Disconnected!'))
+        this.socket.on('connect', () => this.log('Socket Connected!', 'info'))
+        this.socket.on('disconnect', () => this.log('Socket Disconnected!', 'info'))
 
         this.initEvents()
     }

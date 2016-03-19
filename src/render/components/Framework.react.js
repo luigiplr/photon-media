@@ -1,10 +1,10 @@
 import React, { Component } from 'React'
 
-import socketClient from '../utils/socketClient'
+import initWorkers from '../utils/initWorkers'
 import Header from './Header'
 import Search from './Search'
 
-
+const workers = new initWorkers()
 
 
 export default class Framework extends Component {
@@ -20,8 +20,8 @@ export default class Framework extends Component {
     render() {
         return (
             <div className='app-framework'>
-                <Header />
-                <Search socketClient={socketClient} />
+                <Header workers={workers} />
+                <Search workers={workers} />
             </div>
         )
     }

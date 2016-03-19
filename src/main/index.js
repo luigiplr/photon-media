@@ -44,7 +44,7 @@ app.on('ready', () => {
     })
 
     if (process.env.NODE_ENV === 'development') {
-        const client = require('electron-connect').client
+        const { client } = require('electron-connect')
         client.create(mainWindow)
     }
 })
