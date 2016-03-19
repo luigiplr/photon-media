@@ -20,6 +20,7 @@ export default class initWorkers extends EventEmitter {
                 const workerDir = path.join(__dirname, '../', 'workers')
                 new Worker(path.join(workerDir, 'torrentEngine.worker.js'), true).postMessage(this.port)
                 new Worker(path.join(workerDir, 'trakt.worker.js'), true).postMessage(this.port)
+                new Worker(path.join(workerDir, 'color.worker.js'), true).postMessage(this.port)
             })
             .catch(console.error)
     }
@@ -34,7 +35,7 @@ export default class initWorkers extends EventEmitter {
     }
 
     initSocketEvents() {
-        const totalWorkers = 2
+        const totalWorkers = 3
         let loggedWorkers = 0
         this.socket.on('connection', socket => {
             loggedWorkers++
@@ -44,6 +45,7 @@ export default class initWorkers extends EventEmitter {
             }
 
             socket.on('trakt', ({ id, data }) => this.emit(id, data))
+            socket.on('color', ({ id, palette }) => this.emit(id, palette))
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
         })
     }

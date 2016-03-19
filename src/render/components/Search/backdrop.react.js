@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { v4 as uuid } from 'node-uuid'
 import localforage from 'localforage'
 
+const defaultDelay = 10000
 
 export default class Backdrop extends Component {
 
@@ -25,8 +26,12 @@ export default class Backdrop extends Component {
             .then(lastItem => {
                 let delay = 0
                 if (lastItem) {
-                    delay = 30000
-                    this._loadBackdrop(lastItem).then(() => this.setState({ backdrop: lastItem }))
+                    delay = defaultDelay
+                    this._loadBackdrop(lastItem).then(() => {
+                        this.setState({ backdrop: lastItem })
+                        if (lastItem.palette)
+                            this.props.setPalette(lastItem.palette)
+                    })
                 }
                 if (this.props.workers.initiated)
                     this._getTrending(delay)
@@ -67,23 +72,35 @@ export default class Backdrop extends Component {
                 title,
                 year
             }
-            this._loadBackdrop(backdrop).then(() => {
+            Promise.all([this._loadBackdrop(backdrop), this._getColorPalette(backdrop)]).then(([foo, palette]) => {
                 if (!this.mounted) return
+                this.props.setPalette(palette)
+                backdrop.palette = palette
                 this.setState({
                     trending: _.filter(trending, item => !_.isEqual(item, trendingItem)),
                     backdrop
                 })
                 localforage.setItem('last-search-backdrop', backdrop)
-                this.backdropTimeout = setTimeout(this._getNewBackdrop, 30000)
+                this.backdropTimeout = setTimeout(this._getNewBackdrop, defaultDelay)
             })
         })
     };
 
-    _loadBackdrop = ({ image }) => {
+    _getColorPalette = ({ image }) => {
+        return new Promise((resolve, reject) => {
+            const { sockets } = this.props.workers.socket
+            const requestID = uuid()
+
+            sockets.emit('color:get', { id: requestID, image })
+            this.props.workers.once(requestID, palette => resolve(palette))
+        })
+    };
+
+    _loadBackdrop = ({ image }, sockets) => {
         return new Promise(resolve => {
             let backdropImage = new Image()
             backdropImage.onload = () => {
-                resolve()
+                resolve(image)
                 _.defer(() => backdropImage = null)
             }
             backdropImage.src = image

@@ -39,6 +39,7 @@ class trakt {
                     this.trakt.movieTrending().then(data => this.socket.emit(`trakt`, { id, data }))
                     break
                 case 'shows':
+                    this.trakt.showTrending().then(data => this.socket.emit(`trakt`, { id, data }))
                     break
                 case 'all':
                     Promise.all([this.trakt.movieTrending(), this.trakt.showTrending()]).then(([movies, shows]) => this.socket.emit(`trakt`, { id, data: { movies, shows } }))
