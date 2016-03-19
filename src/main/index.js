@@ -7,9 +7,6 @@ const args = minimist(process.argv.slice(2))
 
 process.env.NODE_ENV = minimist(process.argv.slice(2)).dev ? 'development' : 'production'
 
-if (process.env.NODE_ENV === 'development') require('electron-debug')({
-    showDevTools: true
-})
 
 app.commandLine.appendSwitch('allow-file-access-from-files', true)
 
@@ -27,7 +24,7 @@ app.on('ready', () => {
         title: 'Photon Media',
         center: true,
         frame: false,
-        show: false,
+        show: process.env.NODE_ENV === 'development',
         x: mainWindowState.x,
         y: mainWindowState.y,
         width: mainWindowState.width,
@@ -42,9 +39,10 @@ app.on('ready', () => {
         mainWindow.show()
         mainWindow.focus()
     })
-
     if (process.env.NODE_ENV === 'development') {
         const { client } = require('electron-connect')
         client.create(mainWindow)
+        mainWindow.toggleDevTools()
+        mainWindow.focus()
     }
 })
