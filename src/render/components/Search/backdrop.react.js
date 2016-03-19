@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { v4 as uuid } from 'node-uuid'
 import localforage from 'localforage'
 
-const defaultDelay = 10000
+const defaultDelay = 30000
 
 export default class Backdrop extends Component {
 
