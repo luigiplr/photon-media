@@ -18,9 +18,12 @@ export default class initWorkers extends EventEmitter {
             .then(() => this.initSocketEvents())
             .then(() => {
                 const workerDir = path.join(__dirname, '../', 'workers')
-                new Worker(path.join(workerDir, 'torrentEngine.worker.js'), true).postMessage(this.port)
-                new Worker(path.join(workerDir, 'trakt.worker.js'), true).postMessage(this.port)
-                new Worker(path.join(workerDir, 'color.worker.js'), true).postMessage(this.port)
+                this.workers = [
+                    new Worker(path.join(workerDir, 'torrentEngine.worker.js'), true).postMessage(this.port),
+                    new Worker(path.join(workerDir, 'trakt.worker.js'), true).postMessage(this.port),
+                    new Worker(path.join(workerDir, 'color.worker.js'), true).postMessage(this.port),
+                    new Worker(path.join(workerDir, 'urlParser.worker.js'), true).postMessage(this.port)
+                ]
             })
             .catch(console.error)
     }
@@ -35,11 +38,10 @@ export default class initWorkers extends EventEmitter {
     }
 
     initSocketEvents() {
-        const totalWorkers = 3
         let loggedWorkers = 0
         this.socket.on('connection', socket => {
             loggedWorkers++
-            if (loggedWorkers === totalWorkers) {
+            if (loggedWorkers === this.workers.length) {
                 this.initiated = true
                 this.emit('workers:initiated')
             }
