@@ -21,9 +21,15 @@
 
 .search-container .bottom-info-container .title {
     font-size: 17px;
+    cursor: pointer;
     color: rgba(255, 255, 255, 0.35);
     font-weight: 400;
     float: left;
+    transition: border-bottom .5s;
+}
+
+.search-container .bottom-info-container .title:hover {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 .search-container .bottom-info-container .rating {
@@ -73,8 +79,7 @@
     transition: height .5s ease-in-out;
 }
 
-
-.search-container .transition-container{
+.search-container .transition-container {
     display: inline-block;
     height: 100vh;
     top: 0;

@@ -1,5 +1,6 @@
 import React, { Component } from 'React'
 import ReactCSSTransitionReplace from 'react-css-transition-replace'
+import { shell } from 'electron'
 import { delay, defer } from 'lodash'
 import { v4 as uuid } from 'node-uuid'
 
@@ -47,7 +48,7 @@ export default class Backdrop extends Component {
                         backdrop: {
                             homepage,
                             image: images.fanart.full,
-                            certification,
+                            certification: certification.length > 0 ? certification : 'Unrated',
                             title,
                             year
                         }
@@ -60,14 +61,19 @@ export default class Backdrop extends Component {
         })
     };
 
+    _openBackDropURL = () => {
+        if (!this.state.backdrop || !this.state.backdrop.homepage) return
+        shell.openExternal(this.state.backdrop.homepage)
+    };
+
     render() {
         return (
             <ReactCSSTransitionReplace className='transition-container' transitionName="cross-fade" transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                 <div className='transition-container' key={this.state.backdrop.image}>
                     <div style={{backgroundImage: `url(${this.state.backdrop.image})`}} className="search-container-backdrop"/>
                     <div className="bottom-info-container">
-                        <h1 className="title">{this.state.backdrop.title}</h1><span className="year">{this.state.backdrop.year}</span>
-                        <p className="rating">{(this.state.backdrop.certification ? (this.state.backdrop.certification.trim().length === 0 ? 'Unrated' : this.state.backdrop.certification) : '')}</p>
+                        <h1 onClick={this._openBackDropURL} className="title">{this.state.backdrop.title}</h1><span className="year">{this.state.backdrop.year}</span>
+                        <p className="rating">{this.state.backdrop.certification}</p>
                     </div>
                 </div>
             </ReactCSSTransitionReplace>
