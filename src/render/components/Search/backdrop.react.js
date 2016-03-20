@@ -1,4 +1,4 @@
-import React, { Component } from 'React'
+import React, { Component } from 'react'
 import ReactCSSTransitionReplace from 'react-css-transition-replace'
 import { shell } from 'electron'
 import _ from 'lodash'

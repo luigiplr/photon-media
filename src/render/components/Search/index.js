@@ -1,4 +1,4 @@
-import React, { Component } from 'React'
+import React, { Component } from 'react'
 import Backdrop from './backdrop.react'
 
 export default class Search extends Component {

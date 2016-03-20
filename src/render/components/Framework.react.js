@@ -1,4 +1,4 @@
-import React, { Component } from 'React'
+import React, { Component } from 'react'
 
 import initWorkers from '../utils/initWorkers'
 import Header from './Header'
