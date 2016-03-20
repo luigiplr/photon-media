@@ -3,6 +3,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import _ from 'lodash'
 import { v4 as uuid } from 'node-uuid'
 
+import titleMatcher from '../../utils/titleMatcher'
 import MovieDetail from './components/movie.react'
 
 export default class Detail extends Component {
@@ -25,7 +26,28 @@ export default class Detail extends Component {
 
     componentDidMount() {
         this.mounted = true
-        _.delay(() => this.setState({ detail: { type: 'movie' }, loading: false }), 3000)
+
+
+        this._initURLParse()
+
+        //_.delay(() => this.setState({ detail: { type: 'movie' }, loading: false }), 3000)
+    }
+
+
+    _initURLParse = () => {
+        const { url } = this.props
+        const { sockets } = this.props.workers.socket
+        const requestID = uuid()
+
+        sockets.emit('urlParser:get', { id: requestID, url })
+
+        this.props.workers.once(requestID, ({ type, parsed }) => {
+            const { name } = parsed
+
+            const matcher = new titleMatcher(this.props.workers, name)
+
+            console.log(type, parsed)
+        })
     }
 
     _close = () => {
@@ -35,7 +57,7 @@ export default class Detail extends Component {
     _getSubDetail = () => {
         switch (this.state.detail.type) {
             case 'movie':
-                return <MovieDetail/>
+                return <MovieDetail url={this.props.url} detail={this.state.detail} />
                 break
             case 'show':
                 break

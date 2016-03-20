@@ -29,10 +29,7 @@ class urlParser {
                 switch (type) {
                     case 'torrent':
                     case 'magnet':
-                        readTorrent(url, (err, parsed) => {
-                            this.socket.emit('urlParser', { id, type: 'torrent', parsed })
-                            this.log(parsed)
-                        })
+                        readTorrent(url, (err, parsed) => this.socket.emit('urlParser', { id, data: { type: 'torrent', parsed } }))
                         break
                     case 'http':
 

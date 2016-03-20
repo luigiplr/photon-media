@@ -46,6 +46,7 @@ export default class initWorkers extends EventEmitter {
                 this.emit('workers:initiated')
             }
 
+            socket.on('urlParser', ({ id, data }) => this.emit(id, data))
             socket.on('trakt', ({ id, data }) => this.emit(id, data))
             socket.on('color', ({ id, palette }) => this.emit(id, palette))
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
