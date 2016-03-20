@@ -48,8 +48,6 @@ export default class MovieDetail extends Component {
         posterImage.src = poster.full
     };
 
-
-
     _getDropUpStyle() {
         return `
             paper-dropdown-menu.meta-dropdown {
@@ -81,7 +79,7 @@ export default class MovieDetail extends Component {
             <paper-icon-button id="bookmark_button" icon="bookmark-border" className="bookmark-toggle"/> 
             <paper-tooltip for="bookmark_button" offset="0">Bookmark movie</paper-tooltip>
 
-            <img ref="poster" src={this.state.poster} className="poster" />
+            <img ref="poster" src={this.state.posterImage} className="poster" />
             <div className="meta">
                 <div className="meta-item">
                     <paper-icon-button noink icon="star" className="star"/>
@@ -90,7 +88,7 @@ export default class MovieDetail extends Component {
                     <paper-icon-button noink icon="star-border" className="star"/>
                     <paper-icon-button noink icon="star-border" className="star"/>
                     <span className="meta-dot first"/>
-                    <p>{genres.join(', ')}</p>
+                    <p>{genres.slice(0,3).join(', ')}</p>
                     <span className="meta-dot"/>
                     <p>{year}</p>
                     <span className="meta-dot"/>
