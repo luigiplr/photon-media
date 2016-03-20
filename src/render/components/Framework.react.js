@@ -47,7 +47,7 @@ export default class Framework extends Component {
         return (
             <div className='app-framework'>
                 <Header workers={workers} />
-                <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
+                <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
                     <div className='transition-container' key={this.state.page}>
                         {this.getContents()}
                     </div>
