@@ -25,13 +25,11 @@ export default class Framework extends Component {
 
     }
 
-    _changePage = (page, pageData = {}) => {
-        console.log(page)
-        this.setState({ page, pageData })
-    };
+    _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
 
     getContents = () => {
         switch (this.state.page) {
+            case 'home':
             case 'search':
                 return <Search updatePage={this._changePage} workers={workers}/>
                 break
@@ -49,7 +47,7 @@ export default class Framework extends Component {
         return (
             <div className='app-framework'>
                 <Header workers={workers} />
-                <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={700} transitionLeaveTimeout={700}>
+                <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                     <div className='transition-container' key={this.state.page}>
                         {this.getContents()}
                     </div>
