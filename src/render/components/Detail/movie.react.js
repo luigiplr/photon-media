@@ -57,7 +57,7 @@ export default class MovieDetail extends Component {
                 }
                 --paper-input-container-input: {}
                 --paper-input-container-underline: {
-                display: none;
+                    display: none;
                 }
             }
             `
