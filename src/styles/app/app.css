@@ -22,3 +22,34 @@
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
+
+
+.app-framework .cross-fade-leave {
+    opacity: 1;
+}
+
+.app-framework .cross-fade-leave.cross-fade-leave-active {
+    opacity: 0;
+    transition: opacity 0.7s ease-in;
+}
+
+.app-framework .cross-fade-enter {
+    opacity: 0;
+}
+
+.app-framework .cross-fade-enter.cross-fade-enter-active {
+    opacity: 1;
+    transition: opacity 0.7s ease-in;
+}
+
+.app-framework .cross-fade-height {
+    transition: height .5s ease-in-out;
+}
+
+.app-framework .transition-container {
+    display: inline-block;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    position: absolute !important;
+}
