@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { v4 as uuid } from 'node-uuid'
 
 import titleMatcher from '../../utils/titleMatcher'
-import MovieDetail from './components/movie.react'
+import MovieDetail from './movie.react'
 
 export default class Detail extends Component {
 
