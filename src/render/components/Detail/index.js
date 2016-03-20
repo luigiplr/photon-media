@@ -45,10 +45,11 @@ export default class Detail extends Component {
             const { name } = parsed
 
             const matcher = new titleMatcher(this.props.workers, name)
-            matcher.once('success', match => {
-                console.log(match)
+            matcher.once('success', detail => this.setState({ detail }))
+            matcher.once('error', error => {
+                // Do something here UI wise later
+                console.error(error)
             })
-            matcher.once('error', console.error)
         })
     }
 
@@ -59,7 +60,7 @@ export default class Detail extends Component {
     _getSubDetail = () => {
         switch (this.state.detail.type) {
             case 'movie':
-                return <MovieDetail url={this.props.url} detail={this.state.detail} />
+                return <MovieDetail detail={this.state.detail} />
                 break
             case 'show':
                 break

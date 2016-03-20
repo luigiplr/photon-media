@@ -5,7 +5,14 @@ import { v4 as uuid } from 'node-uuid'
 
 export default class MovieDetail extends Component {
 
-    state = {};
+    state = {
+        backgroundImage: '',
+        posterImage: ''
+    };
+
+    static propTypes = {
+        detail: React.PropTypes.object.isRequired
+    };
 
     componentWillUnmount() {
         this.mounted = false
@@ -13,7 +20,35 @@ export default class MovieDetail extends Component {
 
     componentDidMount() {
         this.mounted = true
+        this._loadImages()
     }
+
+    _loadImages = () => {
+        const { fanart, poster } = this.props.detail.images
+        console.log(fanart, poster)
+
+
+        let backgroundImage = new Image()
+
+        backgroundImage.onload = () => {
+            if (!this.mounted) return
+            this.setState({ backgroundImage: fanart.full })
+            _.defer(() => backgroundImage = null)
+        }
+        backgroundImage.src = fanart.full
+
+
+
+        let posterImage = new Image()
+        posterImage.onload = () => {
+            if (!this.mounted) return
+            this.setState({ posterImage: poster.full })
+            _.defer(() => posterImage = null)
+        }
+        posterImage.src = poster.full
+    };
+
+
 
     _getDropUpStyle() {
         return `
@@ -36,17 +71,17 @@ export default class MovieDetail extends Component {
     }
 
     render() {
+        console.log(this.props.detail)
+        const { title, year, runtime, genres, overview } = this.props.detail
         return (
             <div className="movie-detail">
-            <div className="bg-backdrop" style={{backgroundImage: `url(https://walter.trakt.us/images/movies/000/183/371/fanarts/original/2097014462.jpg)`}}/>
+            <div className="bg-backdrop" style={{backgroundImage: `url(${this.state.backgroundImage})`}}/>
             <div className="summary-wrapper movie">
-            <div className="title">
-                The Martian
-            </div>
+            <div className="title">{title}</div>
             <paper-icon-button id="bookmark_button" icon="bookmark-border" className="bookmark-toggle"/> 
             <paper-tooltip for="bookmark_button" offset="0">Bookmark movie</paper-tooltip>
 
-            <img src="https://walter.trakt.us/images/movies/000/183/371/posters/thumb/8767195506.jpg" className="poster" />
+            <img ref="poster" src={this.state.poster} className="poster" />
             <div className="meta">
                 <div className="meta-item">
                     <paper-icon-button noink icon="star" className="star"/>
@@ -55,15 +90,13 @@ export default class MovieDetail extends Component {
                     <paper-icon-button noink icon="star-border" className="star"/>
                     <paper-icon-button noink icon="star-border" className="star"/>
                     <span className="meta-dot first"/>
-                    <p>Science Fiction, Adventure, Drama</p>
+                    <p>{genres.join(', ')}</p>
                     <span className="meta-dot"/>
-                    <p>2015</p>
+                    <p>{year}</p>
                     <span className="meta-dot"/>
-                    <p>141 mins</p>
+                    <p>{runtime} mins</p>
                 </div>
-                <div className="meta-synop">
-                    During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce storm and left behind by his crew. But Watney has survived and finds himself stranded and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity, wit and spirit to subsist and find a way to signal to Earth that he is alive.
-                </div>
+                <div className="meta-synop">{overview}</div>
                 <paper-button className="meta-btn first">
                     theatre showtimes
                 </paper-button>
