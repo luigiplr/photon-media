@@ -24,7 +24,7 @@
 }
 
 .app-framework .cross-fade-height {
-    transition: height 100ms ease-in;
+    transition: height 300ms ease-in-out;
 }
 
 .app-framework .transition-container {
