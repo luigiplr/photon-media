@@ -3,7 +3,6 @@
     height: 100vh;
     width: 100vw;
     background-color: #17181b;
-    z-index: 1;
     overflow: hidden;
 }
 
@@ -31,20 +30,10 @@
     height: calc(100vh - 180px);
 }
 
-.movie-detail .summary-wrapper .back {
-    float: left;
-    margin-top: 60px;
-    margin-left: 40px;
-    color: #fff;
-    cursor: pointer;
-    width: 38px;
-    padding: 0;
-}
-
 .movie-detail .summary-wrapper .title {
     color: #fff;
     margin-top: 60px;
-    margin-left: 27px;
+    margin-left: 105px;
     float: left;
     font-size: 42px;
     font-weight: 500;

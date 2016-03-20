@@ -12,7 +12,7 @@ const workers = new initWorkers()
 export default class Framework extends Component {
 
     state = {
-        page: 'search',
+        page: 'detail',
         pageData: {}
     }
 
