@@ -25,17 +25,17 @@ class urlParser {
 
     initEvents() {
         this.socket.on('urlParser:get', ({ id, url }) => {
-
             this.getType(url).then(type => {
                 switch (type) {
                     case 'torrent':
                     case 'magnet':
                         readTorrent(url, (err, parsed) => {
+                            this.socket.emit('urlParser', { id, type: 'torrent', parsed })
                             this.log(parsed)
                         })
                         break
                     case 'http':
-                     
+
                         break
                 }
             })
@@ -46,7 +46,6 @@ class urlParser {
 
     getType(url) {
         return new Promise(resolve => {
-
             if (url.includes('magnet:'))
                 return resolve('magnet')
 

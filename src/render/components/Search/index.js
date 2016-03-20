@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { clipboard } from 'electron'
+import { v4 as uuid } from 'node-uuid'
 import Backdrop from './backdrop.react'
 
 export default class Search extends Component {
@@ -9,12 +10,12 @@ export default class Search extends Component {
         type: 'url'
     };
 
-    componentWillMount() {
-
+    componentWillUnmount() {
+        this.mounted = false
     }
 
     componentDidMount() {
-
+        this.mounted = true
     }
 
     _setPalette = swatches => {
@@ -39,16 +40,13 @@ export default class Search extends Component {
         if (textColor === '#000' || textColor === '#000000') {
             textColor = '#111214';
         }
-
-        this.setState({ color })
+        if (this.mounted)
+            this.setState({ color })
     };
 
     _handleKeyPress = event => {
-        if (event.key !== 'Enter') return
-        const string = this.refs.searchtext.value
-
-
-        console.log(string)
+        if (event.key !== 'Enter' || !this.refs.searchtext.value || this.refs.searchtext.value.trim().length === 0) return
+        this.props.updatePage('detail', { url: this.refs.searchtext.value })
     };
 
     render() {

@@ -17,18 +17,20 @@ export default class Backdrop extends Component {
         }
     };
 
-    componentWillMount() {
+    componentWillUnmount() {
         this.mounted = false
         clearTimeout(this.backdropTimeout)
     }
 
     componentDidMount() {
+        this.mounted = true
         localforage.getItem('last-search-backdrop')
             .then(lastItem => {
                 let delay = 0
                 if (lastItem) {
                     delay = initialDelay
                     this._loadBackdrop(lastItem).then(() => {
+                        if (!this.mounted) return
                         this.setState({ backdrop: lastItem })
                         if (lastItem.palette)
                             this.props.setPalette(lastItem.palette)
@@ -40,14 +42,15 @@ export default class Backdrop extends Component {
                     this.props.workers.once('workers:initiated', () => this._getTrending(delay))
             })
             .catch(console.error)
-        this.mounted = true
     }
 
     _getTrending = (delay = 0) => {
+        if (!this.mounted) return
         const { sockets } = this.props.workers.socket
         const requestID = uuid()
         sockets.emit('trakt:get:trending', { id: requestID, type: 'all' })
         this.props.workers.once(requestID, ({ movies, shows }) => {
+            if (!this.mounted) return
             let trending = movies.concat(shows)
 
             if (this.state.backdrop.title)

@@ -126,7 +126,7 @@
 .search-container .search-box-contain .searchtext {
     position: absolute;
     padding-right: 0px;
-    width: calc(100% - 50px);
+    width: calc(100% - 85px);
     font-weight: 400;
     height: 38px;
     font-size: 17px;
