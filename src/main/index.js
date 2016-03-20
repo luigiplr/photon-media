@@ -12,9 +12,11 @@ app.commandLine.appendSwitch('allow-file-access-from-files', true)
 app.on('window-all-closed', () => app.quit())
 
 app.on('ready', () => {
+    const { workAreaSize } = require('screen').getPrimaryDisplay()
+
     const mainWindowState = windowStateKeeper({
-        defaultWidth: 1000,
-        defaultHeight: 800
+        defaultWidth: workAreaSize.width * 0.8,
+        defaultHeight: workAreaSize.height * 0.8
     })
 
     const mainWindow = new BrowserWindow({
@@ -37,7 +39,7 @@ app.on('ready', () => {
         mainWindow.show()
         mainWindow.focus()
     })
-    
+
     if (process.env.NODE_ENV === 'development') {
         const { client } = require('electron-connect')
         client.create(mainWindow)
