@@ -7,16 +7,26 @@ export default class matchTitle extends EventEmitter {
         super()
         this.workers = workers
 
-
         this.formatTitle(name)
-            .then(extrapolated => {
-                if (extrapolated.type === 'movie')
-                    return this.searchMovie(extrapolated)
-                else
-                    return this.searchShow(extrapolated)
-            }).then(data => {
-                console.log(data)
+            .then(({ title, season, episode }) => {
+                Promise.race([this.searchEpisode(title, season, episode), this.searchMovie(title)])
+                    .then(outcome => {
+                        console.log(outcome)
+                    })
+
+                /*
+                                if (type === 'movie')
+                                    return this.searchMovie(title).then(movie => {
+                                        return {...movie, type: 'movie' }
+                                    })
+                                else
+                                    return this.searchShow(title).then(show => {
+                                        return {...show, type: 'show', season, episode }
+                                    })
+                                    */
             })
+            .then(data => this.emit('success', data))
+            .catch(error => this.emit('error', error))
     }
 
     formatTitle(title) {
@@ -73,30 +83,42 @@ export default class matchTitle extends EventEmitter {
             }
 
             // return :)
-            resolve({
-                ...formatted,
-                type: ((formatted.season && formatted.episode) ? 'episode' : 'movie')
-            })
+
+            console.log(formatted)
+            resolve(formatted)
         })
     }
 
-    searchMovie({ title }) {
+    searchMovie(title) {
         const { sockets } = this.workers.socket
         const requestID = uuid()
 
         return new Promise((resolve, reject) => {
+            console.log(title)
             sockets.emit('trakt:get:movie', { id, slug: title })
             this.workers.once(id, resolve)
         })
     }
 
-    searchShow({ title }) {
+    searchEpisode(title, season, episode) {
+        const { sockets } = this.workers.socket
+        const id = uuid()
+
+        return new Promise((resolve, reject) => {
+            sockets.emit('trakt:get:episode', { id, slug: title, season, episode })
+            this.workers.once(id, resolve)
+            this.workers.once(`${id}:error`, reject)
+        })
+    }
+
+    searchShow(title) {
         const { sockets } = this.workers.socket
         const id = uuid()
 
         return new Promise((resolve, reject) => {
             sockets.emit('trakt:get:show', { id, slug: title })
             this.workers.once(id, resolve)
+            this.workers.once(`${id}:error`, reject)
         })
     }
 
