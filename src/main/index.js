@@ -24,11 +24,12 @@ app.on('ready', () => {
         title: 'Photon Media',
         center: true,
         frame: false,
-        show: process.env.NODE_ENV === 'development',
+        show: false,
         x: mainWindowState.x,
         y: mainWindowState.y,
         width: mainWindowState.width,
-        height: mainWindowState.height
+        height: mainWindowState.height,
+        backgroundColor: '#212121'
     })
 
     mainWindowState.manage(mainWindow)
