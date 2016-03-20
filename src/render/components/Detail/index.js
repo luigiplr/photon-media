@@ -45,8 +45,10 @@ export default class Detail extends Component {
             const { name } = parsed
 
             const matcher = new titleMatcher(this.props.workers, name)
-
-            console.log(type, parsed)
+            matcher.once('success', match => {
+                console.log(match)
+            })
+            matcher.once('error', console.error)
         })
     }
 
