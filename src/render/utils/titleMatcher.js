@@ -26,12 +26,12 @@ export default class matchTitle extends EventEmitter {
             .catch(error => this.emit('error', error))
     }
 
-    searchMovie(title, year) {
+    searchMovie(title) {
         const { sockets } = this.workers.socket
         const id = uuid()
 
         return new Promise(resolve => {
-            sockets.emit('trakt:get:search', { id, slug: title, year: ((year && year.length === 4) ? parseInt(year) : null), type: 'movie' })
+            sockets.emit('trakt:get:search', { id, slug: title, type: 'movie' })
             this.workers.once(id, result => {
                 this.workers.removeAllListeners(`${id}:error`)
                 resolve((result && result.movie) ? result.movie : false)
