@@ -20,7 +20,7 @@
 
 .app-framework .cross-fade-enter.cross-fade-enter-active {
     opacity: 1;
-    transition: opacity 300ms ease-in
+    transition: opacity 300ms ease-in;
 }
 
 .app-framework .cross-fade-height {
