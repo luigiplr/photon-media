@@ -1,7 +1,6 @@
 import React, { Component } from 'React'
 import Backdrop from './backdrop.react'
 
-
 export default class Search extends Component {
 
     state = {
@@ -57,7 +56,7 @@ export default class Search extends Component {
                     <paper-material className="search-box-contain" elevation="1">
                         <paper-menu-button>
                             <paper-icon-button style={{color: this.state.color}} icon="more-vert" className="dropdown-trigger"/>
-                            <paper-menu className="dropdown-content">
+                            <paper-menu className="dropdown-content" selected="0">
                                 <paper-item onClick={() => this.setState({type: 'url'})}>URL</paper-item>
                                 <paper-item onClick={() => this.setState({type: 'file'})}>File</paper-item>
                             </paper-menu>

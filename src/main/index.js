@@ -7,13 +7,11 @@ const args = minimist(process.argv.slice(2))
 
 process.env.NODE_ENV = minimist(process.argv.slice(2)).dev ? 'development' : 'production'
 
-
 app.commandLine.appendSwitch('allow-file-access-from-files', true)
 
 app.on('window-all-closed', () => app.quit())
 
 app.on('ready', () => {
-
     const mainWindowState = windowStateKeeper({
         defaultWidth: 1000,
         defaultHeight: 800
@@ -39,6 +37,7 @@ app.on('ready', () => {
         mainWindow.show()
         mainWindow.focus()
     })
+    
     if (process.env.NODE_ENV === 'development') {
         const { client } = require('electron-connect')
         client.create(mainWindow)
