@@ -4,6 +4,7 @@ import htmlmin from 'gulp-htmlmin'
 import babel from 'gulp-babel'
 import concat from 'gulp-concat'
 import rimraf from 'gulp-rimraf'
+import jeditor from 'gulp-json-editor'
 import runSequence from 'run-sequence'
 import { server as electronConnect } from 'electron-connect'
 
@@ -39,7 +40,15 @@ gulp.task('build-styles', () => {
 })
 
 gulp.task('build-static-assets', () => {
-    gulp.src(['package.json', 'LICENSE']).pipe(gulp.dest('build'))
+    gulp.src('package.json').pipe(jeditor(json => {
+        delete json.dependencies
+        delete json.scripts
+        delete json.devDependencies
+        json.buildDate = new Date().toLocaleString()
+        return json
+    })).pipe(gulp.dest('build'))
+
+    gulp.src('LICENSE').pipe(gulp.dest('build'))
     gulp.src('src/main/app.html').pipe(htmlmin({ collapseWhitespace: true })).pipe(gulp.dest('build'))
     return gulp.src('src/images/**/*').pipe(gulp.dest('build/images'))
 })
