@@ -8,7 +8,7 @@ import MovieDetail from './components/movie.react'
 export default class Detail extends Component {
 
     state = {
-        loading: false,
+        loading: true,
         detail: {
             type: 'none'
         }
@@ -20,7 +20,7 @@ export default class Detail extends Component {
 
     componentDidMount() {
         this.mounted = true
-        _.delay(() => this.setState({ detail: { type: 'movie' } }), 3000)
+        _.delay(() => this.setState({ detail: { type: 'movie' }, loading: false }), 3000)
     }
 
     _close = () => {

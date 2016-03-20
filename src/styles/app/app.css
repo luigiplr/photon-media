@@ -30,6 +30,7 @@
 .app-framework .transition-container {
     display: inline-block;
     height: 100vh;
+    left: 0;
     top: 0;
     width: 100vw;
     position: absolute !important;
