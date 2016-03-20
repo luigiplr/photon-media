@@ -13,7 +13,7 @@ export default class matchTitle extends EventEmitter {
                 if (extrapolated.type === 'movie')
                     return this.searchMovie(extrapolated)
                 else
-                    return Promise.all([this.searchEpisode(extrapolated), this.searchShow(extrapolated)]).then(([episode, show]) => { type: 'episode', episode, show })
+                    return this.searchShow(extrapolated)
             }).then(data => {
                 console.log(data)
             })
@@ -80,32 +80,23 @@ export default class matchTitle extends EventEmitter {
         })
     }
 
-    searchMovie(title) {
+    searchMovie({ title }) {
         const { sockets } = this.workers.socket
         const requestID = uuid()
-        
+
         return new Promise((resolve, reject) => {
-            // Trakt search here
+            sockets.emit('trakt:get:movie', { id, slug: title })
+            this.workers.once(id, resolve)
         })
     }
 
     searchShow({ title }) {
         const { sockets } = this.workers.socket
-        const requestID = uuid()
+        const id = uuid()
 
         return new Promise((resolve, reject) => {
-            console.log(title)
-                //Trakt search here
-        })
-    }
-
-    searchEpisode({ title, season, episode }) {
-        const { sockets } = this.workers.socket
-        const requestID = uuid()
-
-        return new Promise((resolve, reject) => {
-            console.log(title, season, episode)
-                //Trakt search here
+            sockets.emit('trakt:get:show', { id, slug: title })
+            this.workers.once(id, resolve)
         })
     }
 

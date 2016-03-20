@@ -23,15 +23,11 @@ class trakt {
 
     initEvents() {
 
-        this.socket.on('trakt:search', ({ id, params }) => this.trakt.search(...params, results => this.socket.emit(`trakt:search:response`, { id, results })))
+        this.socket.on('trakt:search', ({ id, params }) => this.trakt.search(...params, data => this.socket.emit('trakt', { id, data })))
 
-        this.socket.on('trakt:fetch', ({ type, data }) => {
+        this.socket.on('trakt:get:movie', ({ id, imdb, tvdb, slug }) => this.trakt.movie((imdb || tvdb || slug), { extended: 'full,images' }).then(data => this.socket.emit('trakt', { id, data })))
 
-        })
-
-        this.socket.on('trakt:get:movie', ({ id, imdb, tvdb, slug }) => this.trakt.movie((imdb || tvdb || slug), { extended: 'full,images' }).then(data => this.socket.emit(`trakt`, { id, data })))
-
-        this.socket.on('trakt:get:show', ({ id, imdb, tvdb, slug }) => this.trakt.show((imdb || tvdb || slug), { extended: 'full,images' }).then(data => this.socket.emit(`trakt`, { id, data })))
+        this.socket.on('trakt:get:show', ({ id, imdb, tvdb, slug }) => Promise.all([this.trakt.show((imdb || tvdb || slug), { extended: 'full,images' }), this.trakt.showSeasons((imdb || tvdb || slug), { extended: 'full,images,episodes' })]).then(([show, seasons]) => this.socket.emit('trakt', { id, data: {...show, seasons } })))
 
         this.socket.on('trakt:get:trending', ({ id, type = 'all' }) => {
             switch (type) {
