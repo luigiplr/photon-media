@@ -19,7 +19,10 @@ export default class matchTitle extends EventEmitter {
                     })
                 }
             }))
-            .then(data => this.emit('success', data))
+            .then(data => this.emit('success', {
+                ...data,
+                quality: this.searchQuality(name)
+            }))
             .catch(error => this.emit('error', error))
     }
 
@@ -172,7 +175,7 @@ export default class matchTitle extends EventEmitter {
         if (title.match(/hdtv/i) && !title.match(/720[pix]/i)) {
             return '480p'
         }
-        return false
+        return undefined
     }
 
     checkTraktSearch(traktRes, filename) {
