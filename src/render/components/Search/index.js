@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { clipboard } from 'electron'
 import Backdrop from './backdrop.react'
 
 export default class Search extends Component {
@@ -42,6 +43,14 @@ export default class Search extends Component {
         this.setState({ color })
     };
 
+    _handleKeyPress = event => {
+        if (event.key !== 'Enter') return
+        const string = this.refs.searchtext.value
+
+
+        console.log(string)
+    };
+
     render() {
         return (
             <div className="search-container">
@@ -61,7 +70,7 @@ export default class Search extends Component {
                                 <paper-item onClick={() => this.setState({type: 'file'})}>File</paper-item>
                             </paper-menu>
                         </paper-menu-button>
-                        <input className="searchtext" />
+                        <input ref="searchtext" onContextMenu={() => this.refs.searchtext.value = clipboard.readText()} onKeyPress={this._handleKeyPress} className="searchtext" />
                         <paper-icon-button style={{color: this.state.color}} className="search-btn" icon={(this.state.type === 'url' ? 'link' : 'folder')}/>
                     </paper-material>
                 </div>
