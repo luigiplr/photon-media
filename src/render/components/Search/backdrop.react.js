@@ -17,6 +17,10 @@ export default class Backdrop extends Component {
         }
     };
 
+    static propTypes = {
+        workers: React.PropTypes.object.isRequired
+    };
+
     componentWillUnmount() {
         this.mounted = false
         clearTimeout(this.backdropTimeout)

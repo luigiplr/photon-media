@@ -10,6 +10,10 @@ export default class Search extends Component {
         type: 'url'
     };
 
+    static propTypes = {
+        workers: React.PropTypes.object.isRequired
+    };
+
     componentWillUnmount() {
         this.mounted = false
     }

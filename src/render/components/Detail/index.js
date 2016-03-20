@@ -14,6 +14,11 @@ export default class Detail extends Component {
         }
     };
 
+    static propTypes = {
+        url: React.PropTypes.string.isRequired,
+        workers: React.PropTypes.object.isRequired
+    };
+
     componentWillUnmount() {
         this.mounted = false
     }

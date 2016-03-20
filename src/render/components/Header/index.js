@@ -3,6 +3,11 @@ import { remote } from 'electron'
 
 
 export default class Header extends Component {
+
+    static propTypes = {
+        workers: React.PropTypes.object.isRequired
+    };
+
     render() {
         return (
             <header>
