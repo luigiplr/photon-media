@@ -8,25 +8,87 @@ export default class matchTitle extends EventEmitter {
         this.workers = workers
 
         this.formatTitle(name)
-            .then(({ title, season, episode }) => {
-                Promise.race([this.searchEpisode(title, season, episode), this.searchMovie(title)])
-                    .then(outcome => {
-                        console.log(outcome)
+            .then(({ title, season, episode }) => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([episode, movie]) => {
+                if (movie) {
+                    return this.getMovie(movie).then(movie => {
+                        return {...movie, type: 'movie' }
                     })
-
-                /*
-                                if (type === 'movie')
-                                    return this.searchMovie(title).then(movie => {
-                                        return {...movie, type: 'movie' }
-                                    })
-                                else
-                                    return this.searchShow(title).then(show => {
-                                        return {...show, type: 'show', season, episode }
-                                    })
-                                    */
-            })
+                } else {
+                    return this.getShow(title).then(show => {
+                        return {...show, type: 'show', season, episode }
+                    })
+                }
+            }))
             .then(data => this.emit('success', data))
             .catch(error => this.emit('error', error))
+    }
+
+    searchMovie(title, year) {
+        const { sockets } = this.workers.socket
+        const id = uuid()
+
+        return new Promise(resolve => {
+            sockets.emit('trakt:get:search', { id, slug: title, year: ((year && year.length === 4) ? parseInt(year) : null), type: 'movie' })
+            this.workers.once(id, result => {
+                this.workers.removeAllListeners(`${id}:error`)
+                resolve((result && result.movie) ? result.movie : false)
+            })
+            this.workers.once(`${id}:error`, error => {
+                this.workers.removeAllListeners(id)
+                resolve(false)
+            })
+        })
+    }
+
+    searchEpisode(title, season, episode) {
+        const { sockets } = this.workers.socket
+        const id = uuid()
+
+        return new Promise(resolve => {
+            sockets.emit('trakt:get:episode', { id, slug: title, season, episode })
+            this.workers.once(id, episodeData => {
+                this.workers.removeAllListeners(`${id}:error`)
+                resolve(episodeData)
+            })
+            this.workers.once(`${id}:error`, error => {
+                this.workers.removeAllListeners(id)
+                resolve(false)
+            })
+        })
+    }
+
+    getMovie({ ids }) {
+        const { sockets } = this.workers.socket
+        const id = uuid()
+
+        return new Promise((resolve, reject) => {
+            sockets.emit('trakt:get:movie', { id, ...ids })
+            this.workers.once(id, movie => {
+                this.workers.removeAllListeners(`${id}:error`)
+                resolve(movie)
+            })
+            this.workers.once(`${id}:error`, error => {
+                this.workers.removeAllListeners(id)
+                reject(error)
+            })
+        })
+    }
+
+    getShow(slug) {
+        const { sockets } = this.workers.socket
+        const id = uuid()
+
+        return new Promise((resolve, reject) => {
+            sockets.emit('trakt:get:show', { id, slug })
+            this.workers.once(id, show => {
+                this.workers.removeAllListeners(`${id}:error`)
+                resolve(show)
+            })
+            this.workers.once(`${id}:error`, error => {
+                this.workers.removeAllListeners(id)
+                reject(error)
+            })
+        })
     }
 
     formatTitle(title) {
@@ -86,39 +148,6 @@ export default class matchTitle extends EventEmitter {
 
             console.log(formatted)
             resolve(formatted)
-        })
-    }
-
-    searchMovie(title) {
-        const { sockets } = this.workers.socket
-        const requestID = uuid()
-
-        return new Promise((resolve, reject) => {
-            console.log(title)
-            sockets.emit('trakt:get:movie', { id, slug: title })
-            this.workers.once(id, resolve)
-        })
-    }
-
-    searchEpisode(title, season, episode) {
-        const { sockets } = this.workers.socket
-        const id = uuid()
-
-        return new Promise((resolve, reject) => {
-            sockets.emit('trakt:get:episode', { id, slug: title, season, episode })
-            this.workers.once(id, resolve)
-            this.workers.once(`${id}:error`, reject)
-        })
-    }
-
-    searchShow(title) {
-        const { sockets } = this.workers.socket
-        const id = uuid()
-
-        return new Promise((resolve, reject) => {
-            sockets.emit('trakt:get:show', { id, slug: title })
-            this.workers.once(id, resolve)
-            this.workers.once(`${id}:error`, reject)
         })
     }
 

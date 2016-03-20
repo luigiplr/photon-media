@@ -1,11 +1,14 @@
 import socketClient from 'socket.io-client'
 import traktAPI from 'trakt-api'
+import _ from 'lodash'
 
 self.onmessage = ({ data }) => new trakt(data) // init socket connection when we get the message (port)
 
 class trakt {
     constructor(port) {
-        this.trakt = traktAPI('021d98ace731891d1d77ae3ae380c84f8cfe17b0f1960de5148535ab049d20a7')
+        this.trakt = traktAPI('021d98ace731891d1d77ae3ae380c84f8cfe17b0f1960de5148535ab049d20a7', {
+            extended: 'full',
+        })
         this.socket = socketClient(`http://localhost:${port}`)
 
         this.socket.on('connect', () => this.log('Socket Connected!', 'info'))
@@ -22,6 +25,10 @@ class trakt {
     });
 
     initEvents() {
+
+        this.socket.on('trakt:get:search', ({ id, imdb, tvdb, slug, type, year }) => this.trakt.search((imdb || tvdb || slug), type, year)
+            .then(results => this.socket.emit('trakt', { id, data: _.remove(results, data => (data.type === type))[0] }))
+            .catch(error => this.socket.emit('trakt:error', { id, error })))
 
         this.socket.on('trakt:get:movie', ({ id, imdb, tvdb, slug }) => this.trakt.movie((imdb || tvdb || slug), { extended: 'full,images' })
             .then(data => this.socket.emit('trakt', { id, data }))
@@ -57,12 +64,4 @@ class trakt {
             }
         })
     }
-
-
-    _getMovie(id) {
-
-
-
-    }
-
 }
