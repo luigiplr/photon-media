@@ -47,8 +47,14 @@ export default class initWorkers extends EventEmitter {
             }
 
             socket.on('urlParser', ({ id, data }) => this.emit(id, data))
+            socket.on('urlParser:error', ({ id, error }) => this.emit(`${id}:error`, error))
+
             socket.on('trakt', ({ id, data }) => this.emit(id, data))
+            socket.on('trakt:error', ({ id, error }) => this.emit(`${id}:error`, error))
+
             socket.on('color', ({ id, palette }) => this.emit(id, palette))
+            socket.on('color:error', ({ id, error }) => this.emit(`${id}:error`, error))
+            
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
         })
     }

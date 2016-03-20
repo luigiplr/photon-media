@@ -23,22 +23,36 @@ class trakt {
 
     initEvents() {
 
-        this.socket.on('trakt:search', ({ id, params }) => this.trakt.search(...params, data => this.socket.emit('trakt', { id, data })))
+        this.socket.on('trakt:get:movie', ({ id, imdb, tvdb, slug }) => this.trakt.movie((imdb || tvdb || slug), { extended: 'full,images' })
+            .then(data => this.socket.emit('trakt', { id, data }))
+            .catch(error => this.socket.emit('trakt:error', { id, error })))
 
-        this.socket.on('trakt:get:movie', ({ id, imdb, tvdb, slug }) => this.trakt.movie((imdb || tvdb || slug), { extended: 'full,images' }).then(data => this.socket.emit('trakt', { id, data })))
+        this.socket.on('trakt:get:episode', ({ id, imdb, tvdb, slug, season, episode }) => this.trakt.episode((imdb || tvdb || slug), season, episode, { extended: 'full,images' })
+            .then(data => this.socket.emit('trakt', { id, data }))
+            .catch(error => this.socket.emit('trakt:error', { id, error })))
 
-        this.socket.on('trakt:get:show', ({ id, imdb, tvdb, slug }) => Promise.all([this.trakt.show((imdb || tvdb || slug), { extended: 'full,images' }), this.trakt.showSeasons((imdb || tvdb || slug), { extended: 'full,images,episodes' })]).then(([show, seasons]) => this.socket.emit('trakt', { id, data: {...show, seasons } })))
+        this.socket.on('trakt:get:show', ({ id, imdb, tvdb, slug }) => {
+            Promise.all([this.trakt.show((imdb || tvdb || slug), { extended: 'full,images' }), this.trakt.showSeasons((imdb || tvdb || slug), { extended: 'full,images,episodes' })])
+                .then(([show, seasons]) => this.socket.emit('trakt', { id, data: {...show, seasons } }))
+                .catch(error => this.socket.emit('trakt:error', { id, error }))
+        })
 
         this.socket.on('trakt:get:trending', ({ id, type = 'all' }) => {
             switch (type) {
                 case 'movies':
-                    this.trakt.movieTrending().then(data => this.socket.emit(`trakt`, { id, data }))
+                    this.trakt.movieTrending()
+                        .then(data => this.socket.emit('trakt', { id, data }))
+                        .catch(error => this.socket.emit('trakt:error', { id, error }))
                     break
                 case 'shows':
-                    this.trakt.showTrending().then(data => this.socket.emit(`trakt`, { id, data }))
+                    this.trakt.showTrending()
+                        .then(data => this.socket.emit('trakt', { id, data }))
+                        .catch(error => this.socket.emit('trakt:error', { id, error }))
                     break
                 case 'all':
-                    Promise.all([this.trakt.movieTrending(), this.trakt.showTrending()]).then(([movies, shows]) => this.socket.emit(`trakt`, { id, data: { movies, shows } }))
+                    Promise.all([this.trakt.movieTrending(), this.trakt.showTrending()])
+                        .then(([movies, shows]) => this.socket.emit('trakt', { id, data: { movies, shows } }))
+                        .catch(error => this.socket.emit('trakt:error', { id, error }))
                     break
             }
         })
