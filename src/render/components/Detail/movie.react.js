@@ -127,7 +127,7 @@ export default class MovieDetail extends Component {
                         <style is="custom-style" dangerouslySetInnerHTML={{ __html: this._getDropUpStyle()}}/>
                         <li className="subtitles-dropdown">
                             <paper-icon-button noink className="play-icon" icon="av:subtitles"/>
-                            <paper-dropdown-menu className="meta-dropdown" vertical-align="bottom" horizontal-align="right" label="None">
+                            <paper-dropdown-menu className="meta-dropdown" vertical-align="bottom" horizontal-align="right">
                                 <paper-listbox className="dropdown-content">
                                     <paper-item>allosaurus</paper-item>
                                     <paper-item>brontosaurus</paper-item>
@@ -138,7 +138,7 @@ export default class MovieDetail extends Component {
                         </li>
                         <li className="device-dropdown">
                             <paper-icon-button noink className="play-icon" icon="hardware:cast-connected"/>
-                            <paper-dropdown-menu className="meta-dropdown" vertical-align="bottom" horizontal-align="right" label="Pizza Cast">
+                            <paper-dropdown-menu className="meta-dropdown" vertical-align="bottom" horizontal-align="right">
                                 <paper-listbox className="dropdown-content">
                                     <paper-item>allosaurus</paper-item>
                                     <paper-item>brontosaurus</paper-item>
