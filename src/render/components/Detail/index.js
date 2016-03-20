@@ -11,7 +11,7 @@ export default class Detail extends Component {
     };
 
     _close = () => {
-        this.props.updatePage('search')
+        _.defer(() => this.props.updatePage('search'))
     };
 
     render() {
