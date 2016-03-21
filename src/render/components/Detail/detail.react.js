@@ -10,9 +10,14 @@ export default class DetailLoaded extends Component {
         backgroundImage: '',
         posterImage: ''
     };
-
+    
     static propTypes = {
-        title: React.PropTypes.string.isRequired
+        title: React.PropTypes.string.isRequired,
+        runtime: React.PropTypes.number.isRequired,
+        people: React.PropTypes.object.isRequired,
+        genres: React.PropTypes.array.isRequired,
+        overview: React.PropTypes.string.isRequired,
+        homepage: React.PropTypes.string,
     };
 
     componentWillUnmount() {
