@@ -119,6 +119,23 @@ export default class DetailLoaded extends Component {
         return starsArray
     }
 
+    getPeople() {
+        let { cast, crew } = this.props.people
+
+        let people = []
+
+        cast.map(({ person, character }) => (
+            <div className="people">
+                <div className="person-avatar"/>
+                <p className="person">{person.name}</p>
+                <p className="status">as {character}</p>
+            </div>
+        ))
+        console.log(cast)
+
+        return cast
+    }
+
     render() {
         const { runtime, genres, overview, trailer, homepage } = this.props
 
@@ -148,6 +165,7 @@ export default class DetailLoaded extends Component {
                         <paper-button className="meta-btn right first">
                         </paper-button>
                         <div className="meta-divider"/>
+                        {::this.getPeople()}
                         <div className="people">
                             <div className="person-avatar">
                                 <div />
