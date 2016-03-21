@@ -16,15 +16,6 @@ export default class Framework extends Component {
         pageData: {}
     }
 
-    componentWillMount() {
-
-
-    }
-
-    componentDidMount() {
-
-    }
-
     _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
 
     getContents = () => {

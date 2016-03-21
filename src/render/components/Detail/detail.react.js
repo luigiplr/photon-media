@@ -119,25 +119,8 @@ export default class DetailLoaded extends Component {
         return starsArray
     }
 
-    getPeople() {
-        let { cast, crew } = this.props.people
-
-        let people = []
-
-        cast.map(({ person, character }) => (
-            <div className="people">
-                <div className="person-avatar"/>
-                <p className="person">{person.name}</p>
-                <p className="status">as {character}</p>
-            </div>
-        ))
-        console.log(cast)
-
-        return cast
-    }
-
     render() {
-        const { runtime, genres, overview, trailer, homepage } = this.props
+        const { runtime, genres, overview, trailer, homepage, people } = this.props
 
         return (
             <div className="movie-detail">
@@ -165,29 +148,17 @@ export default class DetailLoaded extends Component {
                         <paper-button className="meta-btn right first">
                         </paper-button>
                         <div className="meta-divider"/>
-                        {::this.getPeople()}
-                        <div className="people">
-                            <div className="person-avatar">
-                                <div />
-                            </div>
-                            <p className="person">
-                                Ridley Scott
-                            </p>
-                            <p className="status">
-                                Director
-                            </p>
-                        </div>
-                        <div className="people">
-                            <div className="person-avatar">
-                                <div />
-                            </div>
-                            <p className="person">
-                                Matt Damon
-                            </p>
-                            <p className="status">
-                                Actor
-                            </p>
-                        </div>
+                        {
+                            people.cast.slice(0,7).map(({person, character}, idx) => {
+                                return (
+                                    <div key={idx} className="people">
+                                        <div style={{backgroundImage: `url(${person.images.headshot.medium})`}} className="person-avatar"/>
+                                        <p className="person">{person.name}</p>
+                                        <p className="status">as {character}</p>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
                 <div className="controls-container">

@@ -216,6 +216,9 @@
     display: inline-block;
     margin-right: 10px;
     float: left;
+    background-size: 105% auto;
+    border-radius: 50%;
+    background-repeat: no-repeat;
 }
 
 .movie-detail .summary-wrapper .meta .people .person-avatar div {
