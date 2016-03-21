@@ -46,6 +46,9 @@ class urlParser {
             if (url.includes('magnet:'))
                 return resolve('magnet')
 
+            if (url.includes('youtube.com') || url.includes('youtu.be'))
+                return resolve('youtube')
+
             return getRemoteType(url)
         })
     }
