@@ -25,7 +25,7 @@ I enjoy pretty things.
 
 <img src="preview/home1.jpg" alt="Home 1" width="34%"/>
 <img src="preview/home2.jpg" alt="Home 2" width="34%"/>
-<img src="preview/movie1.jpg" alt="Movie 1" width="30%" height="30%"/>
+<img src="preview/movie1.jpg" alt="Movie 1" width="30%"/>
 
 ### Where's the beef!
 
