@@ -5,6 +5,8 @@ import { v4 as uuid } from 'node-uuid'
 
 import titleMatcher from '../../utils/titleMatcher'
 import MovieDetail from './movie.react'
+import ShowDetail from './show.react'
+
 
 export default class Detail extends Component {
 
@@ -63,6 +65,7 @@ export default class Detail extends Component {
                 return <MovieDetail detail={this.state.detail} />
                 break
             case 'show':
+                return <ShowDetail detail={this.state.detail} />
                 break
             default:
                 return null
