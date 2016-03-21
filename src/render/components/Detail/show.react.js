@@ -37,13 +37,23 @@ export default class ShowDetail extends Component {
         }
         backgroundImage.src = fanart.full
 
-        let posterImage = new Image()
-        posterImage.onload = () => {
+        const season = _.find(this.props.detail.seasons, ({ number }) => number === this.state.season)
+        let posterImage = poster.full
+        if (season.image && season.images.poster) posterImage = season.images.poster.full
+        this._loadPoster(posterImage)
+    };
+
+    _loadPoster = poster => {
+        if (this.posterLoader)
+            this.posterLoader = null
+
+        this.posterLoader = new Image()
+        this.posterLoader.onload = () => {
             if (!this.mounted) return
-            this.setState({ posterImage: poster.full })
-            _.defer(() => posterImage = null)
+            this.setState({ posterImage: poster })
+            _.defer(() => this.posterLoader = null)
         }
-        posterImage.src = poster.full
+        this.posterLoader.src = poster
     };
 
     _getTabsStyle() {
@@ -80,8 +90,16 @@ export default class ShowDetail extends Component {
         )
     };
 
+    _selectSeason = (season, episodes, images) => {
+        let poster = (images && images.poster) ? images.poster.full : this.props.detail.images.poster.full
+        this._loadPoster(poster)
+
+        if (season === -1) return this.setState({ season: -1 })
+        this.setState({ season, episode: episodes[0].number })
+    };
+
     render() {
-        const { title, year, status, runtime, genres, overview, trailer, seasons } = this.props.detail
+        const { title, year, status, runtime, genres, overview, trailer, seasons, images } = this.props.detail
         return (
             <div className="show-detail">
                 <div className="bg-backdrop" style={{backgroundImage: `url(${this.state.backgroundImage})`}}/>
@@ -91,13 +109,13 @@ export default class ShowDetail extends Component {
                     </paper-icon-button>
                     <style is="custom-style" dangerouslySetInnerHTML={{ __html: this._getTabsStyle()}}/>
                     <paper-toolbar className="seasons-wrapper">
-                        <paper-tabs selected="0" className="season-tabs bottom" noink scrollable>
-                            <paper-tab onClick={() => this.setState({season: -1})} className="season">Show Info</paper-tab>
+                        <paper-tabs selected={this.state.season + 1} className="season-tabs bottom" noink scrollable>
+                            <paper-tab onClick={() => this._selectSeason(-1)} className="season">Show Info</paper-tab>
                             {
                                 seasons.map(({number, images, episodes}, idx) => {
                                     let titletext = number === 0 ? 'special features' : 'season'
                                     if(number !== 0) titletext = titletext + ` ${number}`
-                                    return <paper-tab key={idx+1} onClick={() => this.setState({season: number, episode: episodes[0].number})} className="season">{titletext}</paper-tab>
+                                    return <paper-tab key={idx+1} onClick={() => this._selectSeason(number, episodes, images)} className="season">{titletext}</paper-tab>
                                 })
                             }
                         </paper-tabs>
