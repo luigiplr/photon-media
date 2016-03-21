@@ -153,7 +153,7 @@ export default class DetailLoaded extends Component {
                                 return (
                                     <div key={idx} className="people">
                                         <div style={{backgroundImage: `url(${person.images.headshot.medium})`}} className="person-avatar"/>
-                                        <p className="person">{person.name}</p>
+                                        <p onClick={() => shell.openExternal(`https://trakt.tv/people/${person.ids.slug}`)} className="person">{person.name}</p>
                                         <p className="status">as {character}</p>
                                     </div>
                                 )
