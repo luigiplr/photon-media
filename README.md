@@ -18,7 +18,7 @@ I enjoy pretty things.
 
 ### Requirements
 
- - PC running Windows 7 or above.
+ - PC running Windows 7, OS X 10.9, Ubuntu 14.x or above.
  - An internet connection
 
 ### [WIP] App Screenshots
