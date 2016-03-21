@@ -12,7 +12,7 @@ export default class matchTitle extends EventEmitter {
             .then(({ title, season, episode }) => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([episode, movie]) => {
                 if (episode) {
                     return this.getShow(title).then(show => {
-                        return {...show, type: 'show', season, episode }
+                        return {...show, type: 'show', episode }
                     })
                 } else if (movie) {
                     return this.getMovie(movie).then(movie => {
@@ -29,20 +29,10 @@ export default class matchTitle extends EventEmitter {
     }
 
     getColors(data) {
-        const { type, images, seasons, season } = data
-        let image
-        if (type === 'movie')
-            image = data.images.poster.full
-        else
-            image = _.find(seasons, ({ number }) => number === parseInt(season)).images.poster.full
-
-        if (!image)
-            return {...data, palette: undefined } // something has gone very wrong as we do not have a image
-
         const { sockets } = this.workers.socket
         const id = uuid()
         return new Promise(resolve => {
-            sockets.emit('color:get', { id, image })
+            sockets.emit('color:get', { id, image: data.images.poster.full })
             this.workers.once(id, palette => {
                 this.workers.removeAllListeners(`${id}:error`)
                 resolve({
@@ -187,6 +177,7 @@ export default class matchTitle extends EventEmitter {
     }
 
     searchQuality(title) {
+        console.log(title)
         // 480p
         if (title.match(/480[pix]/i)) {
             return '480p'

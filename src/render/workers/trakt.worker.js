@@ -38,11 +38,8 @@ class trakt {
             .then(data => this.socket.emit('trakt', { id, data }))
             .catch(error => this.socket.emit('trakt:error', { id, error })))
 
-        this.socket.on('trakt:get:show', ({ id, imdb, tvdb, slug }) => {
-            Promise.all([this.trakt.show((imdb || tvdb || slug), { extended: 'full,images' }), this.trakt.showSeasons((imdb || tvdb || slug), { extended: 'full,images,episodes' })])
-                .then(([show, seasons]) => this.socket.emit('trakt', { id, data: {...show, seasons } }))
-                .catch(error => this.socket.emit('trakt:error', { id, error }))
-        })
+        this.socket.on('trakt:get:show', ({ id, imdb, tvdb, slug }) => this.trakt.show((imdb || tvdb || slug), { extended: 'full,images' }).then(data => this.socket.emit('trakt', { id, data }))
+            .catch(error => this.socket.emit('trakt:error', { id, error })))
 
         this.socket.on('trakt:get:trending', ({ id, type = 'all' }) => {
             switch (type) {

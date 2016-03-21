@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { shell } from 'electron'
 import _ from 'lodash'
+import moment from 'moment'
 
 
 export default class DetailLoaded extends Component {
@@ -29,11 +30,14 @@ export default class DetailLoaded extends Component {
 
     _loadImages = () => {
         const { fanart, poster } = this.props.images
+        const { episode } = this.props
+
+        let backgroundImageURL = (episode && episode.images && episode.images.screenshot && episode.images.screenshot.full) ? episode.images.screenshot.full : fanart.full
 
         let backgroundImage = new Image()
         backgroundImage.onload = () => {
             if (!this.mounted) return
-            this.setState({ backgroundImage: fanart.full })
+            this.setState({ backgroundImage: backgroundImageURL })
             _.defer(() => backgroundImage = null)
         }
         backgroundImage.src = fanart.full
@@ -67,8 +71,13 @@ export default class DetailLoaded extends Component {
             `
     }
 
+    _getHumanTime(minutes) {
+        let time = moment.duration(minutes, 'minutes')
+        return (time.hours() !== 0) ? `${time.hours()} hour${(time.hours() > 1 ? 's' : '')} ${time.minutes()} minutes` : `${time.minutes()} min`
+    }
+
     _getOverview = () => {
-        if (type === 'movie')
+        if (this.props.type === 'movie')
             return this.props.overview
 
         const { overview } = this.props.episode
@@ -83,7 +92,7 @@ export default class DetailLoaded extends Component {
     };
 
     render() {
-        const { year, runtime, genres, overview, trailer } = this.props
+        const { year, runtime, genres, overview, trailer, homepage } = this.props
 
         return (
             <div className="movie-detail">
@@ -103,11 +112,11 @@ export default class DetailLoaded extends Component {
                             <span className="meta-dot"/>
                             <p>{year}</p>
                             <span className="meta-dot"/>
-                            <p>{runtime} mins</p>
+                            <p>{this._getHumanTime(runtime)}</p>
                         </div>
                         <div className="meta-synop">{this._getOverview()}</div>
-                        <paper-button className="meta-btn first">
-                            theatre showtimes
+                        <paper-button onClick={() => shell.openExternal(homepage)} className="meta-btn first">
+                            homepage
                         </paper-button>
                         <paper-button onClick={() => shell.openExternal(trailer)} className="meta-btn">
                             Watch Trailer
