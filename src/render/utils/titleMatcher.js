@@ -9,13 +9,13 @@ export default class matchTitle extends EventEmitter {
 
         this.formatTitle(name)
             .then(({ title, season, episode }) => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([episode, movie]) => {
-                if (movie) {
-                    return this.getMovie(movie).then(movie => {
-                        return {...movie, type: 'movie' }
-                    })
-                } else {
+                if (episode) {
                     return this.getShow(title).then(show => {
                         return {...show, type: 'show', season, episode }
+                    })
+                } else if (movie) {
+                    return this.getMovie(movie).then(movie => {
+                        return {...movie, type: 'movie' }
                     })
                 }
             }))
@@ -148,8 +148,6 @@ export default class matchTitle extends EventEmitter {
             }
 
             // return :)
-
-            console.log(formatted)
             resolve(formatted)
         })
     }

@@ -7,7 +7,10 @@ export default class ShowDetail extends Component {
 
     state = {
         backgroundImage: '',
-        posterImage: ''
+        posterImage: '',
+        info: true,
+        season: parseInt(this.props.detail.season),
+        episode: this.props.detail.episode.number
     };
 
     static propTypes = {
@@ -54,34 +57,55 @@ export default class ShowDetail extends Component {
             `
     }
 
+    _getEpisodes = () => {
+        const season = _.find(this.props.detail.seasons, ({ number }) => number === this.state.season)
+        if (!season) return null
+        const { episodes } = season
+        return (
+            <ul className={this.state.season !== -1 ? 'episode-list-show' : ''}>
+                {
+                    episodes.map(({first_aired, number, title}, idx) => {
+                        if(!title || title.trim().length === 0 || title === 'TBA') return null
+                        return (
+                            <li key={idx} onClick={() => this.setState({episode: number})} className={`epsiode-tab ${((this.state.episode && this.state.episode === number) ? 'active': '')}`}>
+                                <p className="episode-id">{`S${('0' + season.number).slice(-2)}E${('0' + number).slice(-2)}`}</p>
+                                <p className="episode-name">{title}</p>
+                                <paper-icon-button className="info-icon" icon="info"/>
+                                <p className="episode-airdate">{first_aired}</p>
+                            </li>
+                        )
+                    })
+                }
+            </ul>
+        )
+    };
+
     render() {
-        console.log(this.props.detail)
-        const { title, year, runtime, genres, overview, trailer } = this.props.detail
+        const { title, year, status, runtime, genres, overview, trailer, seasons } = this.props.detail
         return (
             <div className="show-detail">
                 <div className="bg-backdrop" style={{backgroundImage: `url(${this.state.backgroundImage})`}}/>
                 <div className="summary-wrapper">
-                    <paper-icon-button className="back" icon="arrow-back"/>
-                    <div className="title">
-                        The Walking Dead
-                    </div>
+                    <div className="title">{title}</div>
                     <paper-icon-button icon="bookmark" className="bookmark-toggle">
                     </paper-icon-button>
                     <style is="custom-style" dangerouslySetInnerHTML={{ __html: this._getTabsStyle()}}/>
                     <paper-toolbar className="seasons-wrapper">
                         <paper-tabs selected="0" className="season-tabs bottom" noink scrollable>
-                            <paper-tab className="season">Show Info</paper-tab>
-                            <paper-tab className="season">season 1</paper-tab>
-                            <paper-tab className="season">season 2</paper-tab>
-                            <paper-tab className="season">season 3</paper-tab>
-                            <paper-tab className="season">season 4</paper-tab>
-                            <paper-tab className="season">season 5</paper-tab>
+                            <paper-tab onClick={() => this.setState({season: -1})} className="season">Show Info</paper-tab>
+                            {
+                                seasons.map(({number, images, episodes}, idx) => {
+                                    let titletext = number === 0 ? 'special features' : 'season'
+                                    if(number !== 0) titletext = titletext + ` ${number}`
+                                    return <paper-tab key={idx+1} onClick={() => this.setState({season: number, episode: episodes[0].number})} className="season">{titletext}</paper-tab>
+                                })
+                            }
                         </paper-tabs>
                     </paper-toolbar>
                 </div>
                 <div className="info-wrapper">
-                    <img src="https://walter.trakt.us/images/shows/000/001/393/posters/thumb/dec5cd226c.jpg" className="poster" />
-                    <div className="meta-container show-info episode-list-show">
+                    <img src={this.state.posterImage} className="poster" />
+                    <div className={`meta-container show-info ${(this.state.season === -1 ? 'episode-list-show' : '')}`}>
                         <div className="meta-item">
                             <paper-icon-button noink icon="star" className="star"/>
                             <paper-icon-button noink icon="star" className="star"/>
@@ -89,21 +113,15 @@ export default class ShowDetail extends Component {
                             <paper-icon-button noink icon="star-border" className="star"/>
                             <paper-icon-button noink icon="star-border" className="star"/>
                             <span className="meta-dot first"/>
-                            <p>
-                                geners
-                            </p>
+                            <p>{genres.slice(0,3).join(', ')}</p>
                             <span className="meta-dot"/>
-                            <p>
-                                2015 - 2016
-                            </p>
+                            <p>{year} - {(status === 'returning series') ? 'ongoing' : 'ended'}</p>
                             <span className="meta-dot"/>
-                            <p>45 min</p>
+                            <p>{runtime} min</p>
                         </div>
-                        <div className="meta-synop">
-                            synopsis
-                        </div>
+                        <div className="meta-synop">{overview}</div>
                         <paper-button id="trakt-link" className="meta-btn">
-                            <i className="zmdi zmdi-open-in-new"></i> More Info
+                             More Info
                         </paper-button>
                         <div className="meta-divider"></div>
                         <div className="people">
@@ -118,18 +136,11 @@ export default class ShowDetail extends Component {
                             </p>
                         </div>
                     </div>
-                    <div className="episode-container ">
-                        <ul className="visible">
-                            <li className="epsiode-tab active">
-                                <p className="episode-id">S06E13</p>
-                                <p className="episode-name">The same boat</p>
-                                <paper-icon-button className="info-icon" icon="info"/>
-                                <p className="episode-airdate">March 13, 2016 9:00 PM</p>
-                            </li>
-                        </ul>
+                    <div className="episode-container">
+                        {this._getEpisodes()}
                     </div>
                     <div className="controls-container">
-                        <paper-button raised className="watchnow-btn">Play <span>S01E01</span></paper-button>
+                        <paper-button raised className="watchnow-btn">Play <span>{`S${('0' + this.state.season).slice(-2)}E${('0' + this.state.episode).slice(-2)}`}</span></paper-button>
                     </div>
                 </div>
             </div>
