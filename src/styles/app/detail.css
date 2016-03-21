@@ -113,6 +113,7 @@
     top: -1px;
     margin-right: 5px;
     padding: 0;
+    cursor: default;
 }
 
 .movie-detail .summary-wrapper .meta .meta-item {
