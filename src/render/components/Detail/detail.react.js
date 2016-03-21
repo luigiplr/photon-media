@@ -3,7 +3,7 @@ import { shell } from 'electron'
 import _ from 'lodash'
 
 
-export default class MovieDetail extends Component {
+export default class DetailLoaded extends Component {
 
     state = {
         backgroundImage: '',
@@ -11,7 +11,7 @@ export default class MovieDetail extends Component {
     };
 
     static propTypes = {
-        detail: React.PropTypes.object.isRequired
+        title: React.PropTypes.string.isRequired
     };
 
     componentWillUnmount() {
@@ -19,7 +19,7 @@ export default class MovieDetail extends Component {
     }
 
     componentWillMount() {
-        console.log('Movie Detail Mounting!', this.props.detail)
+        console.log('Movie Detail Mounting!', this.props)
     }
 
     componentDidMount() {
@@ -28,7 +28,7 @@ export default class MovieDetail extends Component {
     }
 
     _loadImages = () => {
-        const { fanart, poster } = this.props.detail.images
+        const { fanart, poster } = this.props.images
 
         let backgroundImage = new Image()
         backgroundImage.onload = () => {
@@ -67,15 +67,29 @@ export default class MovieDetail extends Component {
             `
     }
 
+    _getOverview = () => {
+        if (type === 'movie')
+            return this.props.overview
+
+        const { overview } = this.props.episode
+        return overview ? overview : 'No synopsis available'
+    };
+
+    _getTitle = () => {
+        let { title, type, episode } = this.props
+        if (type === 'show')
+            title = `${title} S${('0' + episode.season).slice(-2)}E${('0' + episode.number).slice(-2)} - ${episode.title}`
+        return title
+    };
+
     render() {
-        const { title, year, runtime, genres, overview, trailer } = this.props.detail
+        const { year, runtime, genres, overview, trailer } = this.props
+
         return (
             <div className="movie-detail">
                 <div className="bg-backdrop" style={{backgroundImage: `url(${this.state.backgroundImage})`}}/>
                 <div className="summary-wrapper movie">
-                    <div className="title">{title}</div>
-                    <paper-icon-button id="bookmark_button" icon="bookmark-border" className="bookmark-toggle"/> 
-                    <paper-tooltip for="bookmark_button" offset="0">Bookmark movie</paper-tooltip>
+                    <div className="title">{this._getTitle()}</div>
                     <img ref="poster" src={this.state.posterImage} className="poster" />
                     <div className="meta">
                         <div className="meta-item">
@@ -91,7 +105,7 @@ export default class MovieDetail extends Component {
                             <span className="meta-dot"/>
                             <p>{runtime} mins</p>
                         </div>
-                        <div className="meta-synop">{overview}</div>
+                        <div className="meta-synop">{this._getOverview()}</div>
                         <paper-button className="meta-btn first">
                             theatre showtimes
                         </paper-button>

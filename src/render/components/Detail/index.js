@@ -4,8 +4,7 @@ import _ from 'lodash'
 import { v4 as uuid } from 'node-uuid'
 
 import titleMatcher from '../../utils/titleMatcher'
-import MovieDetail from './movie.react'
-import ShowDetail from './show.react'
+import LoadedDetail from './detail.react'
 
 
 export default class Detail extends Component {
@@ -39,7 +38,7 @@ export default class Detail extends Component {
 
         sockets.emit('urlParser:get', { id: requestID, url })
 
-        this.props.workers.once(requestID, ({ type, parsed }) => {
+        this.props.workers.once(requestID, ({ parsed }) => {
             const { name } = parsed
 
             const matcher = new titleMatcher(this.props.workers, name)
@@ -57,11 +56,9 @@ export default class Detail extends Component {
 
     _getSubDetail = () => {
         switch (this.state.detail.type) {
-            case 'movie':
-                return <MovieDetail detail={this.state.detail} />
-                break
             case 'show':
-                return <ShowDetail detail={this.state.detail} />
+            case 'movie':
+                return <LoadedDetail {...this.state.detail} />
                 break
             default:
                 return null
