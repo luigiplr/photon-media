@@ -18,6 +18,10 @@ export default class MovieDetail extends Component {
         this.mounted = false
     }
 
+    componentWillMount() {
+        console.log('Movie Detail Mounting!', this.props.detail)
+    }
+
     componentDidMount() {
         this.mounted = true
         this._loadImages()
@@ -64,7 +68,6 @@ export default class MovieDetail extends Component {
     }
 
     render() {
-        console.log(this.props.detail)
         const { title, year, runtime, genres, overview, trailer } = this.props.detail
         return (
             <div className="movie-detail">

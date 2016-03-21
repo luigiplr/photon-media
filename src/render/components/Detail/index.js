@@ -29,12 +29,8 @@ export default class Detail extends Component {
     componentDidMount() {
         this.mounted = true
 
-
         this._initURLParse()
-
-        //_.delay(() => this.setState({ detail: { type: 'movie' }, loading: false }), 3000)
     }
-
 
     _initURLParse = () => {
         const { url } = this.props

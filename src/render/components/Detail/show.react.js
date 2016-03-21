@@ -21,6 +21,10 @@ export default class ShowDetail extends Component {
         this.mounted = false
     }
 
+    componentWillMount() {
+        console.log('Show Detail Mounting!', this.props.detail)
+    }
+    
     componentDidMount() {
         this.mounted = true
         this._loadImages()

@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events'
 import { v4 as uuid } from 'node-uuid'
+import _ from 'lodash'
 
 
 export default class matchTitle extends EventEmitter {
@@ -19,11 +20,44 @@ export default class matchTitle extends EventEmitter {
                     })
                 }
             }))
+            .then(data => this.getColors(data))
             .then(data => this.emit('success', {
                 ...data,
                 quality: this.searchQuality(name)
             }))
             .catch(error => this.emit('error', error))
+    }
+
+    getColors(data) {
+        const { type, images, seasons, season } = data
+        let image
+        if (type === 'movie')
+            image = data.images.poster.full
+        else
+            image = _.find(seasons, ({ number }) => number === parseInt(season)).images.poster.full
+
+        if (!image)
+            return {...data, palette: undefined } // something has gone very wrong as we do not have a image
+
+        const { sockets } = this.workers.socket
+        const id = uuid()
+        return new Promise(resolve => {
+            sockets.emit('color:get', { id, image })
+            this.workers.once(id, palette => {
+                this.workers.removeAllListeners(`${id}:error`)
+                resolve({
+                    ...data,
+                    palette
+                })
+            })
+            this.workers.once(`${id}:error`, error => {
+                this.workers.removeAllListeners(id)
+                resolve({
+                    ...data,
+                    palette: undefined
+                })
+            })
+        })
     }
 
     searchMovie(title) {
