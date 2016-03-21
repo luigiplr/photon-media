@@ -32,7 +32,7 @@ export default class DetailLoaded extends Component {
         const { fanart, poster } = this.props.images
         const { episode } = this.props
 
-        let backgroundImageURL = (episode && episode.images && episode.images.screenshot && episode.images.screenshot.full) ? episode.images.screenshot.full : fanart.full
+        let backgroundImageURL = /* (episode && episode.images && episode.images.screenshot && episode.images.screenshot.full) ? episode.images.screenshot.full :*/ fanart.full
 
         let backgroundImage = new Image()
         backgroundImage.onload = () => {
@@ -40,7 +40,7 @@ export default class DetailLoaded extends Component {
             this.setState({ backgroundImage: backgroundImageURL })
             _.defer(() => backgroundImage = null)
         }
-        backgroundImage.src = fanart.full
+        backgroundImage.src = backgroundImageURL
 
         let posterImage = new Image()
         posterImage.onload = () => {
@@ -76,45 +76,69 @@ export default class DetailLoaded extends Component {
         return (time.hours() !== 0) ? `${time.hours()} hour${(time.hours() > 1 ? 's' : '')} ${time.minutes()} minutes` : `${time.minutes()} min`
     }
 
-    _getOverview = () => {
-        if (this.props.type === 'movie')
-            return this.props.overview
+    _getOverview() {
+        const { type } = this.props
+        if (type === 'movie') return this.props.overview
 
         const { overview } = this.props.episode
-        return overview ? overview : 'No synopsis available'
-    };
+        return overview ? overview : 'Episode synopsis unavailable'
+    }
 
-    _getTitle = () => {
+    _getReleaseDate() {
+        const { type, year, episode } = this.props
+        if (type === 'movie') return year
+
+        return moment(this.props.episode.first_aired).format('MMMM Do, YYYY h:mm A')
+    }
+
+    _getTitle() {
         let { title, type, episode } = this.props
         if (type === 'show')
             title = `${title} S${('0' + episode.season).slice(-2)}E${('0' + episode.number).slice(-2)} - ${episode.title}`
         return title
-    };
+    }
+
+    _getRating() {
+        const { rating, episode } = this.props
+        const starsRating = ((episode && episode.rating) ? episode.rating : rating) / 2
+
+        let starsArray = []
+
+        let fullStars = Math.floor(starsRating)
+        for (var i = 1; i <= Math.floor(starsRating); i++) {
+            starsArray.push(<paper-icon-button key={i} noink icon="star" className="star"/>)
+        }
+
+        if (starsRating % 1 > 0)
+            starsArray.push(<paper-icon-button key='half-star' noink icon="star-half" className="star"/>)
+
+        for (var i = Math.ceil(starsRating); i < 5; i++) {
+            starsArray.push(<paper-icon-button key={i} noink icon="star-border" className="star"/>)
+        }
+
+        return starsArray
+    }
 
     render() {
-        const { year, runtime, genres, overview, trailer, homepage } = this.props
+        const { runtime, genres, overview, trailer, homepage } = this.props
 
         return (
             <div className="movie-detail">
                 <div className="bg-backdrop" style={{backgroundImage: `url(${this.state.backgroundImage})`}}/>
                 <div className="summary-wrapper movie">
-                    <div className="title">{this._getTitle()}</div>
+                    <div className="title">{::this._getTitle()}</div>
                     <img ref="poster" src={this.state.posterImage} className="poster" />
                     <div className="meta">
                         <div className="meta-item">
-                            <paper-icon-button noink icon="star" className="star"/>
-                            <paper-icon-button noink icon="star" className="star"/>
-                            <paper-icon-button noink icon="star-half" className="star"/>
-                            <paper-icon-button noink icon="star-border" className="star"/>
-                            <paper-icon-button noink icon="star-border" className="star"/>
+                            {::this._getRating()}
                             <span className="meta-dot first"/>
                             <p>{genres.slice(0,3).join(', ')}</p>
                             <span className="meta-dot"/>
-                            <p>{year}</p>
+                            <p>{::this._getReleaseDate()}</p>
                             <span className="meta-dot"/>
                             <p>{this._getHumanTime(runtime)}</p>
                         </div>
-                        <div className="meta-synop">{this._getOverview()}</div>
+                        <div className="meta-synop">{::this._getOverview()}</div>
                         <paper-button onClick={() => shell.openExternal(homepage)} className="meta-btn first">
                             homepage
                         </paper-button>
