@@ -10,7 +10,7 @@ export default class DetailLoaded extends Component {
         backgroundImage: '',
         posterImage: ''
     };
-    
+
     static propTypes = {
         title: React.PropTypes.string.isRequired,
         runtime: React.PropTypes.number.isRequired,
@@ -33,7 +33,7 @@ export default class DetailLoaded extends Component {
         this._loadImages()
     }
 
-    _loadImages = () => {
+    _loadImages() {
         const { fanart, poster } = this.props.images
         const { episode } = this.props
 
@@ -54,7 +54,7 @@ export default class DetailLoaded extends Component {
             _.defer(() => posterImage = null)
         }
         posterImage.src = poster.full
-    };
+    }
 
     _getDropUpStyle() {
         return `
@@ -124,8 +124,35 @@ export default class DetailLoaded extends Component {
         return starsArray
     }
 
+    _getColors() {
+        const { palette } = this.props
+
+        let color
+        let textColor
+
+        if (palette['Vibrant']) {
+            if (palette['Vibrant'].population < 20) {
+                color = palette['Muted'].hex
+                textColor = palette['Muted'].titleTextColor
+            } else {
+                color = palette['Vibrant'].hex
+                textColor = palette['Vibrant'].titleTextColor
+            }
+        } else if (palette['Muted']) {
+            color = palette['Muted'].hex
+            textColor = palette['Muted'].titleTextColor
+        }
+
+        if (textColor === '#000' || textColor === '#000000') {
+            textColor = '#111214';
+        }
+
+        return { color, textColor }
+    }
+
     render() {
         const { runtime, genres, overview, trailer, homepage, people } = this.props
+        const { color, textColor } = this._getColors()
 
         return (
             <div className="movie-detail">
@@ -192,7 +219,7 @@ export default class DetailLoaded extends Component {
                             </paper-dropdown-menu>
                         </li>
                     </div>
-                    <paper-button raised className="watchnow-btn">
+                    <paper-button style={{backgroundColor: color}} raised className="watchnow-btn">
                         <paper-icon-button noink className="play-icon" icon="av:play-arrow"/> Watch Now
                     </paper-button>
                 </div>
