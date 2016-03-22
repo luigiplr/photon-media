@@ -7,7 +7,13 @@ const args = minimist(process.argv.slice(2))
 
 process.env.NODE_ENV = minimist(process.argv.slice(2)).dev ? 'development' : 'production'
 
+/* BEGIN CHROME FLAGS */
+
 app.commandLine.appendSwitch('allow-file-access-from-files', true)
+app.commandLine.appendSwitch('enable-zero-copy', true)
+app.commandLine.appendSwitch('num-raster-threads', 4)
+
+/* END CHROME FLAGS */
 
 app.on('window-all-closed', () => app.quit())
 
