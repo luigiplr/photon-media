@@ -1,6 +1,8 @@
 import { EventEmitter } from 'events'
 import { v4 as uuid } from 'node-uuid'
 import _ from 'lodash'
+import commonTitleMappings from './commonTitleMappings'
+
 
 const MATCHING_TIMEOUT = 10000 // 10 seconds
 
@@ -12,7 +14,9 @@ export default class matchTitle extends EventEmitter {
         this.workers = workers
 
         this.formatTitle(name)
+            .then(::this.mapTitle)
             .then(({ title, season, episode }) => {
+                console.info('Searching for data on:', title, `S${season}`, `E${episode}`)
                 this.timeout = setTimeout(() => this.emit('error', `Timed out attempting to match "${title}"`), MATCHING_TIMEOUT)
                 return new Promise(resolve => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([showEpisode, movie]) => {
                     if (showEpisode) {
@@ -137,6 +141,17 @@ export default class matchTitle extends EventEmitter {
         })
     }
 
+    mapTitle(data) {
+        const { title } = data
+        let match = false
+        _.filter(commonTitleMappings, (matchs, mapped) => {
+            if (matchs.indexOf(title) > -1) return match = mapped
+            else return false
+        })
+        if (match) data.title = match
+        return data
+    }
+
     testIllegitimate(title) {
         const keywords = ['ettv', 'webrip', 'fum', 'skidrow', '3dm', 'tjet', 'batv', 'skgtv', 'stb', 'rartv', 'eztv', 'jyk', 'etrg']
 
@@ -202,7 +217,7 @@ export default class matchTitle extends EventEmitter {
     }
 
     searchQuality(title) {
-            // 480p
+        // 480p
         if (title.match(/480[pix]/i)) {
             return '480p'
         }
