@@ -36,7 +36,8 @@ export default class matchTitle extends EventEmitter {
                 clearTimeout(this.timeout)
                 this.emit('success', {
                     ...data,
-                    quality: this.searchQuality(name)
+                    quality: this.searchQuality(name),
+                    illegitimate: this.testIllegitimate(name)
                 })
             })
             .catch(error => {
@@ -133,6 +134,12 @@ export default class matchTitle extends EventEmitter {
                 reject(error)
             })
         })
+    }
+
+    testIllegitimate(title) {
+        const keywords = ['[ettv]', 'LOL', 'WEBRip', 'KILLERS', 'FUM', 'SKIDROW', 'CODEX', '3DM', '[TJET]', 'FLEET', 'BATV', 'SKGTV', '[StB]', '[rartv]', '[eztv]']
+
+        return new RegExp(keywords.join('|')).test(title)
     }
 
     formatTitle(title) {
