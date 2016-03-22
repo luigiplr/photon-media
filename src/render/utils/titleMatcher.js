@@ -144,8 +144,8 @@ export default class matchTitle extends EventEmitter {
     mapTitle(data) {
         const { title } = data
         let match = false
-        _.filter(commonTitleMappings, (matchs, mapped) => {
-            if (matchs.indexOf(title) > -1) return match = mapped
+        _.filter(commonTitleMappings, (matches, mapped) => {
+            if (matches.indexOf(title) > -1) return match = mapped
             else return false
         })
         if (match) data.title = match
