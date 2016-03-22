@@ -10,6 +10,8 @@ import LoadedDetail from './detail.react'
 export default class Detail extends Component {
 
     state = {
+        error: null,
+        status: `Parsing: "${this.props.url}"`,
         loading: true,
         detail: {
             type: 'none'
@@ -39,22 +41,31 @@ export default class Detail extends Component {
         sockets.emit('urlParser:get', { id: requestID, url })
 
         this.props.workers.once(requestID, ({ parsed }) => {
+            if (!this.mounted) return
             const { name } = parsed
-
+            this.setState({ status: `Parsing: "${name}"` })
             const matcher = new titleMatcher(this.props.workers, name)
-            matcher.once('success', detail => this.setState({ detail }))
+
+            matcher.on('status', status => {
+                if (!this.mounted) return
+                this.setState({ status })
+            })
+            matcher.once('success', detail => {
+                if (!this.mounted) return
+                this.setState({ detail })
+            })
             matcher.once('error', error => {
-                // Do something here UI wise later
-                console.error(error)
+                if (!this.mounted) return
+                this.setState({ error, loading: false })
             })
         })
     }
 
-    _close = () => {
+    _close() {
         _.defer(() => this.props.updatePage('search'))
-    };
+    }
 
-    _getSubDetail = () => {
+    _getSubDetail() {
         switch (this.state.detail.type) {
             case 'show':
             case 'movie':
@@ -63,21 +74,28 @@ export default class Detail extends Component {
             default:
                 return null
         }
-    };
+    }
+
+    _getLoadingContents() {
+        const { error, status } = this.state
+
+        return (
+            <div className="loading-spinner-wrapper">
+            	<style is="custom-style" dangerouslySetInnerHTML={{ __html: 'paper-spinner.thin {--paper-spinner-stroke-width: 2px;}'}}/>
+            	<h1 className="status-text">{(status ? status : error)}</h1>
+                <paper-spinner className="loading-spinner thin" active={this.state.loading}/>
+            </div>
+        )
+    }
 
     render() {
         return (
             <div className="detail">                
-                <paper-icon-button onClick={this._close} className="back" icon="arrow-back"/>
-
-                <style is="custom-style" dangerouslySetInnerHTML={{ __html: 'paper-spinner.thin {--paper-spinner-stroke-width: 2px;}'}}/>
-
-                <div className="loading-spinner-wrapper">
-                    <paper-spinner className="loading-spinner thin" active={this.state.loading}/>
-                </div>
+                <paper-icon-button onClick={::this._close} className="back" icon="arrow-back"/>
+                {::this._getLoadingContents()}
                 <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                     <div className='transition-container' key={this.state.detail.type}>
-                       {this._getSubDetail()}
+                       {::this._getSubDetail()}
                     </div>
                 </ReactCSSTransitionGroup>
             </div>

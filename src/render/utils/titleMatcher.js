@@ -2,6 +2,9 @@ import { EventEmitter } from 'events'
 import { v4 as uuid } from 'node-uuid'
 import _ from 'lodash'
 
+const MATCHING_TIMEOUT = 10000 // 10 seconds
+
+const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
 
 export default class matchTitle extends EventEmitter {
     constructor(workers, name) {
@@ -9,23 +12,37 @@ export default class matchTitle extends EventEmitter {
         this.workers = workers
 
         this.formatTitle(name)
-            .then(({ title, season, episode }) => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([episode, movie]) => {
-                if (episode) {
-                    return this.getShow(title).then(show => {
-                        return {...show, type: 'show', episode }
-                    })
-                } else if (movie) {
-                    return this.getMovie(movie).then(movie => {
-                        return {...movie, type: 'movie' }
-                    })
-                }
-            }))
-            .then(data => this.getColors(data))
-            .then(data => this.emit('success', {
-                ...data,
-                quality: this.searchQuality(name)
-            }))
-            .catch(error => this.emit('error', error))
+            .then(({ title, season, episode }) => {
+                this.timeout = setTimeout(() => this.emit('error', `Timed out attempting to match "${title}"`), MATCHING_TIMEOUT)
+                return new Promise(resolve => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([showEpisode, movie]) => {
+                    if (showEpisode) {
+                        this.title = `${toTitleCase(title)} S${season}E${episode} - ${showEpisode.title}`
+                        this.emit('status', `Fetching Data for "${this.title}"`)
+                        this.getShow(title)
+                            .then(show => resolve({...show, type: 'show', episode: showEpisode }))
+                    } else if (movie) {
+                        this.title = movie.title
+                        this.emit('status', `Fetching Data for "${movie.title}"`)
+                        this.getMovie(movie)
+                            .then(movie => resolve({...movie, type: 'movie' }))
+                    }
+                }))
+            })
+            .then(data => {
+                this.emit('status', `Extracting color palette for "${this.title}"`)
+                return this.getColors(data)
+            })
+            .then(data => {
+                clearTimeout(this.timeout)
+                this.emit('success', {
+                    ...data,
+                    quality: this.searchQuality(name)
+                })
+            })
+            .catch(error => {
+                clearTimeout(this.timeout)
+                this.emit('error', 'Data Matching has run into a critical error!')
+            })
     }
 
     getColors(data) {
@@ -178,7 +195,7 @@ export default class matchTitle extends EventEmitter {
 
     searchQuality(title) {
         console.log(title)
-        // 480p
+            // 480p
         if (title.match(/480[pix]/i)) {
             return '480p'
         }
