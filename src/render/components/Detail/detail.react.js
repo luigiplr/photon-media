@@ -35,25 +35,28 @@ export default class DetailLoaded extends Component {
 
     _loadImages() {
         const { fanart, poster } = this.props.images
-        const { episode } = this.props
 
-        let backgroundImageURL = /* (episode && episode.images && episode.images.screenshot && episode.images.screenshot.full) ? episode.images.screenshot.full :*/ fanart.full
-
-        let backgroundImage = new Image()
-        backgroundImage.onload = () => {
-            if (!this.mounted) return
-            this.setState({ backgroundImage: backgroundImageURL })
-            _.defer(() => backgroundImage = null)
+        const backgroundImageURL = fanart.full
+        if (backgroundImageURL) {
+            let backgroundImage = new Image()
+            backgroundImage.onload = () => {
+                if (!this.mounted) return
+                this.setState({ backgroundImage: backgroundImageURL })
+                _.defer(() => backgroundImage = null)
+            }
+            backgroundImage.src = backgroundImageURL
         }
-        backgroundImage.src = backgroundImageURL
 
-        let posterImage = new Image()
-        posterImage.onload = () => {
-            if (!this.mounted) return
-            this.setState({ posterImage: poster.full })
-            _.defer(() => posterImage = null)
+        const posterURL = poster.full
+        if (posterURL) {
+            let posterImage = new Image()
+            posterImage.onload = () => {
+                if (!this.mounted) return
+                this.setState({ posterImage: posterURL })
+                _.defer(() => posterImage = null)
+            }
+            posterImage.src = posterURL
         }
-        posterImage.src = poster.full
     }
 
     _getDropUpStyle() {
