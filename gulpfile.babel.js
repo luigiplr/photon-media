@@ -4,6 +4,7 @@ import htmlmin from 'gulp-htmlmin'
 import babel from 'gulp-babel'
 import concat from 'gulp-concat'
 import rimraf from 'gulp-rimraf'
+import symlink from 'gulp-sym'
 import jeditor from 'gulp-json-editor'
 import runSequence from 'run-sequence'
 import { server as electronConnect } from 'electron-connect'
@@ -47,6 +48,8 @@ gulp.task('build-static-assets', () => {
         json.buildDate = new Date().toLocaleString()
         return json
     })).pipe(gulp.dest('build'))
+
+    gulp.src('bower_components').pipe(symlink('build/bower_components', { force: true }))
 
     gulp.src('LICENSE').pipe(gulp.dest('build'))
     gulp.src('src/main/app.html').pipe(htmlmin({ collapseWhitespace: true })).pipe(gulp.dest('build'))

@@ -47,6 +47,7 @@
     "gulp-htmlmin": "^1.3.0",
     "gulp-json-editor": "^2.2.1",
     "gulp-rimraf": "^0.2.0",
+    "gulp-sym": "0.0.14",
     "run-sequence": "^1.1.5"
   }
 }
