@@ -128,6 +128,7 @@ export default class DetailLoaded extends Component {
 
     _getColors() {
         const { palette } = this.props
+        if (!palette) return { color: null }
 
         let color
         let textColor
@@ -154,7 +155,7 @@ export default class DetailLoaded extends Component {
 
     render() {
         const { runtime, genres, overview, trailer, homepage, people } = this.props
-        const { color, textColor } = this._getColors()
+        const { color } = this._getColors()
 
         return (
             <div className="movie-detail">
