@@ -36,6 +36,7 @@ export default class matchTitle extends EventEmitter {
                 clearTimeout(this.timeout)
                 this.emit('success', {
                     ...data,
+                    orginalTitle: name,
                     quality: this.searchQuality(name),
                     illegitimate: this.testIllegitimate(name)
                 })

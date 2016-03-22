@@ -6,7 +6,8 @@ import { defer } from 'lodash'
 export default class PiratedWarning extends Component {
 
     static propTypes = {
-        settingsStore: React.PropTypes.object.isRequired
+        settingsStore: React.PropTypes.object.isRequired,
+        orginalTitle: React.PropTypes.string.isRequired
     };
 
     state = {
@@ -46,6 +47,16 @@ export default class PiratedWarning extends Component {
         this.props.settingsStore.setItem('dont-display-pirate-warning', checked)
     }
 
+    _reportIncorrectMatch() {
+        const { orginalTitle, title, ids, type } = this.props
+        const { NODE_ENV } = process.env
+
+        const header = `Incorrect Match: "${orginalTitle}"`
+        const body = `Parsed Title: ${title} | Parsed IMDB: ${ids.imdb} | Parsed Type: ${type} | Build ENV: ${NODE_ENV}`
+
+        shell.openExternal(`https://github.com/luigiplr/photon-media/issues/new?title=${header}&body=${body.trim()}`)
+    }
+
     render() {
         return (
             <div className="dialog-back">
@@ -60,7 +71,7 @@ export default class PiratedWarning extends Component {
                     </paper-dialog-scrollable>
                     <paper-checkbox onClick={::this._dontShowAgain} ref="pirate-checkbox">Dont display again</paper-checkbox>
                     <div>
-                        <paper-button onClick={() => shell.openExternal('https://github.com/luigiplr/photon-media/issues/new')} dialog-dismiss className="dialog-button">Report incorrect match</paper-button>
+                        <paper-button onClick={::this._reportIncorrectMatch} dialog-dismiss className="dialog-button">Report incorrect match</paper-button>
                         <paper-button className="dialog-button" dialog-dismiss>Dismiss</paper-button>
                     </div>
                 </paper-dialog>
