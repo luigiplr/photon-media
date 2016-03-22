@@ -109,15 +109,14 @@ export default class DetailLoaded extends Component {
 
         let starsArray = []
 
-        let fullStars = Math.floor(starsRating)
-        for (var i = 1; i <= Math.floor(starsRating); i++) {
+        for (let i = 1; i <= Math.floor(starsRating); i++) {
             starsArray.push(<paper-icon-button key={i} noink icon="star" className="star"/>)
         }
 
         if (starsRating % 1 > 0)
             starsArray.push(<paper-icon-button key='half-star' noink icon="star-half" className="star"/>)
 
-        for (var i = Math.ceil(starsRating); i < 5; i++) {
+        for (let i = Math.ceil(starsRating); i < 5; i++) {
             starsArray.push(<paper-icon-button key={i} noink icon="star-border" className="star"/>)
         }
 
