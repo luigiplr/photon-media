@@ -62,16 +62,14 @@ export default class DetailLoaded extends Component {
     _getDropUpStyle() {
         return `
             paper-dropdown-menu.meta-dropdown {
-                --paper-dropdown-menu: {
-                    top: 2px;
-                    width: 150px;
-                }
-                --paper-input-container-label: {
-                    color: white;
+                --primary-text-color: #fff;
+                --paper-input-container-input: {
                     font-weight: 500;
-                    margin-left: 10px;
+                    font-size: 15px;
                 }
-                --paper-input-container-input: {}
+                --paper-dropdown-menu-icon: {
+                    color: #fff;
+                }
                 --paper-input-container-underline: {
                     display: none;
                 }
@@ -154,7 +152,7 @@ export default class DetailLoaded extends Component {
     }
 
     render() {
-        const { runtime, genres, overview, trailer, homepage, people } = this.props
+        const { runtime, genres, overview, trailer, homepage, people, quality } = this.props
         const { color } = this._getColors()
 
         return (
@@ -199,25 +197,23 @@ export default class DetailLoaded extends Component {
                 <div className="controls-container">
                     <div className="meta-container-c">
                         <style is="custom-style" dangerouslySetInnerHTML={{ __html: this._getDropUpStyle()}}/>
+                        <li className="quality">
+                            <paper-icon-button className="icon" noink icon="av:high-quality"/>
+                            <span className="quality">{(quality ? quality : 'Unable to parse quality')}</span>
+                        </li>
                         <li className="subtitles-dropdown">
-                            <paper-icon-button noink className="play-icon" icon="av:subtitles"/>
-                            <paper-dropdown-menu className="meta-dropdown" vertical-align="bottom" horizontal-align="right">
-                                <paper-listbox className="dropdown-content">
-                                    <paper-item>allosaurus</paper-item>
-                                    <paper-item>brontosaurus</paper-item>
-                                    <paper-item>carcharodontosaurus</paper-item>
-                                    <paper-item>diplodocus</paper-item>
+                            <paper-icon-button className="icon" noink icon="av:subtitles"/>
+                            <paper-dropdown-menu no-label-float vertical-align="bottom" horizontal-align="right" className="meta-dropdown">
+                                <paper-listbox selected="0" className="dropdown-content">
+                                    <paper-item>English</paper-item>
                                 </paper-listbox>
                             </paper-dropdown-menu>
                         </li>
-                        <li className="device-dropdown">
-                            <paper-icon-button noink className="play-icon" icon="hardware:cast-connected"/>
-                            <paper-dropdown-menu className="meta-dropdown" vertical-align="bottom" horizontal-align="right">
-                                <paper-listbox className="dropdown-content">
-                                    <paper-item>allosaurus</paper-item>
-                                    <paper-item>brontosaurus</paper-item>
-                                    <paper-item>carcharodontosaurus</paper-item>
-                                    <paper-item>diplodocus</paper-item>
+                        <li className="subtitles-dropdown">
+                            <paper-icon-button className="icon" noink icon="hardware:cast-connected"/>
+                            <paper-dropdown-menu no-label-float vertical-align="bottom" horizontal-align="right" className="meta-dropdown">
+                                <paper-listbox selected="0" className="dropdown-content">
+                                    <paper-item>Piza Cast</paper-item>
                                 </paper-listbox>
                             </paper-dropdown-menu>
                         </li>

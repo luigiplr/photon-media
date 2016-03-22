@@ -290,9 +290,8 @@
     padding: 0;
     margin-right: 3px;
 }
-
 .movie-detail .controls-container .meta-container-c {
-    top: 25px;
+    top: 5px;
     position: absolute;
     left: calc(((100vh - 210px) * 2 / 3) + 170px);
 }
@@ -301,11 +300,34 @@
     width: 100%;
     list-style: none;
     margin: 0;
-    height: 55px;
+    position: relative;
     padding: 0;
 }
 
+.movie-detail .controls-container .meta-container-c li.quality .quality {
+    color: #fff;
+    font-weight: 500;
+    font-size: 15px;
+    position: relative;
+    margin-left: 8px;
+    bottom: -1px;
+    margin-top: 3px;
+}
+
+.movie-detail .controls-container .meta-container-c li.subtitles-dropdown{
+    margin-top: 6px;
+}
+
+.meta-dropdown{
+    width: 150px;
+}
+
+.movie-detail .controls-container .meta-container-c li.subtitles-dropdown .icon {
+    margin-right: 7px;
+}
+
 .movie-detail .controls-container .meta-container-c li .icon {
-    color: white;
+    color: #fff;
+    padding: 7px;
     cursor: default;
 }
