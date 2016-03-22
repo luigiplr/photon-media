@@ -20,7 +20,7 @@ const settingsStore = localforage.createInstance({
 export default class Framework extends Component {
 
     state = {
-        page: 'settings',
+        page: 'search',
         pageData: {}
     }
 
