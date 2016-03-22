@@ -137,9 +137,9 @@ export default class matchTitle extends EventEmitter {
     }
 
     testIllegitimate(title) {
-        const keywords = ['[ettv]', 'LOL', 'WEBRip', 'KILLERS', 'FUM', 'SKIDROW', 'CODEX', '3DM', '[TJET]', 'FLEET', 'BATV', 'SKGTV', '[StB]', '[rartv]', '[eztv]']
+        const keywords = ['ettv', 'webrip', 'fum', 'skidrow', '3dm', 'tjet', 'batv', 'skgtv', 'stb', 'rartv', 'eztv']
 
-        return new RegExp(keywords.join('|')).test(title)
+        return new RegExp(keywords.join('|')).test(title.toLowerCase())
     }
 
     formatTitle(title) {
