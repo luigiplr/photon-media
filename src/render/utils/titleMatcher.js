@@ -16,7 +16,7 @@ export default class matchTitle extends EventEmitter {
                 this.timeout = setTimeout(() => this.emit('error', `Timed out attempting to match "${title}"`), MATCHING_TIMEOUT)
                 return new Promise(resolve => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([showEpisode, movie]) => {
                     if (showEpisode) {
-                        this.title = `${toTitleCase(title)} S${season}E${episode} - ${showEpisode.title}`
+                        this.title = `${toTitleCase(title.replace(/-/g, ' '))} S${season}E${episode} - ${showEpisode.title}`
                         this.emit('status', `Fetching Data for "${this.title}"`)
                         this.getShow(title)
                             .then(show => resolve({...show, type: 'show', episode: showEpisode }))
