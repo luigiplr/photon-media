@@ -5,6 +5,7 @@ import { v4 as uuid } from 'node-uuid'
 
 import titleMatcher from '../../utils/titleMatcher'
 import LoadedDetail from './detail.react'
+import WarningDialog from './warning.react'
 
 
 export default class Detail extends Component {
@@ -81,8 +82,8 @@ export default class Detail extends Component {
 
         return (
             <div className="loading-spinner-wrapper">
-            	<style is="custom-style" dangerouslySetInnerHTML={{ __html: 'paper-spinner.thin {--paper-spinner-stroke-width: 2px;}'}}/>
-            	<h1 className="status-text">{(status ? status : error)}</h1>
+                <style is="custom-style" dangerouslySetInnerHTML={{ __html: 'paper-spinner.thin {--paper-spinner-stroke-width: 2px;}'}}/>
+                <h1 className="status-text">{(status ? status : error)}</h1>
                 <paper-spinner className="loading-spinner thin" active={this.state.loading}/>
             </div>
         )
@@ -93,6 +94,7 @@ export default class Detail extends Component {
             <div className="detail">                
                 <paper-icon-button onClick={::this._close} className="back" icon="arrow-back"/>
                 {::this._getLoadingContents()}
+                {(this.state.detail.illegitimate ? <WarningDialog {...this.state.detail} /> : null)}
                 <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                     <div className='transition-container' key={this.state.detail.type}>
                        {::this._getSubDetail()}

@@ -54,3 +54,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.dialog-button {
+    font-weight: 400;
+}
