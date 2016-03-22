@@ -21,7 +21,8 @@ export default class Detail extends Component {
 
     static propTypes = {
         url: React.PropTypes.string.isRequired,
-        workers: React.PropTypes.object.isRequired
+        workers: React.PropTypes.object.isRequired,
+        settingsStore: React.PropTypes.object.isRequired
     };
 
     componentWillUnmount() {
@@ -94,7 +95,7 @@ export default class Detail extends Component {
             <div className="detail">                
                 <paper-icon-button onClick={::this._close} className="back" icon="arrow-back"/>
                 {::this._getLoadingContents()}
-                {(this.state.detail.illegitimate ? <WarningDialog {...this.state.detail} /> : null)}
+                {(this.state.detail.illegitimate ? <WarningDialog settingsStore={this.props.settingsStore} /> : null)}
                 <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                     <div className='transition-container' key={this.state.detail.type}>
                        {::this._getSubDetail()}

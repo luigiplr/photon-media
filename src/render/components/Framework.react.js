@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import localforage from 'localforage'
 
 import initWorkers from '../utils/initWorkers'
 import Header from './Header'
@@ -7,6 +8,11 @@ import Search from './Search'
 import Detail from './Detail'
 
 const workers = new initWorkers()
+
+const settingsStore = localforage.createInstance({
+    name: 'photon-media',
+    version: 1.0
+})
 
 
 export default class Framework extends Component {
@@ -22,10 +28,10 @@ export default class Framework extends Component {
         switch (this.state.page) {
             case 'home':
             case 'search':
-                return <Search updatePage={this._changePage} workers={workers}/>
+                return <Search workers={workers} updatePage={this._changePage} settingsStore={settingsStore}/>
                 break
             case 'detail':
-                return <Detail updatePage={this._changePage} {...this.state.pageData} workers={workers}/>
+                return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} workers={workers}/>
                 break
             case 'settings':
                 break

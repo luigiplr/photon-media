@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { shell } from 'electron'
-import localforage from 'localforage'
 import { defer } from 'lodash'
 
 
 export default class PiratedWarning extends Component {
+
+    static propTypes = {
+        settingsStore: React.PropTypes.object.isRequired
+    };
 
     state = {
         open: false
@@ -13,7 +16,7 @@ export default class PiratedWarning extends Component {
     componentDidMount() {
         this.mounted = true
 
-        localforage.getItem('dont-display-pirate-warning')
+        settingsStore.getItem('dont-display-pirate-warning')
             .then(dont => {
                 if (!dont) {
                     this.setState({ open: true })
@@ -40,7 +43,7 @@ export default class PiratedWarning extends Component {
 
     _dontShowAgain() {
         const { checked } = this.refs['pirate-checkbox']
-        localforage.setItem('last-search-backdrop', checked)
+        settingsStore.setItem('last-search-backdrop', checked)
     }
 
     render() {

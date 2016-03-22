@@ -3,7 +3,6 @@ import ReactCSSTransitionReplace from 'react-css-transition-replace'
 import { shell } from 'electron'
 import _ from 'lodash'
 import { v4 as uuid } from 'node-uuid'
-import localforage from 'localforage'
 
 const defaultDelay = 30000
 const initialDelay = 10000
@@ -18,6 +17,7 @@ export default class Backdrop extends Component {
     };
 
     static propTypes = {
+        settingsStore: React.PropTypes.object.isRequired,
         workers: React.PropTypes.object.isRequired
     };
 
@@ -28,7 +28,9 @@ export default class Backdrop extends Component {
 
     componentDidMount() {
         this.mounted = true
-        localforage.getItem('last-search-backdrop')
+        const { settingsStore } = this.props
+        
+        settingsStore.getItem('last-search-backdrop')
             .then(lastItem => {
                 let delay = 0
                 if (lastItem) {
@@ -68,6 +70,7 @@ export default class Backdrop extends Component {
     _getNewBackdrop = () => {
         if (!this.mounted || this.state.trending.length === 0) return
 
+        const { settingsStore } = this.props
         const { sockets } = this.props.workers.socket
         const requestID = uuid()
 
@@ -93,7 +96,7 @@ export default class Backdrop extends Component {
                     trending: _.filter(trending, item => !_.isEqual(item, trendingItem)),
                     backdrop
                 })
-                localforage.setItem('last-search-backdrop', backdrop)
+                settingsStore.setItem('last-search-backdrop', backdrop)
                 this.backdropTimeout = setTimeout(this._getNewBackdrop, defaultDelay)
             })
         })

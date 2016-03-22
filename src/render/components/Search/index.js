@@ -11,6 +11,7 @@ export default class Search extends Component {
     };
 
     static propTypes = {
+        settingsStore: React.PropTypes.object.isRequired,
         workers: React.PropTypes.object.isRequired
     };
 
@@ -57,7 +58,7 @@ export default class Search extends Component {
         return (
             <div className="search-container">
 
-                <Backdrop setPalette={this._setPalette} workers={this.props.workers} />
+                <Backdrop {...this.props} setPalette={this._setPalette} />
 
                 <div className="bottom-button-container">
                     <paper-icon-button className="bottom-btn" icon="settings"/>
