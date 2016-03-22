@@ -25,7 +25,7 @@ export default class DetailLoaded extends Component {
     }
 
     componentWillMount() {
-        console.log('Movie Detail Mounting!', this.props)
+        console.log('Detail Mounting!', this.props)
     }
 
     componentDidMount() {
