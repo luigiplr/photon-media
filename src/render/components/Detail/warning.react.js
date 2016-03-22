@@ -16,7 +16,7 @@ export default class PiratedWarning extends Component {
     componentDidMount() {
         this.mounted = true
 
-        settingsStore.getItem('dont-display-pirate-warning')
+        this.props.settingsStore.getItem('dont-display-pirate-warning')
             .then(dont => {
                 if (!dont) {
                     this.setState({ open: true })
@@ -43,7 +43,7 @@ export default class PiratedWarning extends Component {
 
     _dontShowAgain() {
         const { checked } = this.refs['pirate-checkbox']
-        settingsStore.setItem('last-search-backdrop', checked)
+        this.props.settingsStore.setItem('dont-display-pirate-warning', checked)
     }
 
     render() {
