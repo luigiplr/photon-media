@@ -61,7 +61,7 @@ export default class Search extends Component {
                 <Backdrop {...this.props} setPalette={this._setPalette} />
 
                 <div className="bottom-button-container">
-                    <paper-icon-button className="bottom-btn" icon="settings"/>
+                    <paper-icon-button className="bottom-btn" icon="settings" onClick={() => this.props.updatePage('settings')}/>
                 </div>
 
                 <div style={{textAlign: 'center'}}>

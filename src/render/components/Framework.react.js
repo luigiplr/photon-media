@@ -6,6 +6,8 @@ import initWorkers from '../utils/initWorkers'
 import Header from './Header'
 import Search from './Search'
 import Detail from './Detail'
+import Settings from './Settings'
+
 
 const workers = new initWorkers()
 
@@ -18,7 +20,7 @@ const settingsStore = localforage.createInstance({
 export default class Framework extends Component {
 
     state = {
-        page: 'search',
+        page: 'settings',
         pageData: {}
     }
 
@@ -29,12 +31,10 @@ export default class Framework extends Component {
             case 'home':
             case 'search':
                 return <Search workers={workers} updatePage={this._changePage} settingsStore={settingsStore}/>
-                break
             case 'detail':
                 return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} workers={workers}/>
-                break
             case 'settings':
-                break
+                return <Settings updatePage={this._changePage} />
             default:
                 return null
         }
