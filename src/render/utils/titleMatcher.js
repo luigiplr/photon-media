@@ -201,7 +201,6 @@ export default class matchTitle extends EventEmitter {
     }
 
     searchQuality(title) {
-        console.log(title)
             // 480p
         if (title.match(/480[pix]/i)) {
             return '480p'
