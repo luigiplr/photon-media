@@ -18,6 +18,8 @@ workers.players = class players {
             try {
                 fs.accessSync(checkPath, fs.F_OK)
                 player.path = checkPath
+                delete player.paths
+                delete player.execs
                 this.foundPlayers[player.id] = player
             } catch (e) {}
         })))
