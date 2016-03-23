@@ -10,7 +10,8 @@ import vibrant from 'node-vibrant'
 import traktAPI from 'trakt-api'
 import readTorrent from 'read-torrent'
 import http from 'http'
-import webtorrent from 'webtorrent'
+import npm from 'npm'
+
 
 const workers = {}
 
