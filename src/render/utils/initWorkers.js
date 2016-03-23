@@ -8,7 +8,7 @@ class InitWorkers extends EventEmitter {
             .then(port => this.port = port)
             .then(::this.initSocketServer)
             .then(() => {
-                this.workers = ['players', 'trakt', 'color', 'urlParser', 'npm']
+                this.workers = ['players', 'trakt', 'color', 'urlParser', 'plugins']
                 this.workers.map(worker => new Worker(path.join(__dirname, 'workers.js'), true).postMessage({ port: this.port, worker }))
             })
             .then(::this.initSocketEvents)
@@ -36,8 +36,8 @@ class InitWorkers extends EventEmitter {
             socket.on('players', ({ id, players }) => this.emit(id, players))
             socket.on('players:error', ({ id, error }) => this.emit(`${id}:error`, error))
 
-            socket.on('npm', ({ id, data }) => this.emit(id, data))
-            socket.on('npm:error', ({ id, error }) => this.emit(`${id}:error`, error))
+            socket.on('plugins', ({ id, data }) => this.emit(id, data))
+            socket.on('plugins:error', ({ id, error }) => this.emit(`${id}:error`, error))
 
             socket.on('color', ({ id, palette }) => this.emit(id, palette))
             socket.on('color:error', ({ id, error }) => this.emit(`${id}:error`, error))

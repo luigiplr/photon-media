@@ -1,4 +1,4 @@
-workers.npm = class npmWorker {
+workers.plugins = class pluginsWorker {
     constructor(port) {
         this.socket = socketClient(`http://localhost:${port}`)
 
@@ -12,14 +12,14 @@ workers.npm = class npmWorker {
     }
 
     log = (message, type = 'log') => this.socket.emit('info', {
-        source: 'NPM Worker',
+        source: 'Plugins Worker',
         type,
         message
     });
 
     initEvents() {
-        this.socket.on('npm:install', ({ id, pluginPath }) => {
-            this.log(pluginPath)
+        this.socket.on('plugin:install', ({ id, plugin }) => {
+            this.log(plugin)
         })
     }
 }
