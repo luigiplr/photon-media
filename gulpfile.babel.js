@@ -5,6 +5,8 @@ import babel from 'gulp-babel'
 import concat from 'gulp-concat'
 import rimraf from 'gulp-rimraf'
 import gutil from 'gulp-util'
+import uglify from 'gulp-uglify'
+import sourcemaps from 'gulp-sourcemaps'
 import symlink from 'gulp-sym'
 import jeditor from 'gulp-json-editor'
 import plumber from 'gulp-plumber'
@@ -13,6 +15,8 @@ import { server as electronConnect } from 'electron-connect'
 
 /* setup electron connect server for live reloading */
 const electronDev = electronConnect.create({ path: 'build' })
+
+
 
 
 
@@ -27,6 +31,16 @@ gulp.task('build-core', () => {
             gutil.log(gutil.colors.red(err.message))
         })
         .pipe(concat('core.js'))
+        .pipe(uglify({
+            options: {
+                compress: {
+                    screw_ie8: true
+                },
+                mangle: {
+                    screw_ie8: true
+                }
+            }
+        }))
         .pipe(gulp.dest('build/js'))
     return gulp.src('src/main/workers/*.js')
         .pipe(plumber())
@@ -35,13 +49,41 @@ gulp.task('build-core', () => {
             gutil.log(gutil.colors.red('[Workers Code Compilation Error]'))
             gutil.log(gutil.colors.red(err.message))
         })
+        .pipe(uglify({
+            options: {
+                compress: {
+                    screw_ie8: true
+                },
+                mangle: {
+                    screw_ie8: true
+                }
+            }
+        }))
         .pipe(gulp.dest('build/js/workers'))
 })
 
-gulp.task('build-render', () => gulp.src('src/render/**/*.js').pipe(plumber()).pipe(babel()).on('error', err => {
-    gutil.log(gutil.colors.red('[Render Code Compilation Error]'))
-    gutil.log(gutil.colors.red(err.message))
-}).pipe(gulp.dest('build/js/render')))
+gulp.task('build-render', () => {
+    return gulp.src('src/render/**/*.js')
+        .pipe(sourcemaps.init())
+        .pipe(plumber())
+        .pipe(babel())
+        .on('error', err => {
+            gutil.log(gutil.colors.red('[Render Code Compilation Error]'))
+            gutil.log(gutil.colors.red(err.message))
+        })
+        .pipe(uglify({
+            options: {
+                compress: {
+                    screw_ie8: true
+                },
+                mangle: {
+                    screw_ie8: true
+                }
+            }
+        }))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('build/js/render'))
+})
 
 gulp.task('build-styles', () => {
     gulp.src('src/styles/app/**/*.css')
