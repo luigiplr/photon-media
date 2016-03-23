@@ -28,6 +28,7 @@ const uglifyOptions = {
     }
 }
 
+process.env.PRODUCTION_BUILD = true
 
 /* Build Tasks */
 
@@ -128,12 +129,12 @@ gulp.task('build', callback => runSequence('clean-build', ['build-core', 'build-
 
 gulp.task('start', callback => runSequence('build', 'electron-start', callback))
 
-gulp.task('start-dev', callback => runSequence('build', ['watch-core', 'watch-render', 'watch-styles', 'watch-static-assets'], 'electron-start-dev', callback))
-
-gulp.task('release', callback => {
-    process.env.PRODUCTION_BUILD = true
-    return runSequence('build', callback)
+gulp.task('start-dev', callback => {
+    process.env.PRODUCTION_BUILD = false
+    return runSequence('build', ['watch-core', 'watch-render', 'watch-styles', 'watch-static-assets'], 'electron-start-dev', callback)
 })
+
+gulp.task('release', callback => runSequence('build', callback))
 
 
 
