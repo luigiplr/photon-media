@@ -114,7 +114,10 @@ gulp.task('clean-build', () => gulp.src('build', { read: false }).pipe(rimraf())
 
 /* Watch Tasks */
 
-gulp.task('watch-core', () => gulp.watch('src/main/**/*.js', ['build-core', callback => electronDev.restart(['--dev'], callback)]))
+gulp.task('watch-core', () => {
+    gulp.watch('src/main/core.js', ['build-core', callback => electronDev.restart(['--dev'], callback)])
+    return gulp.watch('src/main/workers/**/*.js', ['build-core', electronDev.reload])
+})
 
 gulp.task('watch-render', () => gulp.watch('src/render/**/*.js', ['build-render', electronDev.reload]))
 
