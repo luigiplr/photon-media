@@ -31,7 +31,7 @@ workers.players = class players {
     });
 
     initEvents() {
-        this.socket.on('players:get', ({ id }) => this.scan().then(players => this.emit('players', { id, players })))
+        this.socket.on('players:get', ({ id }) => this.scan().then(players => this.socket.emit('players', { id, players })))
     }
 
     scan() {

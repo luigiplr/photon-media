@@ -29,6 +29,10 @@ class titleMatcher extends EventEmitter {
                 return this.getColors(data)
             })
             .then(data => {
+                this.emit('status', `Detecting available players`)
+                return this.getPlayers(data)
+            })
+            .then(data => {
                 clearTimeout(this.timeout)
                 this.emit('success', {
                     ...data,
@@ -44,6 +48,28 @@ class titleMatcher extends EventEmitter {
     }
 
     toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
+    getPlayers(data) {
+        const { sockets } = this.workers.socket
+        const id = uuid()
+        return new Promise(resolve => {
+            sockets.emit('players:get', { id })
+            this.workers.once(id, players => {
+                this.workers.removeAllListeners(`${id}:error`)
+                resolve({
+                    ...data,
+                    players
+                })
+            })
+            this.workers.once(`${id}:error`, error => {
+                this.workers.removeAllListeners(id)
+                resolve({
+                    ...data,
+                    players: undefined
+                })
+            })
+        })
+    }
 
     getColors(data) {
         const { sockets } = this.workers.socket
