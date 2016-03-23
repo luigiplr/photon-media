@@ -23,7 +23,7 @@ const electronDev = electronConnect.create({ path: 'build' })
 /* Build Tasks */
 
 gulp.task('build-core', () => {
-    gulp.src('src/main/*.js')
+    gulp.src('src/main/core.js')
         .pipe(plumber())
         .pipe(babel())
         .on('error', err => {
