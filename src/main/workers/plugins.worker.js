@@ -21,16 +21,21 @@ workers.plugins = class pluginsWorker {
     });
 
     npmQueue = async.queue((pluginPath, next) => {
-        if (fs.existsSync(path.join(pluginPath, 'node_modules'))) {
+        if (fs.existsSync(path.join(pluginPath, 'node_modules'))) { // Check if npm install has already been run, if it has we dont need todo it again
             const plugin = require(pluginPath)
-            this.log(plugin)
+            const { pluginData, name } = require(path.join(pluginPath, 'package.json'))
+            this.plugins[name] = {
+                ...pluginData,
+                plugin: new plugin()
+            }
             return next()
         }
 
-
-        const { dependencies, name } = require(path.join(pluginPath, 'package.json'))
+        const { dependencies, name, pluginData } = require(path.join(pluginPath, 'package.json'))
         let depArray = []
-        _.forEach(dependencies, (version, dep) => depArray.push(`${dep}@${version}`))
+
+        _.forEach(dependencies, (version, dep) => depArray.push(`${dep}@${version}`)) //parse every production dep in the plugin and push to our npm install array
+
         npm.load({}, (err) => {
             if (err) {
                 this.log(err, 'error')
@@ -41,7 +46,10 @@ workers.plugins = class pluginsWorker {
                 this.log(`Compleated dependencies install for ${name}`)
 
                 const plugin = require(pluginPath)
-                this.log(plugin)
+                this.plugins[name] = {
+                    ...pluginData,
+                    plugin: new plugin()
+                }
                 next()
             })
         })
@@ -49,11 +57,7 @@ workers.plugins = class pluginsWorker {
 
     initEvents() {
         this.socket.on('plugins:get', ({ id, pluginDir, appVersion }) => {
-            const plugins = fs.readdirSync(pluginDir).filter(file => fs.statSync(path.join(pluginDir, file)).isDirectory())
-
-            _.forEach(plugins, plugin => {
-                this.npmQueue.push(path.join(pluginDir, plugin))
-            })
+            _.forEach(fs.readdirSync(pluginDir).filter(file => fs.statSync(path.join(pluginDir, file)).isDirectory()), plugin => this.npmQueue.push(path.join(pluginDir, plugin)))
 
             this.npmQueue.drain = () => this.log(this.plugins)
         })
@@ -61,5 +65,4 @@ workers.plugins = class pluginsWorker {
             this.log(plugin)
         })
     }
-
 }
