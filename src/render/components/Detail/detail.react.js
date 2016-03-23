@@ -1,10 +1,4 @@
-import React, { Component } from 'react'
-import { shell } from 'electron'
-import _ from 'lodash'
-import moment from 'moment'
-
-
-export default class DetailLoaded extends Component {
+class LoadedDetail extends Component {
 
     state = {
         backgroundImage: '',

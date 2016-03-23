@@ -1,27 +1,18 @@
-import React, { Component } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import localforage from 'localforage'
-
-import initWorkers from '../utils/initWorkers'
-import Header from './Header'
-import Search from './Search'
-import Detail from './Detail'
-import Settings from './Settings'
-
-
-const workers = new initWorkers()
-
 const settingsStore = localforage.createInstance({
     name: 'photon-media',
     version: 1.0
 })
 
 
-export default class Framework extends Component {
+class Framework extends Component {
 
     state = {
         page: 'search',
         pageData: {}
+    }
+
+    componentWillMount() {
+        this.workers = new InitWorkers()
     }
 
     _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
@@ -30,9 +21,9 @@ export default class Framework extends Component {
         switch (this.state.page) {
             case 'home':
             case 'search':
-                return <Search workers={workers} updatePage={this._changePage} settingsStore={settingsStore}/>
+                return <Search workers={this.workers} updatePage={this._changePage} settingsStore={settingsStore}/>
             case 'detail':
-                return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} workers={workers}/>
+                return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} workers={this.workers}/>
             case 'settings':
                 return <Settings updatePage={this._changePage} />
             default:
@@ -43,7 +34,7 @@ export default class Framework extends Component {
     render() {
         return (
             <div className='app-framework'>
-                <Header workers={workers} />
+                <Header workers={this.workers} />
                 <ReactCSSTransitionGroup transitionName="cross-fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
                     <div className='transition-container' key={this.state.page}>
                         {this.getContents()}

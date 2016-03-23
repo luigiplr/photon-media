@@ -1,12 +1,4 @@
-import getPort from 'get-port'
-import express from 'express'
-import { EventEmitter } from 'events'
-import { createServer } from 'http'
-import socketIO from 'socket.io'
-import path from 'path'
-import Worker from 'workerjs'
-
-export default class initWorkers extends EventEmitter {
+class InitWorkers extends EventEmitter {
     constructor() {
         super()
 
@@ -16,7 +8,7 @@ export default class initWorkers extends EventEmitter {
             .then(port => this.port = port)
             .then(() => this.initSocketServer())
             .then(() => {
-                const workerDir = path.join(__dirname, '../', 'workers')
+                const workerDir = path.join(__dirname, 'workers')
                 this.workers = [
                     new Worker(path.join(workerDir, 'torrentEngine.worker.js'), true).postMessage(this.port),
                     new Worker(path.join(workerDir, 'trakt.worker.js'), true).postMessage(this.port),
@@ -54,7 +46,7 @@ export default class initWorkers extends EventEmitter {
 
             socket.on('color', ({ id, palette }) => this.emit(id, palette))
             socket.on('color:error', ({ id, error }) => this.emit(`${id}:error`, error))
-            
+
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
         })
     }

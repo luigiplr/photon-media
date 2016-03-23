@@ -1,9 +1,4 @@
-import React, { Component } from 'react'
-import { clipboard } from 'electron'
-import { v4 as uuid } from 'node-uuid'
-import Backdrop from './backdrop.react'
-
-export default class Search extends Component {
+class Search extends Component {
 
     state = {
         color: void 0,

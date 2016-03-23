@@ -1,12 +1,3 @@
-import React, { Component } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import _ from 'lodash'
-import { v4 as uuid } from 'node-uuid'
-
-import titleMatcher from '../../utils/titleMatcher'
-import LoadedDetail from './detail.react'
-import WarningDialog from './warning.react'
-
 
 export default class Detail extends Component {
 

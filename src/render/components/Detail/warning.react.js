@@ -1,9 +1,4 @@
-import React, { Component } from 'react'
-import { shell } from 'electron'
-import { defer } from 'lodash'
-
-
-export default class PiratedWarning extends Component {
+class WarningDialog extends Component {
 
     static propTypes = {
         settingsStore: React.PropTypes.object.isRequired,
@@ -21,12 +16,12 @@ export default class PiratedWarning extends Component {
             .then(dont => {
                 if (!dont) {
                     this.setState({ open: true })
-                    defer(() => this.refs.backdrop.appendChild(document.getElementsByTagName('iron-overlay-backdrop')[0]))
+                    _.defer(() => this.refs.backdrop.appendChild(document.getElementsByTagName('iron-overlay-backdrop')[0]))
                 }
             })
             .catch(() => {
                 this.setState({ open: true })
-                defer(() => this.refs.backdrop.appendChild(document.getElementsByTagName('iron-overlay-backdrop')[0]))
+                _.defer(() => this.refs.backdrop.appendChild(document.getElementsByTagName('iron-overlay-backdrop')[0]))
             })
     }
 
