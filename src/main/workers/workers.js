@@ -1,6 +1,9 @@
 /* common imports */
 import socketClient from 'socket.io-client'
 import _ from 'lodash'
+import async from 'async'
+import path from 'path'
+import fs from 'fs'
 
 /* Worker imports */
 import vibrant from 'node-vibrant'
