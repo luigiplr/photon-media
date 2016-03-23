@@ -7,7 +7,7 @@ dist
 
 bower_components
 node_modules
-electron
+electron_cache
 npm-debug.log
 
 cache

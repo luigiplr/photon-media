@@ -9,8 +9,11 @@ import uglify from 'gulp-uglify'
 import sourcemaps from 'gulp-sourcemaps'
 import symlink from 'gulp-sym'
 import gulpif from 'gulp-if'
+import install from 'gulp-install'
 import jeditor from 'gulp-json-editor'
 import plumber from 'gulp-plumber'
+import electronPackager from 'electron-packager'
+import packageJson from './package.json'
 import runSequence from 'run-sequence'
 import { server as electronConnect } from 'electron-connect'
 
@@ -135,7 +138,7 @@ gulp.task('start-dev', callback => {
     return runSequence('build', ['watch-core', 'watch-render', 'watch-styles', 'watch-static-assets'], 'electron-start-dev', callback)
 })
 
-gulp.task('release', callback => runSequence('build', callback))
+gulp.task('release', callback => runSequence('build', 'electron-npm-deps', 'electron-build', callback))
 
 
 
@@ -144,6 +147,28 @@ gulp.task('release', callback => runSequence('build', callback))
 gulp.task('electron-start', electronDev.start)
 
 gulp.task('electron-start-dev', callback => electronDev.start(['--dev'], callback))
+
+gulp.task('electron-npm-deps', callback => gulp.src('package.json')
+    .pipe(gulp.dest('build'))
+    .pipe(install({ args: ['--production', '--no-optional'] })))
+
+gulp.task('electron-build', callback => electronPackager({
+    arch: 'ia32',
+    dir: 'build',
+    out: 'release',
+    platform: 'win32',
+    name: 'Photon Media',
+    'build-version': packageJson.version,
+    'app-version': packageJson.version,
+    asar: true,
+    cache: 'electron_cache',
+    overwrite: true,
+    version: '0.37.2'
+}, (err, appPath) => {
+    if (err) console.error(err)
+    else console.info(`App built to ${appPath}`)
+    callback()
+}))
 
 
 process.on('uncaughtException', console.error)
