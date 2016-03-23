@@ -11,6 +11,7 @@
     "release": "gulp release"
   },
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "async": "^2.0.0-rc.1",
     "electron-window-state": "^2.0.0",
     "express": "^4.13.4",
