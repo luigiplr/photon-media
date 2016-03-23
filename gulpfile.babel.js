@@ -10,9 +10,11 @@ import sourcemaps from 'gulp-sourcemaps'
 import symlink from 'gulp-sym'
 import gulpif from 'gulp-if'
 import jeditor from 'gulp-json-editor'
+import electron from 'gulp-electron'
 import plumber from 'gulp-plumber'
 import runSequence from 'run-sequence'
 import { server as electronConnect } from 'electron-connect'
+import packageJson from './package.json'
 
 /* setup electron connect server for live reloading */
 const electronDev = electronConnect.create({ path: 'build' })
@@ -145,6 +147,34 @@ gulp.task('electron-start', electronDev.start)
 
 gulp.task('electron-start-dev', callback => electronDev.start(['--dev'], callback))
 
+
+gulp.task('electron-build', () => {
+
+    gulp.src('')
+        .pipe(electron({
+            src: './build',
+            packageJson: 'build/package.json',
+            release: './release',
+            cache: './cache',
+            version: `v${packageJson.devDependencies['electron-prebuilt']}`,
+            packaging: true,
+            platforms: ['win32-ia32'],
+            platformResources: {
+                darwin: {
+                    CFBundleDisplayName: packageJson.name,
+                    CFBundleIdentifier: packageJson.name,
+                    CFBundleName: packageJson.name,
+                    CFBundleVersion: packageJson.version
+                },
+                win: {
+                    'version-string': packageJson.version,
+                    'file-version': packageJson.version,
+                    'product-version': packageJson.version
+                }
+            }
+        }))
+        .pipe(gulp.dest(''))
+});
 
 process.on('uncaughtException', console.error)
 
