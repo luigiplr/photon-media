@@ -8,6 +8,7 @@ import gutil from 'gulp-util'
 import uglify from 'gulp-uglify'
 import sourcemaps from 'gulp-sourcemaps'
 import symlink from 'gulp-sym'
+import gulpif from 'gulp-if'
 import jeditor from 'gulp-json-editor'
 import plumber from 'gulp-plumber'
 import runSequence from 'run-sequence'
@@ -67,7 +68,7 @@ gulp.task('build-render', () => {
             gutil.log(gutil.colors.red(err.message))
         })
         .pipe(uglify(uglifyOptions))
-        .pipe(sourcemaps.write())
+        .pipe(gulpif(process.env.PRODUCTION_BUILD, sourcemaps.write()))
         .pipe(gulp.dest('build/js'))
 })
 
@@ -92,7 +93,10 @@ gulp.task('build-static-assets', () => {
         return json
     })).pipe(gulp.dest('build'))
 
-    gulp.src('bower_components').pipe(symlink('build/bower_components', { force: true }))
+    if (!process.env.PRODUCTION_BUILD)
+        gulp.src('bower_components').pipe(symlink('build/bower_components', { force: true }))
+    else
+        gulp.src('bower_components/**/*').pipe(gulp.dest('build/bower_components'))
 
     gulp.src('LICENSE').pipe(gulp.dest('build'))
     gulp.src('src/main/**/*.html').pipe(htmlmin({ collapseWhitespace: true })).pipe(gulp.dest('build'))
@@ -111,15 +115,25 @@ gulp.task('watch-render', () => gulp.watch('src/render/**/*.js', ['build-render'
 
 gulp.task('watch-styles', () => gulp.watch('src/styles/**/*.css', ['build-styles', electronDev.reload]))
 
-gulp.task('watch-static-assets', () => gulp.watch(['package.json', 'src/main/app.html, src/images/**/*'], ['build-static-assets', electronDev.reload]))
+gulp.task('watch-static-assets', () => {
+    gulp.watch('package.json', ['build-static-assets', electronDev.reload])
+    return gulp.watch('src/main/app.html', ['build-static-assets', electronDev.reload])
+})
 
 
 
 /* npm tasks */
 
-gulp.task('start', callback => runSequence('clean-build', ['build-core', 'build-render', 'build-styles', 'build-static-assets'], 'electron-start', callback))
+gulp.task('build', callback => runSequence('clean-build', ['build-core', 'build-render', 'build-styles', 'build-static-assets'], callback))
 
-gulp.task('start-dev', callback => runSequence('clean-build', ['build-core', 'build-render', 'build-styles', 'build-static-assets'], ['watch-core', 'watch-render', 'watch-styles', 'watch-static-assets'], 'electron-start-dev', callback))
+gulp.task('start', callback => runSequence('build', 'electron-start', callback))
+
+gulp.task('start-dev', callback => runSequence('build', ['watch-core', 'watch-render', 'watch-styles', 'watch-static-assets'], 'electron-start-dev', callback))
+
+gulp.task('release', callback => {
+    process.env.PRODUCTION_BUILD = true
+    return runSequence('build', callback)
+})
 
 
 
