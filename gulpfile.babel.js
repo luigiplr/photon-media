@@ -73,7 +73,7 @@ gulp.task('build-render', () => {
             gutil.log(gutil.colors.red(err.message))
         })
         .pipe(uglify(uglifyOptions))
-        .pipe(gulpif(PRODUCTION_BUILD, sourcemaps.write()))
+        .pipe(gulpif(!PRODUCTION_BUILD, sourcemaps.write()))
         .pipe(gulp.dest('build/js'))
 })
 
