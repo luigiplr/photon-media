@@ -8,13 +8,11 @@ class InitWorkers extends EventEmitter {
             .then(port => this.port = port)
             .then(() => this.initSocketServer())
             .then(() => {
-                const workerDir = path.join(__dirname, 'workers')
-                this.workers = [
-                    new Worker(path.join(workerDir, 'torrentEngine.worker.js'), true).postMessage(this.port),
-                    new Worker(path.join(workerDir, 'trakt.worker.js'), true).postMessage(this.port),
-                    new Worker(path.join(workerDir, 'color.worker.js'), true).postMessage(this.port),
-                    new Worker(path.join(workerDir, 'urlParser.worker.js'), true).postMessage(this.port)
-                ]
+                this.workers = ['torrentEngine', 'trakt', 'color', 'urlParser']
+
+                this.workers.map(worker => {
+                    return new Worker(path.join(__dirname, 'workers.js'), true).postMessage({ port: this.port, worker })
+                })
             })
             .then(() => this.initSocketEvents())
             .catch(console.error)

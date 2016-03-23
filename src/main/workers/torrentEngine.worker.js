@@ -1,13 +1,4 @@
-import socketClient from 'socket.io-client'
-import webtorrent from 'webtorrent'
-
-const webtorrentInstance = new webtorrent()
-
-
-self.onmessage = ({ data }) => new torrentEngine(data) // init socket connection when we get the message (port)
-
-
-class torrentEngine {
+workers.torrentEngine = class {
     constructor(port) {
         this.socket = socketClient(`http://localhost:${port}`)
 

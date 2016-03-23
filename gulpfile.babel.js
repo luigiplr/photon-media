@@ -16,8 +16,16 @@ import { server as electronConnect } from 'electron-connect'
 /* setup electron connect server for live reloading */
 const electronDev = electronConnect.create({ path: 'build' })
 
-
-
+const uglifyOptions = {
+    options: {
+        compress: {
+            screw_ie8: true
+        },
+        mangle: {
+            screw_ie8: true
+        }
+    }
+}
 
 
 /* Build Tasks */
@@ -31,35 +39,21 @@ gulp.task('build-core', () => {
             gutil.log(gutil.colors.red(err.message))
         })
         .pipe(concat('core.js'))
-        .pipe(uglify({
-            options: {
-                compress: {
-                    screw_ie8: true
-                },
-                mangle: {
-                    screw_ie8: true
-                }
-            }
-        }))
+        .pipe(uglify(uglifyOptions))
         .pipe(gulp.dest('build/js'))
-    return gulp.src('src/main/workers/*.js')
+    return gulp.src([
+            'src/main/workers/workers.js',
+            'src/main/workers/*.js'
+        ])
+        .pipe(concat('workers.js'))
         .pipe(plumber())
         .pipe(babel())
         .on('error', err => {
             gutil.log(gutil.colors.red('[Workers Code Compilation Error]'))
             gutil.log(gutil.colors.red(err.message))
         })
-        .pipe(uglify({
-            options: {
-                compress: {
-                    screw_ie8: true
-                },
-                mangle: {
-                    screw_ie8: true
-                }
-            }
-        }))
-        .pipe(gulp.dest('build/js/workers'))
+        .pipe(uglify(uglifyOptions))
+        .pipe(gulp.dest('build/js'))
 })
 
 gulp.task('build-render', () => {
@@ -72,16 +66,7 @@ gulp.task('build-render', () => {
             gutil.log(gutil.colors.red('[Render Code Compilation Error]'))
             gutil.log(gutil.colors.red(err.message))
         })
-        .pipe(uglify({
-            options: {
-                compress: {
-                    screw_ie8: true
-                },
-                mangle: {
-                    screw_ie8: true
-                }
-            }
-        }))
+        .pipe(uglify(uglifyOptions))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('build/js'))
 })

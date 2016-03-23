@@ -1,13 +1,4 @@
-import socketClient from 'socket.io-client'
-import http from 'http'
-import _ from 'lodash'
-import readTorrent from 'read-torrent'
-
-
-self.onmessage = ({ data }) => new urlParser(data) // init socket connection when we get the message (port)
-
-
-class urlParser {
+workers.urlParser = class {
     constructor(port) {
         this.socket = socketClient(`http://localhost:${port}`)
 
