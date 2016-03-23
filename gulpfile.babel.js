@@ -23,7 +23,7 @@ const electronDev = electronConnect.create({ path: 'build' })
 /* Build Tasks */
 
 gulp.task('build-core', () => {
-    gulp.src('src/main/*.js')
+    gulp.src('src/main/core.js')
         .pipe(plumber())
         .pipe(babel())
         .on('error', err => {
@@ -64,6 +64,7 @@ gulp.task('build-core', () => {
 
 gulp.task('build-render', () => {
     return gulp.src('src/render/**/*.js')
+        .pipe(concat('render.js'))
         .pipe(sourcemaps.init())
         .pipe(plumber())
         .pipe(babel())
@@ -82,7 +83,7 @@ gulp.task('build-render', () => {
             }
         }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('build/js/render'))
+        .pipe(gulp.dest('build/js'))
 })
 
 gulp.task('build-styles', () => {

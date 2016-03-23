@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
-import { remote } from 'electron'
-
-
-export default class Header extends Component {
+class Header extends Component {
 
     static propTypes = {
         workers: React.PropTypes.object.isRequired

@@ -1,14 +1,6 @@
-import { EventEmitter } from 'events'
-import { v4 as uuid } from 'node-uuid'
-import _ from 'lodash'
-import commonTitleMappings from './commonTitleMappings'
-
-
 const MATCHING_TIMEOUT = 10000 // 10 seconds
 
-const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
-
-export default class matchTitle extends EventEmitter {
+class titleMatcher extends EventEmitter {
     constructor(workers, name) {
         super()
         this.workers = workers
@@ -20,7 +12,7 @@ export default class matchTitle extends EventEmitter {
                 this.timeout = setTimeout(() => this.emit('error', `Timed out attempting to match "${title}"`), MATCHING_TIMEOUT)
                 return new Promise(resolve => Promise.all([this.searchEpisode(title, season, episode), this.searchMovie(title, ((season && episode) ? (season + episode) : null))]).then(([showEpisode, movie]) => {
                     if (showEpisode) {
-                        this.title = `${toTitleCase(title.replace(/-/g, ' '))} S${season}E${episode} - ${showEpisode.title}`
+                        this.title = `${::this.toTitleCase(title.replace(/-/g, ' '))} S${season}E${episode} - ${showEpisode.title}`
                         this.emit('status', `Fetching Data for "${this.title}"`)
                         this.getShow(title)
                             .then(show => resolve({...show, type: 'show', episode: showEpisode }))
@@ -50,6 +42,8 @@ export default class matchTitle extends EventEmitter {
                 this.emit('error', 'Data Matching has run into a critical error!')
             })
     }
+
+    toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
     getColors(data) {
         const { sockets } = this.workers.socket

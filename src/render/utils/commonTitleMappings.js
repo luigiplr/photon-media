@@ -1,4 +1,4 @@
-export default {
+const commonTitleMappings = {
     '60-minutes': ['60-minutes-us'],
     'american-crime-1969': ['american-crime'],
     'the-bachelor-live': ['bachelor-live'],

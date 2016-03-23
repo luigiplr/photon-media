@@ -1,13 +1,7 @@
-import React, { Component } from 'react'
-import ReactCSSTransitionReplace from 'react-css-transition-replace'
-import { shell } from 'electron'
-import _ from 'lodash'
-import { v4 as uuid } from 'node-uuid'
-
 const defaultDelay = 30000
 const initialDelay = 10000
 
-export default class Backdrop extends Component {
+class Backdrop extends Component {
 
     state = {
         trending: [],
@@ -29,7 +23,7 @@ export default class Backdrop extends Component {
     componentDidMount() {
         this.mounted = true
         const { settingsStore } = this.props
-        
+
         settingsStore.getItem('last-search-backdrop')
             .then(lastItem => {
                 let delay = 0
@@ -130,7 +124,7 @@ export default class Backdrop extends Component {
 
     render() {
         return (
-            <ReactCSSTransitionReplace className="transition-container" transitionName="cross-fade" transitionEnterTimeout={700} transitionLeaveTimeout={700}>
+            <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                 <div className='transition-container' key={this.state.backdrop.image}>
                     <div style={{ backgroundImage: `url(${this.state.backdrop.image})` }} className="search-container-backdrop" />
                     <div className="bottom-info-container">
@@ -139,7 +133,7 @@ export default class Backdrop extends Component {
                         <p className="rating">{this.state.backdrop.certification}</p> 
                     </div> 
                 </div> 
-            </ReactCSSTransitionReplace>
+            </ReactCSSTransitionGroup>
         )
     }
 }
