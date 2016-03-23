@@ -28,7 +28,7 @@ const uglifyOptions = {
     }
 }
 
-process.env.PRODUCTION_BUILD = true
+let PRODUCTION_BUILD = true
 
 /* Build Tasks */
 
@@ -43,6 +43,7 @@ gulp.task('build-core', () => {
         .pipe(concat('core.js'))
         .pipe(uglify(uglifyOptions))
         .pipe(gulp.dest('build/js'))
+
     return gulp.src([
             'src/main/workers/workers.js',
             'src/main/workers/*.js'
@@ -69,7 +70,7 @@ gulp.task('build-render', () => {
             gutil.log(gutil.colors.red(err.message))
         })
         .pipe(uglify(uglifyOptions))
-        .pipe(gulpif(process.env.PRODUCTION_BUILD, sourcemaps.write()))
+        .pipe(gulpif(PRODUCTION_BUILD, sourcemaps.write()))
         .pipe(gulp.dest('build/js'))
 })
 
@@ -94,7 +95,7 @@ gulp.task('build-static-assets', () => {
         return json
     })).pipe(gulp.dest('build'))
 
-    if (!process.env.PRODUCTION_BUILD)
+    if (!PRODUCTION_BUILD)
         gulp.src('bower_components').pipe(symlink('build/bower_components', { force: true }))
     else
         gulp.src('bower_components/**/*').pipe(gulp.dest('build/bower_components'))
@@ -130,7 +131,7 @@ gulp.task('build', callback => runSequence('clean-build', ['build-core', 'build-
 gulp.task('start', callback => runSequence('build', 'electron-start', callback))
 
 gulp.task('start-dev', callback => {
-    process.env.PRODUCTION_BUILD = false
+    PRODUCTION_BUILD = false
     return runSequence('build', ['watch-core', 'watch-render', 'watch-styles', 'watch-static-assets'], 'electron-start-dev', callback)
 })
 
