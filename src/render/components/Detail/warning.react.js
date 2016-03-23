@@ -27,13 +27,13 @@ class WarningDialog extends Component {
 
     _getDialogUpStyle() {
         return `
-                paper-dialog.warning {
-                    position: fixed;
-                    width: 50vw;
-                    min-width: 500px;
-                    overflow: auto;
-                    z-index: 999;
-                }
+            paper-dialog.warning {
+                position: fixed;
+                width: 50vw;
+                min-width: 500px;
+                overflow: auto;
+                z-index: 999;
+            }
             `
     }
 
@@ -60,7 +60,7 @@ class WarningDialog extends Component {
                 <paper-dialog modal className="warning" opened={this.state.open} entry-animation="scale-up-animation" exit-animation="fade-out-animation">
                     <h2>Possibly illegitimate media source detected</h2>
                     <paper-dialog-scrollable>
-                        While Photon Media was designed with the idea to create a general purpose streaming/casting client, using it to stream illegitimate (pirated) materal is unendorsed and not encouraged. 
+                        While Photon Media was designed with the idea to create a general purpose casting client, using it to cast illegitimate (pirated) materal is unendorsed nor encouraged. 
                         <br/><br/>
                         We display this warning in hopes you will support the creators of the media in question and use a legitimate source.
                     </paper-dialog-scrollable>
