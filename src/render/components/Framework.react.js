@@ -13,6 +13,7 @@ class Framework extends Component {
 
     componentWillMount() {
         this.workers = new InitWorkers()
+        this.plugins = new Plugins(this.workers)
     }
 
     _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });

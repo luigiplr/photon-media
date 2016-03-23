@@ -19,7 +19,7 @@ class InitWorkers extends EventEmitter {
         return new Promise((resolve, reject) => {
             const httpServer = createServer(express())
             this.socket = socketIO(httpServer)
-            console.info(`Socket Server running @ port ${this.port}`)
+            console.info(`Socket Server running on port: ${this.port}`)
             httpServer.listen(this.port, resolve)
         })
     }
@@ -46,8 +46,8 @@ class InitWorkers extends EventEmitter {
                 loggedWorkers++
                 if (loggedWorkers === this.workers.length) {
                     this.initiated = true
-                    this.emit('workers:initiated')
                     console.info('All workers initialized successfully')
+                    this.emit('workers:initiated')
                 }
             })
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
