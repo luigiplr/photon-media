@@ -6,12 +6,12 @@ class InitWorkers extends EventEmitter {
 
         getPort()
             .then(port => this.port = port)
-            .then(() => this.initSocketServer())
+            .then(::this.initSocketServer)
             .then(() => {
                 this.workers = ['players', 'trakt', 'color', 'urlParser', 'npm']
                 this.workers.map(worker => new Worker(path.join(__dirname, 'workers.js'), true).postMessage({ port: this.port, worker }))
             })
-            .then(() => this.initSocketEvents())
+            .then(::this.initSocketEvents)
             .catch(console.error)
     }
 
