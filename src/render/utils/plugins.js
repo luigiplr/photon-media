@@ -4,16 +4,21 @@ class Plugins extends EventEmitter {
         this.workers = workers
 
         this._installed = {}
+        this.appVersion = remote.app.getVersion()
+        this.pluginDir = path.join(remote.app.getPath('appData'), remote.app.getName(), 'plugins')
+
+        if (!fs.existsSync(this.pluginDir)) fs.mkdirSync(this.pluginDir)
 
         this.workers.once('workers:initiated', () => {
-            console.info('Plugins Initializing')
             this.sockets = this.workers.socket.sockets
             this.checkInstalled()
         })
     }
 
     checkInstalled() {
-        console.log(this.sockets)
+        const id = uuid()
+        console.info(`Plugins initializing from "${this.pluginDir}"`)
+        this.sockets.emit('plugins:get', { pluginDir: this.pluginDir, appVersion: this.appVersion, id })
     }
 
     install(zip) {

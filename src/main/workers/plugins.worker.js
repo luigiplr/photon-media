@@ -18,6 +18,9 @@ workers.plugins = class pluginsWorker {
     });
 
     initEvents() {
+        this.socket.on('plugins:get', ({ id, pluginDir, appVersion }) => {
+            this.log({ id, pluginDir, appVersion })
+        })
         this.socket.on('plugin:install', ({ id, plugin }) => {
             this.log(plugin)
         })
