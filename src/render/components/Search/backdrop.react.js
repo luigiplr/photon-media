@@ -124,7 +124,7 @@ class Backdrop extends Component {
 
     render() {
         return (
-            <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={700} transitionLeaveTimeout={700}>
+            <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
                 <div className='transition-container' key={this.state.backdrop.image}>
                     <div style={{ backgroundImage: `url(${this.state.backdrop.image})` }} className="search-container-backdrop" />
                     <div className="bottom-info-container">
