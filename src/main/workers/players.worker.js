@@ -1,4 +1,4 @@
-workers.torrentEngine = class {
+workers.players = class players {
     constructor(port) {
         this.socket = socketClient(`http://localhost:${port}`)
 
@@ -11,24 +11,18 @@ workers.torrentEngine = class {
         this.initEvents()
     }
 
+
     log = (message, type = 'log') => this.socket.emit('info', {
-        source: 'Torrent Engine Worker',
+        source: 'Player Discovery Worker',
         type,
         message
     });
 
     initEvents() {
-        this.socket.on('torrentEngine:stats', ({ infohash, target = 'all' }) => {
+
+        this.socket.on('players:get', ({ id }) => {
 
         })
 
-        this.socket.on('torrentEngine:add', infohash => webtorrentInstance.add(infohash, (torrent) => {
-            this.log(`Client is downloading: ${torrent.infoHash}`)
-
-        }))
-
-        this.socket.on('torrentEngine:remove', infohash => {
-
-        })
     }
 }

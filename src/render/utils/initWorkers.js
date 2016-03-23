@@ -8,7 +8,7 @@ class InitWorkers extends EventEmitter {
             .then(port => this.port = port)
             .then(() => this.initSocketServer())
             .then(() => {
-                this.workers = ['torrentEngine', 'trakt', 'color', 'urlParser']
+                this.workers = ['players', 'trakt', 'color', 'urlParser']
 
                 this.workers.map(worker => {
                     return new Worker(path.join(__dirname, 'workers.js'), true).postMessage({ port: this.port, worker })
@@ -30,12 +30,6 @@ class InitWorkers extends EventEmitter {
     initSocketEvents() {
         let loggedWorkers = 0
         this.socket.on('connection', socket => {
-            loggedWorkers++
-            if (loggedWorkers === this.workers.length) {
-                this.initiated = true
-                this.emit('workers:initiated')
-            }
-
             socket.on('urlParser', ({ id, data }) => this.emit(id, data))
             socket.on('urlParser:error', ({ id, error }) => this.emit(`${id}:error`, error))
 
@@ -45,6 +39,14 @@ class InitWorkers extends EventEmitter {
             socket.on('color', ({ id, palette }) => this.emit(id, palette))
             socket.on('color:error', ({ id, error }) => this.emit(`${id}:error`, error))
 
+            socket.on('initiated', () => {
+                loggedWorkers++
+                if (loggedWorkers === this.workers.length) {
+                    this.initiated = true
+                    this.emit('workers:initiated')
+                    console.info('All workers initialized successfully')
+                }
+            })
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))
         })
     }
