@@ -8,9 +8,7 @@ workers.plugins = class pluginsWorker {
         })
         this.socket.on('disconnect', () => this.log('Socket Disconnected!', 'info'))
 
-
         this.plugins = {}
-
         this.initEvents()
     }
 
@@ -26,7 +24,7 @@ workers.plugins = class pluginsWorker {
             const { pluginData, name } = require(path.join(pluginPath, 'package.json'))
             this.plugins[name] = {
                 ...pluginData,
-                plugin: new plugin()
+                path: pluginPath
             }
             return next()
         }
@@ -48,7 +46,7 @@ workers.plugins = class pluginsWorker {
                 const plugin = require(pluginPath)
                 this.plugins[name] = {
                     ...pluginData,
-                    plugin: new plugin()
+                    path: pluginPath
                 }
                 next()
             })
@@ -58,8 +56,7 @@ workers.plugins = class pluginsWorker {
     initEvents() {
         this.socket.on('plugins:get', ({ id, pluginDir, appVersion }) => {
             _.forEach(fs.readdirSync(pluginDir).filter(file => fs.statSync(path.join(pluginDir, file)).isDirectory()), plugin => this.npmQueue.push(path.join(pluginDir, plugin)))
-
-            this.npmQueue.drain = () => this.log(this.plugins)
+            this.npmQueue.drain = () => this.socket.emit('plugins', { id, plugins: this.plugins })
         })
         this.socket.on('plugin:install', ({ id, plugin }) => {
             this.log(plugin)

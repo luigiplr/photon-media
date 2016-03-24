@@ -36,7 +36,7 @@ class InitWorkers extends EventEmitter {
             socket.on('players', ({ id, players }) => this.emit(id, players))
             socket.on('players:error', ({ id, error }) => this.emit(`${id}:error`, error))
 
-            socket.on('plugins', ({ id, data }) => this.emit(id, data))
+            socket.on('plugins', ({ id, plugins }) => this.emit(id, plugins))
             socket.on('plugins:error', ({ id, error }) => this.emit(`${id}:error`, error))
 
             socket.on('color', ({ id, palette }) => this.emit(id, palette))

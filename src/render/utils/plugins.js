@@ -19,6 +19,9 @@ class Plugins extends EventEmitter {
         const id = uuid()
         console.info(`Plugins initializing from "${this.pluginDir}"`)
         this.sockets.emit('plugins:get', { pluginDir: this.pluginDir, appVersion: this.appVersion, id })
+        this.workers.once(id, plugins => {
+            console.log(plugins)
+        })
     }
 
     install(zip) {
