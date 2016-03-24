@@ -19,38 +19,15 @@ workers.plugins = class pluginsWorker {
     });
 
     npmQueue = async.queue((pluginPath, next) => {
-        if (fs.existsSync(path.join(pluginPath, 'node_modules'))) { // Check if npm install has already been run, if it has we dont need todo it again
-            const plugin = require(pluginPath)
-            const { pluginData, name } = require(path.join(pluginPath, 'package.json'))
-            this.plugins[name] = {
-                ...pluginData,
-                path: pluginPath
-            }
-            return next()
+
+        const pluginPackage = require(path.join(pluginPath, 'package.json'))
+        const { dependencies, name } = pluginPackage
+
+        this.plugins[name] = {
+            package: pluginPackage,
+            path: pluginPath
         }
-
-        const { dependencies, name, pluginData } = require(path.join(pluginPath, 'package.json'))
-        let depArray = []
-
-        _.forEach(dependencies, (version, dep) => depArray.push(`${dep}@${version}`)) //parse every production dep in the plugin and push to our npm install array
-
-        npm.load({}, (err) => {
-            if (err) {
-                this.log(err, 'error')
-                return next()
-            }
-            npm.commands.install(pluginPath, depArray, (er, data) => {
-                if (err) this.log(err, 'error')
-                this.log(`Compleated dependencies install for ${name}`)
-
-                const plugin = require(pluginPath)
-                this.plugins[name] = {
-                    ...pluginData,
-                    path: pluginPath
-                }
-                next()
-            })
-        })
+        next()
     });
 
     initEvents() {
