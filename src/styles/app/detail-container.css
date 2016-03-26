@@ -17,14 +17,14 @@
     padding: 0;
 }
 
-.detail .loading-spinner-wrapper {
+.loading-spinner-wrapper {
     width: 100vw;
     position: absolute;
     height: 100vh;
     text-align: center;
 }
 
-.detail .loading-spinner-wrapper .loading-spinner {
+.loading-spinner-wrapper .loading-spinner {
     width: 50px;
     height: 50px;
     margin-top: 45vh;
@@ -32,14 +32,14 @@
     text-align: left;
 }
 
-.detail .loading-spinner-wrapper .status-btn {
+.loading-spinner-wrapper .status-btn {
     color: #fff;
     opacity: .6;
     position: relative;
     top: -30px;
 }
 
-.detail .loading-spinner-wrapper .status-text {
+.loading-spinner-wrapper .status-text {
     width: 50vw;
     line-height: 25px;
     color: white;

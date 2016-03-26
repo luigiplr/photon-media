@@ -47,7 +47,7 @@ class InitWorkers extends EventEmitter {
                 if (loggedWorkers === this.workers.length) {
                     this.initiated = true
                     console.info('All workers initialized successfully')
-                    this.emit('workers:initiated')
+                    this.emit('initiated')
                 }
             })
             socket.on('info', ({ type, source, message }) => console[type](`${source}:`, message))

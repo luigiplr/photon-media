@@ -10,7 +10,7 @@ class Plugins extends EventEmitter {
 
         if (!fs.existsSync(this.pluginDir)) fs.mkdirSync(this.pluginDir)
 
-        this.workers.once('workers:initiated', () => {
+        this.workers.once('initiated', () => {
             this.sockets = this.workers.socket.sockets
             this.checkInstalled()
         })
@@ -23,6 +23,7 @@ class Plugins extends EventEmitter {
         this.workers.once(id, plugins => {
             this.plugins = plugins
             this.initialized = true
+            this.emit('initiated')
         })
     }
 

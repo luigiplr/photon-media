@@ -1,8 +1,8 @@
-.app-framework{
-	position: fixed;
-	height: 100vh;
-	top: 0;
-	width: 100vw;
+.app-framework {
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
 }
 
 .app-framework .cross-fade-leave {
@@ -34,4 +34,8 @@
     top: 0;
     width: 100vw;
     position: absolute !important;
+}
+
+body {
+    background-color: #17181b;
 }
