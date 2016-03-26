@@ -1,4 +1,3 @@
-
 export default class Detail extends Component {
 
     state = {
@@ -27,15 +26,13 @@ export default class Detail extends Component {
     }
 
     _initURLParse = () => {
-        const { url } = this.props
-        const { sockets } = this.props.workers.socket
-        const requestID = uuid()
+        const { workers, plugins, url } = this.props
+        const parseRequest = uuid()
+        const urlParse = new urlParser({ id: parseRequest, workers, plugins, url })
 
-        sockets.emit('urlParser:get', { id: requestID, url })
-
-        this.props.workers.once(requestID, ({ parsed }) => {
+        urlParse.on(parseRequest, ({ name, url }) => {
             if (!this.mounted) return
-            const { name } = parsed
+
             this.setState({ status: `Parsing: "${name}"` })
             const matcher = new titleMatcher(this.props.workers, name)
 

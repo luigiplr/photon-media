@@ -10,12 +10,15 @@ import sourcemaps from 'gulp-sourcemaps'
 import symlink from 'gulp-sym'
 import gulpif from 'gulp-if'
 import install from 'gulp-install'
+import download from 'gulp-download'
+import unzip from 'gulp-unzip'
 import jeditor from 'gulp-json-editor'
 import plumber from 'gulp-plumber'
 import electronPackager from 'electron-packager'
 import packageJson from './package.json'
 import runSequence from 'run-sequence'
 import { server as electronConnect } from 'electron-connect'
+import fs from 'fs'
 
 /* setup electron connect server for live reloading */
 const electronDev = electronConnect.create({ path: 'build' })
@@ -34,6 +37,20 @@ const uglifyOptions = {
 let PRODUCTION_BUILD = true
 
 /* Build Tasks */
+
+gulp.task('build-plugins', () => {
+    if (!fs.existsSync('build_cache/plugins/master.zip'))
+        download('https://github.com/photonics-org/default-plugins/archive/master.zip')
+        .pipe(gulp.dest('build_cache/plugins'))
+
+    if (!fs.existsSync('build_cache/plugins/default-plugins-master'))
+        gulp.src('build_cache/plugins/master.zip')
+        .pipe(unzip())
+        .pipe(gulp.dest('build_cache/plugins'))
+
+    return gulp.src('build_cache/plugins/default-plugins-master/**/*.zip')
+        .pipe(gulp.dest('build/plugins'))
+})
 
 gulp.task('build-core', () => {
     gulp.src('src/main/core.js')
@@ -132,7 +149,7 @@ gulp.task('watch-static-assets', () => {
 
 /* npm tasks */
 
-gulp.task('build', callback => runSequence('clean-build', ['build-core', 'build-render', 'build-styles', 'build-static-assets'], callback))
+gulp.task('build', callback => runSequence('clean-build', ['build-core', 'build-render', 'build-styles', 'build-static-assets', 'build-plugins'], callback))
 
 gulp.task('start', callback => runSequence('build', 'electron-start', callback))
 
@@ -164,7 +181,7 @@ gulp.task('electron-build', callback => electronPackager({
     'build-version': packageJson.version,
     'app-version': packageJson.version,
     asar: true,
-    cache: 'electron_cache',
+    cache: 'build_cache',
     overwrite: true,
     version: '0.37.2'
 }, (err, appPath) => {

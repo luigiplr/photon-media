@@ -1,6 +1,3 @@
-const defaultDelay = 30000
-const initialDelay = 10000
-
 class Backdrop extends Component {
 
     state = {
@@ -9,6 +6,9 @@ class Backdrop extends Component {
             image: ''
         }
     };
+
+    defaultDelay = 20000;
+    initialDelay = 5000;
 
     static propTypes = {
         settingsStore: React.PropTypes.object.isRequired,
@@ -28,7 +28,7 @@ class Backdrop extends Component {
             .then(lastItem => {
                 let delay = 0
                 if (lastItem) {
-                    delay = initialDelay
+                    delay = this.initialDelay
                     this._loadBackdrop(lastItem).then(() => {
                         if (!this.mounted) return
                         this.setState({ backdrop: lastItem })
@@ -91,7 +91,7 @@ class Backdrop extends Component {
                     backdrop
                 })
                 settingsStore.setItem('last-search-backdrop', backdrop)
-                this.backdropTimeout = setTimeout(this._getNewBackdrop, defaultDelay)
+                this.backdropTimeout = setTimeout(this._getNewBackdrop, this.defaultDelay)
             })
         })
     };

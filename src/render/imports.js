@@ -5,6 +5,7 @@ import { clipboard, shell, remote } from 'electron'
 import { EventEmitter } from 'events'
 import { v4 as uuid } from 'node-uuid'
 import _ from 'lodash'
+import fs from 'fs'
 import localforage from 'localforage'
 import moment from 'moment'
 
