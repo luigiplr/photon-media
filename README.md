@@ -8,7 +8,8 @@
 
 ### What is Photon Media?
 
-Photon media was designed to be able to parse any local video files and supported urls (supported urls can be expanded via engine plugins)<br>
+Photon media was designed to be able to parse any local video files and supported urls<br>
+(supported urls can be expanded via engine plugins)<br><br>
 Photon media will parse, fetch subtitles and offer methods of playback (casting, local players etc) for supported filetypes
 
 ### Why did I make it?
