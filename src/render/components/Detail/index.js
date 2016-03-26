@@ -1,4 +1,3 @@
-
 export default class Detail extends Component {
 
     state = {
@@ -27,31 +26,39 @@ export default class Detail extends Component {
     }
 
     _initURLParse = () => {
-        const { url } = this.props
-        const { sockets } = this.props.workers.socket
-        const requestID = uuid()
+        const { workers, plugins, url } = this.props
 
-        sockets.emit('urlParser:get', { id: requestID, url })
+        const urlParse = new urlParser(workers, plugins, url)
 
-        this.props.workers.once(requestID, ({ parsed }) => {
-            if (!this.mounted) return
-            const { name } = parsed
-            this.setState({ status: `Parsing: "${name}"` })
-            const matcher = new titleMatcher(this.props.workers, name)
-
-            matcher.on('status', status => {
-                if (!this.mounted) return
-                this.setState({ status })
-            })
-            matcher.once('success', detail => {
-                if (!this.mounted) return
-                this.setState({ detail })
-            })
-            matcher.once('error', error => {
-                if (!this.mounted) return
-                this.setState({ error, loading: false })
-            })
+        urlParse.on('parsed', data => {
+            console.log(data)
         })
+
+
+        /*
+                sockets.emit('urlParser:get', { id: requestID, url })
+
+                this.props.workers.once(requestID, ({ parsed }) => {
+                    if (!this.mounted) return
+                    const { name } = parsed
+                    this.setState({ status: `Parsing: "${name}"` })
+                    const matcher = new titleMatcher(this.props.workers, name)
+
+                    matcher.on('status', status => {
+                        if (!this.mounted) return
+                        this.setState({ status })
+                    })
+                    matcher.once('success', detail => {
+                        if (!this.mounted) return
+                        this.setState({ detail })
+                    })
+                    matcher.once('error', error => {
+                        if (!this.mounted) return
+                        this.setState({ error, loading: false })
+                    })
+                })
+
+                */
     }
 
     _close() {

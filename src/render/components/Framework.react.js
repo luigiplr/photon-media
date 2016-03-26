@@ -22,11 +22,11 @@ class Framework extends Component {
         switch (this.state.page) {
             case 'home':
             case 'search':
-                return <Search workers={this.workers} updatePage={this._changePage} settingsStore={settingsStore}/>
+                return <Search workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={settingsStore}/>
             case 'detail':
-                return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} workers={this.workers}/>
+                return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
             case 'settings':
-                return <Settings updatePage={this._changePage} />
+                return <Settings plugins={this.plugins} updatePage={this._changePage} />
             default:
                 return null
         }

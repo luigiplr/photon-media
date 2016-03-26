@@ -3,7 +3,8 @@ class Plugins extends EventEmitter {
         super()
         this.workers = workers
 
-        this._installed = {}
+        this.plugins = {}
+        this.initialized = false
         this.appVersion = remote.app.getVersion()
         this.pluginDir = path.join(remote.app.getPath('appData'), remote.app.getName(), 'plugins')
 
@@ -20,7 +21,8 @@ class Plugins extends EventEmitter {
         console.info(`Plugins initializing from "${this.pluginDir}"`)
         this.sockets.emit('plugins:get', { pluginDir: this.pluginDir, appVersion: this.appVersion, id })
         this.workers.once(id, plugins => {
-            console.log(plugins)
+            this.plugins = plugins
+            this.initialized = true
         })
     }
 
