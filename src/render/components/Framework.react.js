@@ -43,11 +43,11 @@ class Framework extends Component {
 
     _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
 
-    getContents() {
+    _getContents() {
         switch (this.state.page) {
             case 'home':
             case 'search':
-                return <Search workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={settingsStore}/>
+                return <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={settingsStore}/>
             case 'detail':
                 return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
             case 'settings':
@@ -57,7 +57,7 @@ class Framework extends Component {
         }
     }
 
-    getCoreContents() {
+    _getCoreContents() {
         const { initializing, initializingDots } = this.state
         if (initializing) {
             return (
@@ -71,7 +71,7 @@ class Framework extends Component {
             return (
                 <ReactCSSTransitionGroup transitionName="cross-fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
                     <div className='transition-container' key={this.state.page}>
-                        {::this.getContents()}
+                        {::this._getContents()}
                     </div>
                 </ReactCSSTransitionGroup>
             )
@@ -81,8 +81,8 @@ class Framework extends Component {
     render() {
         return (
             <div className='app-framework'>
-                <Header workers={this.workers} />
-                {::this.getCoreContents()}
+                <Header />
+                {::this._getCoreContents()}
             </div>
         )
     }
