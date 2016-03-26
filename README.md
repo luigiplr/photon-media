@@ -48,7 +48,7 @@ Pre-built binarys & setup files can be found in the [Releases Tab](https://githu
 
 To run the app in development:
 
-- `npm start` or `gulp start-dev`
+- `npm start` or `gulp start-dev` -- On windows terminal must be run as administrator for gulp-dev (symlinks)
 
 ### Building & Release
 
