@@ -27,38 +27,28 @@ export default class Detail extends Component {
 
     _initURLParse = () => {
         const { workers, plugins, url } = this.props
+        const parseRequest = uuid()
+        const urlParse = new urlParser({ id: parseRequest, workers, plugins, url })
 
-        const urlParse = new urlParser(workers, plugins, url)
+        urlParse.on(parseRequest, ({ name, url }) => {
+            if (!this.mounted) return
 
-        urlParse.on('parsed', data => {
-            console.log(data)
+            this.setState({ status: `Parsing: "${name}"` })
+            const matcher = new titleMatcher(this.props.workers, name)
+
+            matcher.on('status', status => {
+                if (!this.mounted) return
+                this.setState({ status })
+            })
+            matcher.once('success', detail => {
+                if (!this.mounted) return
+                this.setState({ detail })
+            })
+            matcher.once('error', error => {
+                if (!this.mounted) return
+                this.setState({ error, loading: false })
+            })
         })
-
-
-        /*
-                sockets.emit('urlParser:get', { id: requestID, url })
-
-                this.props.workers.once(requestID, ({ parsed }) => {
-                    if (!this.mounted) return
-                    const { name } = parsed
-                    this.setState({ status: `Parsing: "${name}"` })
-                    const matcher = new titleMatcher(this.props.workers, name)
-
-                    matcher.on('status', status => {
-                        if (!this.mounted) return
-                        this.setState({ status })
-                    })
-                    matcher.once('success', detail => {
-                        if (!this.mounted) return
-                        this.setState({ detail })
-                    })
-                    matcher.once('error', error => {
-                        if (!this.mounted) return
-                        this.setState({ error, loading: false })
-                    })
-                })
-
-                */
     }
 
     _close() {

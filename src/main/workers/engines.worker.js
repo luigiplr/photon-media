@@ -18,11 +18,9 @@ workers.engines = class {
     });
 
     initEvents() {
-        this.socket.on('engines:parse', ({ id, engines, url }) => {
-            this.parseURL(engines, url)
-                .then(data => this.socket.emit('engines', { id, data }))
-                .catch(() => this.socket.emit('engines:error', { id, error: 'No Engine Found' }))
-        })
+        this.socket.on('engines:parse', ({ id, engines, url }) => this.parseURL(engines, url)
+            .then(data => this.socket.emit('engines', { id, data }))
+            .catch(() => this.socket.emit('engines:error', { id, error: 'No Engine Found' })))
     }
 
     parseURL(engines, url) {
@@ -31,10 +29,12 @@ workers.engines = class {
             _.forEach(engines, engine => {
                 let engineModule = require(engine.path)
                 engineModule = new engineModule({ url })
+
                 engineModule.once('incompatible', () => engineModule.removeAllListeners('parsed'))
                 engineModule.once('parsed', data => {
                     engineModule.removeAllListeners('incompatible')
                     foundEngine = true
+                    this.log(data)
                     resolve(data)
                 })
             })
