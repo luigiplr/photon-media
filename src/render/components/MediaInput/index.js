@@ -1,4 +1,4 @@
-class Search extends Component {
+class MediaInput extends Component {
 
     state = {
         color: void 0,
