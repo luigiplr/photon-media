@@ -85,7 +85,7 @@ class Framework extends Component {
             case 'detail':
                 return <Detail settingsStore={this.settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
             case 'settings':
-                return <SettingsComponent settingsStore={this.settingsStore} plugins={this.plugins} updatePage={this._changePage} />
+                return <SettingsComponent settingsStore={this.settingsStore} plugins={this.plugins} workers={this.workers} updatePage={this._changePage} />
             default:
                 return null
         }

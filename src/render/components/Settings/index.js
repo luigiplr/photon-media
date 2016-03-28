@@ -6,7 +6,8 @@ export default class SettingsComponent extends Component {
 
     static propTypes = {
         settingsStore: React.PropTypes.object.isRequired,
-        workers: React.PropTypes.object.isRequired
+        workers: React.PropTypes.object.isRequired,
+        plugins: React.PropTypes.object.isRequired
     };
 
     _changeTab(tab) {
@@ -15,13 +16,13 @@ export default class SettingsComponent extends Component {
     }
 
     _getSettingsTab() {
-        let tabContents = null
+        let TabContents = null
         switch (this.state.tab) {
             case 'general':
-                tabContents = <SettingsTabGeneral />
+                TabContents = <SettingsTabGeneral {...this.props} />
                 break
         }
-        return tabContents
+        return TabContents
     }
 
     _settingsTabStyles() {
