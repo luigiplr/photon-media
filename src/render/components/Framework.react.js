@@ -8,22 +8,35 @@ class Framework extends Component {
     };
 
     componentWillMount() {
-        this.workers = new InitWorkers()
-        this.workers.once('initiated', () => this.setState({ initializing: 'Loading Plugins' }))
+        Promise.all([this._initSettings(), this._initWorkers()]).then(() => {
+            this.setState({ initializing: 'Loading Plugins' })
 
-        this.settings = new Settings(localforage.createInstance({
-            name: 'photon-media',
-            version: 1.0
-        }))
-
-        this.plugins = new Plugins(this.workers)
-        this.plugins.once('initiated', () => this.setState({ initializing: false }))
+            this.plugins = new Plugins(this.workers)
+            this.plugins.once('initiated', () => this.setState({ initializing: false }))
+        })
 
         this.setupContextMenus()
     }
 
     componentDidMount() {
         this.addDaDots()
+    }
+
+    _initSettings() {
+        return new Promise(resolve => {
+            this.settingsStore = new Settings(localforage.createInstance({
+                name: 'photon-media',
+                version: 1.0
+            }))
+            this.settingsStore.once('initiated', resolve)
+        })
+    }
+
+    _initWorkers() {
+        return new Promise(resolve => {
+            this.workers = new InitWorkers()
+            this.workers.once('initiated', resolve)
+        })
     }
 
     setupContextMenus() {
@@ -68,11 +81,11 @@ class Framework extends Component {
     _getContents() {
         switch (this.state.page) {
             case 'home':
-                return <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settings={this.settings}/>
+                return <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={this.settingsStore}/>
             case 'detail':
-                return <Detail settings={this.settings} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
+                return <Detail settingsStore={this.settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
             case 'settings':
-                return <SettingsComponent settings={this.settings} plugins={this.plugins} updatePage={this._changePage} />
+                return <SettingsComponent settingsStore={this.settingsStore} plugins={this.plugins} updatePage={this._changePage} />
             default:
                 return null
         }
