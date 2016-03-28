@@ -32,10 +32,11 @@ workers.plugins = class pluginsWorker {
 
     initEvents() {
         this.socket.on('plugins:verifyDefault', ({ id, installDir, pluginDir }) => {
-            _.forEach(fs.readdirSync(installDir), zip => {
-                const pluginInstallPath = path.join(pluginDir, path.parse(zip).name)
-                if (!fs.existsSync(pluginInstallPath)) new admZip(path.join(installDir, zip)).extractAllTo(pluginInstallPath, true)
-            })
+            if (fs.existsSync(installDir))
+                _.forEach(fs.readdirSync(installDir), zip => {
+                    const pluginInstallPath = path.join(pluginDir, path.parse(zip).name)
+                    if (!fs.existsSync(pluginInstallPath)) new admZip(path.join(installDir, zip)).extractAllTo(pluginInstallPath, true)
+                })
             this.socket.emit('plugins', { id, data: null })
         })
 
