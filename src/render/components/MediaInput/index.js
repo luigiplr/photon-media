@@ -72,7 +72,7 @@ class MediaInput extends Component {
                 <div style={{textAlign: 'center'}}>
                     <paper-material className="search-box-contain" elevation="1">
                         <input ref="searchtext" onChange={() => this.setState({ text: (this.refs.searchtext.value.trim().length === 0) ? false : true })} onKeyPress={this._handleKeyPress} className="searchtext" />
-                        <paper-icon-button onClick={() => !this.state.text ? this._handleOpenFilePicker() :  this.parseInput()} style={{color: this.state.color}} className="search-btn" icon={!this.state.text ? 'folder-open' :  'chevron-right'}/>
+                        <paper-icon-button onClick={() => !this.state.text ? _.defer(::this._handleOpenFilePicker) :  this.parseInput()} style={{color: this.state.color}} className="search-btn" icon={!this.state.text ? 'folder-open' :  'chevron-right'}/>
                     </paper-material>
                 </div>
             </div>
