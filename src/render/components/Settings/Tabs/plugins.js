@@ -5,10 +5,6 @@ export default class SettingsTabPlugins extends Component {
         workers: React.PropTypes.object.isRequired,
         plugins: React.PropTypes.object.isRequired
     };
-    
-    componentDidMount() {
-        console.log(this.props.plugins)
-    }
 
     _changeSetting(setting, checkbox) {
         const value = checkbox ? this.refs[setting].checked : this.refs[setting].value
@@ -24,41 +20,44 @@ export default class SettingsTabPlugins extends Component {
         `
     }
 
+    _formatPlugins() {
+        const { plugins } = this.props.plugins
+        let formatted = []
+        _.forEach(plugins, plugin => formatted.push({
+            path: plugin.path,
+            homepage: plugin.package.pluginData.homepage,
+            title: plugin.package.pluginData.title,
+            version: plugin.package.version
+        }))
+        return formatted
+    }
+
     render() {
         const { settingsStore } = this.props
         return (
             <div className="right-panel">
                 <div className="setting plugins-list">
                     <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._getStyles()}}/>
-                    <h2>Plugins List</h2>
+                    <h2>Installed Plugins</h2>
                     <div className="setting-inner">
                         <paper-listbox>
-                            <paper-item>
-                                <div className="plugin-name">Memes</div>
-                                <div className="plugin-btns">
-                                    <div className="btn">
-                                        <paper-icon-button icon="info-outline"/>
-                                        <paper-tooltip offset="-2" position="top">View plugin info</paper-tooltip>
-                                    </div>
-                                    <div className="btn">
-                                        <paper-icon-button icon="delete"/>
-                                        <paper-tooltip offset="-2" position="top">Remove plugin</paper-tooltip>
-                                    </div>
-                                </div>
-                            </paper-item>
-                            <paper-item>
-                                <div className="plugin-name">Memes</div>
-                                <div className="plugin-btns">
-                                    <div className="btn">
-                                        <paper-icon-button icon="info-outline"/>
-                                        <paper-tooltip offset="-2" position="top">View plugin info</paper-tooltip>
-                                    </div>
-                                    <div className="btn">
-                                        <paper-icon-button icon="delete"/>
-                                        <paper-tooltip offset="-2" position="top">Remove plugin</paper-tooltip>
-                                    </div>
-                                </div>
-                            </paper-item>
+                            {
+                                this._formatPlugins().map(({title, homepage, version, path}, idx) => (
+                                        <paper-item key={idx}>
+                                            <div className="plugin-name">{title}</div>
+                                            <div className="plugin-btns">
+                                                <div className="btn">
+                                                    <paper-icon-button onClick={() => shell.openExternal(homepage)} icon="open-in-new"/>
+                                                    <paper-tooltip offset="-2" position="top">View plugin homepage</paper-tooltip>
+                                                </div>
+                                                <div className="btn">
+                                                    <paper-icon-button icon="delete"/>
+                                                    <paper-tooltip offset="-2" position="top">Remove plugin</paper-tooltip>
+                                                </div>
+                                            </div>
+                                        </paper-item>
+                                    ))
+                            }
                         </paper-listbox>
                         <paper-button raised className="install-plugin">Install</paper-button>
                     </div>
