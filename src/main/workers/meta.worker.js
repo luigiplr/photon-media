@@ -1,4 +1,4 @@
-workers.trakt = class trakt {
+workers.meta = class meta {
     constructor(port) {
         this.trakt = traktAPI('021d98ace731891d1d77ae3ae380c84f8cfe17b0f1960de5148535ab049d20a7', {
             extended: 'full',
@@ -16,12 +16,13 @@ workers.trakt = class trakt {
 
 
     log = (message, type = 'log') => this.socket.emit('info', {
-        source: 'Trakt Worker',
+        source: 'Meta Worker',
         type,
         message
     });
 
     initEvents() {
+        /* Trakt */
 
         this.socket.on('trakt:get:search', ({ id, imdb, tvdb, slug, type, year }) => this.trakt.search((imdb || tvdb || slug), type, year)
             .then(results => this.socket.emit('trakt', { id, data: _.remove(results, data => (data.type === type))[0] }))
@@ -58,5 +59,20 @@ workers.trakt = class trakt {
                     break
             }
         })
+
+
+        /* Color */
+
+        this.socket.on('color:get', ({ id, image }) => vibrant.from(image, {
+            colorCount: 100,
+            quality: 10
+        }).getPalette((err, palette) => {
+            _.forEach(palette, swatch => {
+                swatch.hex = swatch.getHex()
+                swatch.population = swatch.getPopulation()
+                swatch.titleTextColor = swatch.getTitleTextColor()
+            })
+            this.socket.emit('color', { id, palette })
+        }))
     }
 }

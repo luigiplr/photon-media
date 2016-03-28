@@ -8,7 +8,7 @@ class InitWorkers extends EventEmitter {
             .then(port => this.port = port)
             .then(::this.initSocketServer)
             .then(() => {
-                this.workers = ['players', 'trakt', 'color', 'engines', 'plugins']
+                this.workers = ['players', 'meta', 'engines', 'plugins']
                 this.workers.map(worker => new Worker(path.join(__dirname, 'workers.js'), true).postMessage({ port: this.port, worker }))
             })
             .then(::this.initSocketEvents)

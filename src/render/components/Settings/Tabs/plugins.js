@@ -1,8 +1,14 @@
 export default class SettingsTabPlugins extends Component {
 
     static propTypes = {
-        settingsStore: React.PropTypes.object.isRequired
+        settingsStore: React.PropTypes.object.isRequired,
+        workers: React.PropTypes.object.isRequired,
+        plugins: React.PropTypes.object.isRequired
     };
+    
+    componentDidMount() {
+        console.log(this.props.plugins)
+    }
 
     _changeSetting(setting, checkbox) {
         const value = checkbox ? this.refs[setting].checked : this.refs[setting].value
@@ -27,6 +33,19 @@ export default class SettingsTabPlugins extends Component {
                     <h2>Plugins List</h2>
                     <div className="setting-inner">
                         <paper-listbox>
+                            <paper-item>
+                                <div className="plugin-name">Memes</div>
+                                <div className="plugin-btns">
+                                    <div className="btn">
+                                        <paper-icon-button icon="info-outline"/>
+                                        <paper-tooltip offset="-2" position="top">View plugin info</paper-tooltip>
+                                    </div>
+                                    <div className="btn">
+                                        <paper-icon-button icon="delete"/>
+                                        <paper-tooltip offset="-2" position="top">Remove plugin</paper-tooltip>
+                                    </div>
+                                </div>
+                            </paper-item>
                             <paper-item>
                                 <div className="plugin-name">Memes</div>
                                 <div className="plugin-btns">
