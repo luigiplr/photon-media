@@ -10,9 +10,7 @@ process.env.NODE_ENV = minimist(process.argv.slice(2)).dev ? 'development' : 'pr
 /* BEGIN CHROME FLAGS */
 
 app.commandLine.appendSwitch('allow-file-access-from-files', true)
-//app.commandLine.appendSwitch('enable-zero-copy', true)
-app.commandLine.appendSwitch('num-raster-threads', 4)
-//app.commandLine.appendSwitch('enable-gpu-rasterization', true)
+app.commandLine.appendSwitch('js-flags', '--es_staging')
 
 
 /* END CHROME FLAGS */
