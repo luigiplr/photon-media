@@ -42,8 +42,7 @@
 .loading-spinner-wrapper .status-text {
     width: 50vw;
     line-height: 25px;
-    color: white;
-    opacity: .6;
+    opacity: .8;
     padding-left: 25vw;
     padding-right: 25vw;
     font-size: 20px;
@@ -53,6 +52,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #f0f8ff;
 }
 
 .dialog-button {
