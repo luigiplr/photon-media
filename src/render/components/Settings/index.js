@@ -24,6 +24,9 @@ export default class SettingsComponent extends Component {
             case 'ui':
                 TabContents = <SettingsTabUI {...this.props} />
                 break
+            case 'plugins':
+                TabContents = <SettingsTabPlugins {...this.props} />
+                break
         }
         return TabContents
     }
