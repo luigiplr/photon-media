@@ -61,7 +61,6 @@ gulp.task('build-core', () => {
             gutil.log(gutil.colors.red(err.message))
         })
         .pipe(concat('core.js'))
-        .pipe(uglify(uglifyOptions))
         .pipe(gulp.dest('build/js'))
 
     return gulp.src([
@@ -75,7 +74,6 @@ gulp.task('build-core', () => {
             gutil.log(gutil.colors.red('[Workers Code Compilation Error]'))
             gutil.log(gutil.colors.red(err.message))
         })
-        .pipe(uglify(uglifyOptions))
         .pipe(gulp.dest('build/js'))
 })
 
@@ -89,7 +87,6 @@ gulp.task('build-render', () => {
             gutil.log(gutil.colors.red('[Render Code Compilation Error]'))
             gutil.log(gutil.colors.red(err.message))
         })
-        .pipe(uglify(uglifyOptions))
         .pipe(gulpif(!PRODUCTION_BUILD, sourcemaps.write()))
         .pipe(gulp.dest('build/js'))
 })
