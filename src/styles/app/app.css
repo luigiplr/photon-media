@@ -38,4 +38,13 @@
 
 body {
     background-color: #212121;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    cursor: default;
+    text-rendering: optimizelegibility;
+    img {
+        pointer-events: none;
+    }
 }
