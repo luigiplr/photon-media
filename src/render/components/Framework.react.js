@@ -11,7 +11,7 @@ class Framework extends Component {
         initializingDots: '',
         page: 'search',
         pageData: {}
-    }
+    };
 
     componentWillMount() {
         this.workers = new InitWorkers()
@@ -19,10 +19,33 @@ class Framework extends Component {
 
         this.plugins = new Plugins(this.workers)
         this.plugins.once('initiated', () => this.setState({ initializing: false }))
+
+        this.setupContextMenus()
     }
 
     componentDidMount() {
         this.addDaDots()
+    }
+
+    setupContextMenus() {
+        const buildEditorContextMenu = remote.require('electron-editor-context-menu');
+
+        window.addEventListener('contextmenu', ({ target }) => {
+            if (!target.closest('textarea, input, [contenteditable="true"]')) return
+
+            const menu = buildEditorContextMenu(null, [{
+                label: 'Cut',
+                role: 'cut'
+            }, {
+                label: 'Copy',
+                role: 'copy'
+            }, {
+                label: 'Paste',
+                role: 'paste'
+            }])
+        
+            setTimeout(() => menu.popup(remote.getCurrentWindow()), 30)
+        })
     }
 
     addDaDots() {

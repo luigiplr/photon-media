@@ -60,7 +60,7 @@ class MediaInput extends Component {
 
                 <div style={{textAlign: 'center'}}>
                     <paper-material className="search-box-contain" elevation="1">
-                        <input ref="searchtext" onContextMenu={() => this.refs.searchtext.value = clipboard.readText()} onKeyPress={this._handleKeyPress} className="searchtext" />
+                        <input ref="searchtext" onKeyPress={this._handleKeyPress} className="searchtext" />
                         <paper-icon-button style={{color: this.state.color}} className="search-btn" icon="link"/>
                     </paper-material>
                 </div>

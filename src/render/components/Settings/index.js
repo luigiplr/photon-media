@@ -5,11 +5,11 @@ export default class Settings extends Component {
     };
 
     _changeTab(tab) {
-
+        console.log(`Switch settings tab to ${tab}`)
     }
 
     _getSettingsTab() {
-        switch (this.state.tab.toLowerCase()) {
+        switch (this.state.tab) {
             case 'general':
                 break
         }

@@ -1,5 +1,5 @@
 /* Electron */
-import { clipboard, shell, remote } from 'electron'
+import { shell, remote } from 'electron'
 
 /* General */
 import { EventEmitter } from 'events'

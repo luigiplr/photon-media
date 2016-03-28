@@ -1,7 +1,7 @@
 export default class SettingsSidebar extends Component {
 
     static propTypes = {
-        changeTab: React.PropTypes.function.isRequired,
+        changeTab: React.PropTypes.func.isRequired,
         tab: React.PropTypes.string.isRequired
     };
 
@@ -30,7 +30,7 @@ export default class SettingsSidebar extends Component {
 
     _settingsTab({ title, icon }, key) {
         return (
-            <paper-item key={key} className="setting-tab">
+            <paper-item onClick={() => this.props.changeTab(title.toLowerCase())} key={key} className="setting-tab">
                 <iron-icon className="icon" icon={icon}/>
                 {title}
                 <paper-ripple/>
