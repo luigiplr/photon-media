@@ -45,16 +45,11 @@ class Framework extends Component {
         window.addEventListener('contextmenu', ({ target }) => {
             if (!target.closest('textarea, input, [contenteditable="true"]')) return
 
-            const menu = buildEditorContextMenu(null, [{
-                label: 'Cut',
-                role: 'cut'
-            }, {
-                label: 'Copy',
-                role: 'copy'
-            }, {
-                label: 'Paste',
-                role: 'paste'
-            }])
+            const menu = buildEditorContextMenu(null, [
+                { label: 'Cut', role: 'cut' },
+                { label: 'Copy', role: 'copy' },
+                { label: 'Paste', role: 'paste' }
+            ])
 
             setTimeout(() => menu.popup(remote.getCurrentWindow()), 30)
         })
