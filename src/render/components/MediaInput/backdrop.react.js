@@ -24,24 +24,22 @@ class Backdrop extends Component {
         this.mounted = true
         const { settingsStore } = this.props
 
-        settingsStore.getItem('last-search-backdrop')
-            .then(lastItem => {
-                let delay = 0
-                if (lastItem) {
-                    delay = this.initialDelay
-                    this._loadBackdrop(lastItem).then(() => {
-                        if (!this.mounted) return
-                        this.setState({ backdrop: lastItem })
-                        if (lastItem.palette)
-                            this.props.setPalette(lastItem.palette)
-                    })
-                }
-                if (this.props.workers.initiated)
-                    this._getTrending(delay)
-                else
-                    this.props.workers.once('workers:initiated', () => this._getTrending(delay))
+        const lastItem = settingsStore['last-search-backdrop']
+
+        let delay = 0
+        if (lastItem) {
+            delay = this.initialDelay
+            this._loadBackdrop(lastItem).then(() => {
+                if (!this.mounted) return
+                this.setState({ backdrop: lastItem })
+                if (lastItem.palette)
+                    this.props.setPalette(lastItem.palette)
             })
-            .catch(console.error)
+        }
+        if (this.props.workers.initiated)
+            this._getTrending(delay)
+        else
+            this.props.workers.once('workers:initiated', () => this._getTrending(delay))
     }
 
     _getTrending = (delay = 0) => {
@@ -90,7 +88,7 @@ class Backdrop extends Component {
                     trending: _.filter(trending, item => !_.isEqual(item, trendingItem)),
                     backdrop
                 })
-                settingsStore.setItem('last-search-backdrop', backdrop)
+                settingsStore.setSetting('last-search-backdrop', backdrop)
                 this.backdropTimeout = setTimeout(this._getNewBackdrop, this.defaultDelay)
             })
         })

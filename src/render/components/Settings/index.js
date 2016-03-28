@@ -1,4 +1,4 @@
-export default class Settings extends Component {
+export default class SettingsComponent extends Component {
 
     state = {
         tab: 'general'

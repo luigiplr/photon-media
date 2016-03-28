@@ -9,10 +9,9 @@ class Plugins extends EventEmitter {
 
         if (!fs.existsSync(this.pluginDir)) fs.mkdirSync(this.pluginDir)
 
-        this.workers.once('initiated', () => {
-            this.sockets = this.workers.socket.sockets
-            this.verifyDefaultPlugins().then(::this.checkInstalled)
-        })
+        this.sockets = this.workers.socket.sockets
+        this.verifyDefaultPlugins()
+            .then(::this.checkInstalled)
     }
 
     checkInstalled() {

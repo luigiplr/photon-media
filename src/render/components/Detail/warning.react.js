@@ -12,17 +12,10 @@ class WarningDialog extends Component {
     componentDidMount() {
         this.mounted = true
 
-        this.props.settingsStore.getItem('dont-display-pirate-warning')
-            .then(dont => {
-                if (!dont) {
-                    this.setState({ open: true })
-                    _.defer(() => this.refs.backdrop.appendChild(document.getElementsByTagName('iron-overlay-backdrop')[0]))
-                }
-            })
-            .catch(() => {
-                this.setState({ open: true })
-                _.defer(() => this.refs.backdrop.appendChild(document.getElementsByTagName('iron-overlay-backdrop')[0]))
-            })
+        if (!settingsStore.dontDisplayPirateWarning) {
+            this.setState({ open: true })
+            _.defer(() => this.refs.backdrop.appendChild(document.getElementsByTagName('iron-overlay-backdrop')[0]))
+        }
     }
 
     _getDialogUpStyle() {
@@ -39,7 +32,7 @@ class WarningDialog extends Component {
 
     _dontShowAgain() {
         const { checked } = this.refs['pirate-checkbox']
-        this.props.settingsStore.setItem('dont-display-pirate-warning', checked)
+        this.props.settingsStore.setSetting(dontDisplayPirateWarning, checked)
     }
 
     _reportIncorrectMatch() {
