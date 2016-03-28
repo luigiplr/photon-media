@@ -28,10 +28,10 @@ export default class SettingsSidebar extends Component {
         `
     }
 
-    _settingsTab({ title, icon }) {
+    _settingsTab({ title, icon }, key) {
         return (
-            <paper-item className="setting-tab">
-                <iron-icon className="icon" icon={icon} onClick="showUI()"/>
+            <paper-item key={key} className="setting-tab">
+                <iron-icon className="icon" icon={icon}/>
                 {title}
                 <paper-ripple/>
             </paper-item>
