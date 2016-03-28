@@ -1,9 +1,3 @@
-const settingsStore = localforage.createInstance({
-    name: 'photon-media',
-    version: 1.0
-})
-
-
 class Framework extends Component {
 
     state = {
@@ -16,6 +10,11 @@ class Framework extends Component {
     componentWillMount() {
         this.workers = new InitWorkers()
         this.workers.once('initiated', () => this.setState({ initializing: 'Loading Plugins' }))
+
+        this.settings = new Settings(localforage.createInstance({
+            name: 'photon-media',
+            version: 1.0
+        }))
 
         this.plugins = new Plugins(this.workers)
         this.plugins.once('initiated', () => this.setState({ initializing: false }))
@@ -43,7 +42,7 @@ class Framework extends Component {
                 label: 'Paste',
                 role: 'paste'
             }])
-        
+
             setTimeout(() => menu.popup(remote.getCurrentWindow()), 30)
         })
     }
@@ -69,11 +68,11 @@ class Framework extends Component {
     _getContents() {
         switch (this.state.page) {
             case 'home':
-                return <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={settingsStore}/>
+                return <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settings={this.settings}/>
             case 'detail':
-                return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
+                return <Detail settings={this.settings} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
             case 'settings':
-                return <Settings plugins={this.plugins} updatePage={this._changePage} />
+                return <SettingsComponent settings={this.settings} plugins={this.plugins} updatePage={this._changePage} />
             default:
                 return null
         }
