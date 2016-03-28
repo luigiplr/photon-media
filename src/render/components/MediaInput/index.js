@@ -1,7 +1,8 @@
 class MediaInput extends Component {
 
     state = {
-        color: void 0
+        color: void 0,
+        text: false
     };
 
     static propTypes = {
@@ -45,7 +46,7 @@ class MediaInput extends Component {
 
     _handleKeyPress = event => {
         if (event.key !== 'Enter' || !this.refs.searchtext.value || this.refs.searchtext.value.trim().length === 0) return
-        this.props.updatePage('detail', { url: this.refs.searchtext.value })
+        _.defer(() => this.props.updatePage('detail', { url: this.refs.searchtext.value }))
     };
 
     render() {
@@ -60,8 +61,8 @@ class MediaInput extends Component {
 
                 <div style={{textAlign: 'center'}}>
                     <paper-material className="search-box-contain" elevation="1">
-                        <input ref="searchtext" onKeyPress={this._handleKeyPress} className="searchtext" />
-                        <paper-icon-button style={{color: this.state.color}} className="search-btn" icon="link"/>
+                        <input ref="searchtext" onChange={() => this.setState({ text: (this.refs.searchtext.value.trim().length === 0) ? false : true })} onKeyPress={this._handleKeyPress} className="searchtext" />
+                        <paper-icon-button style={{color: this.state.color}} className="search-btn" icon={!this.state.text ? 'folder-open' :  'chevron-right'}/>
                     </paper-material>
                 </div>
             </div>
