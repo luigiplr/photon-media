@@ -46,13 +46,23 @@ class MediaInput extends Component {
 
     _handleKeyPress = event => {
         if (event.key !== 'Enter' || !this.refs.searchtext.value || this.refs.searchtext.value.trim().length === 0) return
-        _.defer(() => this.props.updatePage('detail', { url: this.refs.searchtext.value }))
+        this.parseInput()
     };
+
+    parseInput = (url = this.refs.searchtext.value) => _.defer(() => this.props.updatePage('detail', { url }));
+
+    _handleOpenFilePicker = () => remote.dialog.showOpenDialog({
+        title: 'Select file',
+        properties: ['openFile', 'createDirectory'],
+        filters: [{ name: 'Video Files', extensions: ['MP4', 'MKV', 'MOV', 'AVI', 'WMV', 'WMA', 'ASF', '3GP', 'OGM', 'OGG', 'WAV', 'Real'] }]
+    }, file => {
+        if (!file) return
+        this.parseInput(file[0])
+    });
 
     render() {
         return (
             <div className="search-container">
-
                 <Backdrop {...this.props} setPalette={this._setPalette} />
 
                 <div className="bottom-button-container">
@@ -62,7 +72,7 @@ class MediaInput extends Component {
                 <div style={{textAlign: 'center'}}>
                     <paper-material className="search-box-contain" elevation="1">
                         <input ref="searchtext" onChange={() => this.setState({ text: (this.refs.searchtext.value.trim().length === 0) ? false : true })} onKeyPress={this._handleKeyPress} className="searchtext" />
-                        <paper-icon-button style={{color: this.state.color}} className="search-btn" icon={!this.state.text ? 'folder-open' :  'chevron-right'}/>
+                        <paper-icon-button onClick={() => !this.state.text ? this._handleOpenFilePicker() :  this.parseInput()} style={{color: this.state.color}} className="search-btn" icon={!this.state.text ? 'folder-open' :  'chevron-right'}/>
                     </paper-material>
                 </div>
             </div>
