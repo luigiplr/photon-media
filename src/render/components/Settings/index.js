@@ -21,6 +21,9 @@ export default class SettingsComponent extends Component {
             case 'general':
                 TabContents = <SettingsTabGeneral {...this.props} />
                 break
+            case 'ui':
+                TabContents = <SettingsTabUI {...this.props} />
+                break
         }
         return TabContents
     }
