@@ -37,6 +37,8 @@ app.on('ready', () => {
         y: mainWindowState.y,
         width: mainWindowState.width,
         height: mainWindowState.height,
+        minWidth: 768,
+        minHeight: 468,
         backgroundColor: '#212121'
     })
 
