@@ -15,7 +15,6 @@ class urlParser extends EventEmitter {
 
         sockets.emit('engines:parse', { id, engines, url })
         this.workers.once(id, engine => {
-            console.log('whoa')
             this.emit(id, engine)
             this.workers.removeAllListeners(`${id}:error`)
         })
