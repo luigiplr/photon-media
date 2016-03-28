@@ -7,6 +7,7 @@ export default class SettingsSidebar extends Component {
 
     tabs = [
         { icon: 'settings', title: 'General' },
+        { icon: 'image:tune', title: 'UI' },
         { icon: 'device:widgets', title: 'Plugins' },
         { icon: 'notification:network-check', title: 'Network' },
         { icon: 'info-outline', title: 'About' },

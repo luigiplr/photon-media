@@ -6,7 +6,6 @@ export default class SettingsTabGeneral extends Component {
                     <h2>Display Options</h2>
                     <div className="setting-inner">
                         <paper-checkbox checked="1">Cycle trending series & movies backdrop</paper-checkbox>
-                        <paper-checkbox>Show confirmation dialog on exit</paper-checkbox>
                     </div>
                 </div>
                 <div className="setting display-settings flex-checkbox">

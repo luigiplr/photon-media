@@ -13,7 +13,7 @@ class Settings extends EventEmitter {
     }
 
     _settingsLoader = async.queue(({ setting, defaultValue }, next) => this._localforage.getItem(setting)
-        .then(loadedSetting => (this[setting] = loadedSetting ? loadedSetting : defaultValue))
+        .then(loadedSetting => this[setting] = loadedSetting ? loadedSetting : defaultValue)
         .then(next)
         .catch(err => {
             console.error(err)
