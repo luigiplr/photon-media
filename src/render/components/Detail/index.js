@@ -52,7 +52,7 @@ export default class Detail extends Component {
     }
 
     _close() {
-        _.defer(() => this.props.updatePage('search'))
+        _.defer(() => this.props.updatePage('home'))
     }
 
     _getSubDetail() {
@@ -81,7 +81,7 @@ export default class Detail extends Component {
     render() {
         return (
             <div className="detail">                
-                <paper-icon-button onClick={::this._close} className="back" icon="arrow-back"/>
+                {(!this.state.error ? <paper-icon-button onClick={::this._close} className="back" icon="arrow-back"/> : null)}
                 {::this._getLoadingContents()}
                 {(this.state.detail.illegitimate ? <WarningDialog {...this.state.detail} settingsStore={this.props.settingsStore} /> : null)}
                 <ReactCSSTransitionGroup className="transition-container" transitionName="cross-fade" transitionEnterTimeout={500} transitionLeaveTimeout={500}>

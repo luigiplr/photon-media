@@ -9,7 +9,7 @@ class Framework extends Component {
     state = {
         initializing: 'App Initializing',
         initializingDots: '',
-        page: 'search',
+        page: 'home',
         pageData: {}
     };
 
@@ -69,7 +69,6 @@ class Framework extends Component {
     _getContents() {
         switch (this.state.page) {
             case 'home':
-            case 'search':
                 return <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={settingsStore}/>
             case 'detail':
                 return <Detail settingsStore={settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
