@@ -28,7 +28,11 @@ class Settings extends EventEmitter {
 
     _defaultSettings() {
         return {
+            /* Backdrop */
             cycleBackdrop: true,
+            'last-search-backdrop': null,
+
+            /* Detail */
             dontDisplayPirateWarning: false
         }
     }

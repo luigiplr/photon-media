@@ -2,9 +2,7 @@ class Backdrop extends Component {
 
     state = {
         trending: [],
-        backdrop: {
-            image: ''
-        }
+        backdrop: { image: '' }
     };
 
     defaultDelay = 20000;
@@ -23,6 +21,8 @@ class Backdrop extends Component {
     componentDidMount() {
         this.mounted = true
         const { settingsStore } = this.props
+
+        if (!settingsStore.cycleBackdrop) return
 
         const lastItem = settingsStore['last-search-backdrop']
 
