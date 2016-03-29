@@ -10,6 +10,10 @@
 Photon media was designed to be able to be a general purpose casting application, with the ability for expansion via sting/file engines & new player definition plugins<br><br>
 Please note its currently in a WIP phase.
 
+### What can Photon stream? 
+Out of the box photon will be able to parse local files along with a few common domains (youtube, vimeo etc).<br>
+Photons supported url's can be expanded through the installation of 3rd party engine plugins
+
 ### Requirements
 
  - PC running Windows 7, OS X 10.9, Ubuntu 14.x or above.
