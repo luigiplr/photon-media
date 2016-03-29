@@ -18,10 +18,8 @@ workers.engines = class engineWorker {
     });
 
     initEvents() {
-        this.socket.on('engines:parse', ({ id, engines, type, value }) => {
-            Promise.all(engines.map(engine => this.spawnEngine(engine, type, value)))
-                .then(compatible => this.socket.emit('engines', { id, data: compatible.filter(engine => engine !== false) }))
-        })
+        this.socket.on('engines:parse', ({ id, engines, type, value }) => Promise.all(engines.map(engine => this.spawnEngine(engine, type, value)))
+            .then(compatible => this.socket.emit('engines', { id, data: compatible.filter(engine => engine !== false) })))
     }
 
     spawnEngine(engine, type, value) {

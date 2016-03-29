@@ -2,6 +2,7 @@ export default class Detail extends Component {
 
     state = {
         error: null,
+        errorReportable: false,
         status: `Parsing: "${this.props.url}"`,
         loading: true,
         detail: {
@@ -32,6 +33,7 @@ export default class Detail extends Component {
         urlParse.on(parseRequest, (compatibleEngines = []) => {
             switch (compatibleEngines.length) {
                 case 0:
+                    this.setState({ error: 'Error: No compatable engine installed', loading: false })
                     break
                 case 1:
                     this._initNameParse({...compatibleEngines[0] })
@@ -94,10 +96,18 @@ export default class Detail extends Component {
     _getLoadingContents() {
         const { error, status } = this.state
 
+        const errBtns = error ? (
+            <div className="status-btn-holder">
+                <paper-button className="status-btn">Report</paper-button>
+                <paper-button onClick={::this._close} className="status-btn">back</paper-button>
+            </div>
+        ) : null
+
         return (
             <div className="loading-spinner-wrapper">
                 <style is="custom-style" dangerouslySetInnerHTML={{ __html: 'paper-spinner.thin {--paper-spinner-stroke-width: 2px;}'}}/>
-                <h1 className="status-text">{(status ? status : error)}</h1>
+                <h1 className="status-text">{(error ? error : status)}</h1>
+                {errBtns}
                 <paper-spinner className="loading-spinner thin" active={this.state.loading}/>
             </div>
         )

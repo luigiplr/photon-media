@@ -31,11 +31,19 @@
     text-align: left;
 }
 
-.loading-spinner-wrapper .status-btn {
+.detail .loading-spinner-wrapper .status-btn-holder {
+    position: absolute;
+    width: 100vw;
+    z-index: 2;
+    text-align: center;
+    margin-top: 43vh;
+}
+
+.detail .loading-spinner-wrapper .status-btn-holder .status-btn {
     color: #fff;
     opacity: .6;
+    display: inline-block;
     position: relative;
-    top: -30px;
 }
 
 .loading-spinner-wrapper .status-text {
