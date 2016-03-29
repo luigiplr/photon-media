@@ -12,7 +12,7 @@ workers.players = class players {
         this.definePaths()
     }
 
-    scanQueue = async.queue((player, next) => {
+    playerScanQueue = async.queue((player, next) => {
         _.forEach(this.searchPaths, systemPath => _.forEach(player.paths, playerPath => _.forEach(player.execs, exec => {
             let checkPath = path.join(systemPath, playerPath, exec)
             try {
@@ -34,16 +34,16 @@ workers.players = class players {
         this.socket.on('players:play', ({ id, playerID, castID, url, subs }) => {
             if (playerID)
                 this.startPlayer({ playerID, url, subs }).then(() => this.socket.emit('players', { id, data: 'playing' })).catch(() => this.socket.emit('players', { id, data: 'error' }))
-            else if (castID)
-            //la-la-ka
+                //else if (castID)
+                //la-la-ka
         })
     }
 
     scan() {
         this.foundPlayers = {}
         return new Promise(resolve => {
-            _.forEach(this.playerDefinitions(), player => this.scanQueue.push(player))
-            this.scanQueue.drain = () => resolve(this.foundPlayers)
+            _.forEach(this.playerDefinitions, player => this.playerScanQueue.push(player))
+            this.playerScanQueue.drain = () => resolve(this.foundPlayers)
         })
     }
 
@@ -91,34 +91,38 @@ workers.players = class players {
         })
     }
 
-    playerDefinitions() {
-        return [{
-            name: 'VLC',
-            id: 'vlc',
-            urlswitch: null,
-            subswitch: '--sub-file=',
-            paths: ['VideoLAN/VLC'],
-            execs: ['vlc.exe'],
-            srcIcon: 'images/players/vlc-player-icon.png',
-            cast: false
-        }, {
-            name: 'Powder Player',
-            id: 'powder',
-            urlswitch: null,
-            subswitch: '--sub-file=',
-            paths: ['Powder Player'],
-            execs: ['powder.exe'],
-            srcIcon: 'images/players/powder-player-icon.png',
-            cast: false
-        }, {
-            name: 'Windows Media Player',
-            id: 'wmplayer',
-            subswitch: null,
-            urlswitch: null,
-            paths: ['Windows Media Player'],
-            execs: ['wmplayer.exe'],
-            srcIcon: 'images/players/windows-media-player-icon.png',
-            cast: false
-        }]
-    }
+    castingDefinitions = [{
+        name: 'Chromecast',
+        id: 'chromecast',
+        srcIcon: 'images/players/vlc-player-icon.png'
+    }];
+
+    playerDefinitions = [{
+        name: 'VLC',
+        id: 'vlc',
+        urlswitch: null,
+        subswitch: '--sub-file=',
+        paths: ['VideoLAN/VLC'],
+        execs: ['vlc.exe'],
+        srcIcon: 'images/players/vlc-player-icon.png',
+        cast: false
+    }, {
+        name: 'Powder Player',
+        id: 'powder',
+        urlswitch: null,
+        subswitch: '--sub-file=',
+        paths: ['Powder Player'],
+        execs: ['powder.exe'],
+        srcIcon: 'images/players/powder-player-icon.png',
+        cast: false
+    }, {
+        name: 'Windows Media Player',
+        id: 'wmplayer',
+        subswitch: null,
+        urlswitch: null,
+        paths: ['Windows Media Player'],
+        execs: ['wmplayer.exe'],
+        srcIcon: 'images/players/windows-media-player-icon.png',
+        cast: false
+    }];
 }
