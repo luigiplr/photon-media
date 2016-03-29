@@ -9,6 +9,7 @@ const commonTitleMappings = {
     'bordertown-2016': ['bordertown-2015'],
     'celebrity-big-brother-2001': ['celebrity-big-brother'],
     'chicago-p-d': ['chicago-pd'],
+    'stargate-sg-1': ['stargate-sg1'],
     'childrens-hospital': ['childrens-hospital-us'],
     'cooper-barrett-s-guide-to-surviving-life-2016': ['cooper-barretts-guide-to-surviving-life'],
     'cosmos-a-spacetime-odyssey': ['cosmos-a-space-time-odyssey'],
