@@ -31,8 +31,11 @@ workers.players = class players {
     initEvents() {
         this.socket.on('players:get', ({ id }) => this.scan().then(players => this.socket.emit('players', { id, players })))
 
-        this.socket.on('players:play', ({ id, playerID, url, subs }) => {
-            this.startPlayer({ playerID, url, subs })
+        this.socket.on('players:play', ({ id, playerID, castID, url, subs }) => {
+            if (playerID)
+                this.startPlayer({ playerID, url, subs }).then(() => this.socket.emit('players', { id, data: 'playing' })).catch(() => this.socket.emit('players', { id, data: 'error' }))
+            else if (castID)
+            //la-la-ka
         })
     }
 
