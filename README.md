@@ -5,16 +5,10 @@
 [![license](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](LICENSE)
 
 
-
 ### What is Photon Media?
 
-Photon media was designed to be able to parse any local video files and supported urls<br>
-(supported urls can be expanded via engine plugins)<br><br>
-Photon media will parse, fetch subtitles and offer methods of playback (casting, local players etc) for supported filetypes
-
-### Why did I make it?
-
-I enjoy pretty things.
+Photon media was designed to be able to be a general purpose casting application, with the ability for expansion via sting/file engines & new player definition plugins<br><br>
+Please note its currently in a WIP phase.
 
 ### Requirements
 
