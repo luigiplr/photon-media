@@ -21,32 +21,44 @@ export default class Detail extends Component {
 
     componentDidMount() {
         this.mounted = true
-        this._initURLParse()
+        this._initURLEngineParse()
     }
 
-    _initURLParse = () => {
-        const { workers, plugins, url, settingsStore } = this.props
+    _initURLEngineParse() {
+        const { workers, plugins, url } = this.props
         const parseRequest = uuid()
         const urlParse = new urlParser({ id: parseRequest, workers, plugins, url })
 
-        urlParse.on(parseRequest, ({ name, url }) => {
+        urlParse.on(parseRequest, (compatibleEngines = []) => {
+            switch (compatibleEngines.length) {
+                case 0:
+                    break
+                case 1:
+                    this._initNameParse({...compatibleEngines[0] })
+                    break
+                default:
+                    //for when there is more than one
+            }
+        })
+    }
+
+    _initNameParse({ name, url }) {
+        const { workers, settingsStore } = this.props
+
+        this.setState({ status: `Parsing: "${name}"` })
+        const matcher = new titleMatcher({ workers, settingsStore }, name)
+
+        matcher.on('status', status => {
             if (!this.mounted) return
-
-            this.setState({ status: `Parsing: "${name}"` })
-            const matcher = new titleMatcher({ workers, settingsStore }, name)
-
-            matcher.on('status', status => {
-                if (!this.mounted) return
-                this.setState({ status })
-            })
-            matcher.once('success', detail => {
-                if (!this.mounted) return
-                this.setState({ detail: {...detail, url } })
-            })
-            matcher.once('error', error => {
-                if (!this.mounted) return
-                this.setState({ error: 'There was a error during parsing', loading: false })
-            })
+            this.setState({ status })
+        })
+        matcher.once('success', detail => {
+            if (!this.mounted) return
+            this.setState({ detail: {...detail, url } })
+        })
+        matcher.once('error', error => {
+            if (!this.mounted) return
+            this.setState({ error: 'There was a error during parsing', loading: false })
         })
     }
 

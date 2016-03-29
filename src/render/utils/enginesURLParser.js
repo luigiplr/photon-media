@@ -2,7 +2,6 @@ class urlParser extends EventEmitter {
     constructor({ id, workers, plugins, url }) {
         super()
 
-        this.MATCHING_TIMEOUT = 10000
         this.workers = workers
         this.plugins = plugins
 
@@ -26,14 +25,6 @@ class urlParser extends EventEmitter {
         const { sockets } = this.workers.socket
 
         sockets.emit('engines:parse', { id, engines, type, value })
-        this.workers.once(id, engine => {
-            this.emit(id, engine)
-            this.workers.removeAllListeners(`${id}:error`)
-        })
-        this.workers.once(`${id}:error`, error => {
-            this.emit(`${id}:error`, error)
-            this.workers.removeAllListeners(id)
-        })
-
+        this.workers.once(id, compatibleEngines => this.emit(id, compatibleEngines))
     }
 }

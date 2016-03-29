@@ -1,4 +1,4 @@
-workers.engines = class {
+workers.engines = class engineWorker {
     constructor(port) {
         this.socket = socketClient(`http://localhost:${port}`)
 
@@ -18,42 +18,28 @@ workers.engines = class {
     });
 
     initEvents() {
-        this.socket.on('engines:parse', ({ id, engines, type, value }) => this.parseURL(engines, type, value)
-            .then(data => this.socket.emit('engines', { id, data }))
-            .catch(() => this.socket.emit('engines:error', { id, error: 'No Engine Found' })))
+        this.socket.on('engines:parse', ({ id, engines, type, value }) => {
+            Promise.all(engines.map(engine => this.spawnEngine(engine, type, value)))
+                .then(compatible => this.socket.emit('engines', { id, data: compatible.filter(engine => engine !== false) }))
+        })
     }
 
-    parseURL(engines, type, value) {
-        return new Promise((resolve, reject) => Promise.all([engines.map(::this.spawnEngine)]).then(compatible => {
-
-
-
-
-
-
-        }))
-    }
-
-
-    spawnEngine(engine) {
+    spawnEngine(engine, type, value) {
         return new Promise(resolve => {
             let engineModule = require(engine.path)
-            const timeoutTimer = 
-            engineModule = new engineModule({ url })
+            const timeoutTimer = setTimeout(() => resolve(false), 30000)
+            engineModule = new engineModule({ type, value })
 
             engineModule.once('incompatible', () => {
                 engineModule.removeAllListeners('parsed')
+                clearTimeout(timeoutTimer)
                 resolve(false)
             })
             engineModule.once('compatible', data => {
                 engineModule.removeAllListeners('incompatible')
-                foundEngine = true
+                clearTimeout(timeoutTimer)
                 resolve(data)
             })
-
-            _.delay(() => {
-                if (!foundEngine) reject()
-            }, 5000)
         })
     }
 }
