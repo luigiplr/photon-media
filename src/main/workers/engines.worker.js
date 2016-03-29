@@ -18,26 +18,39 @@ workers.engines = class {
     });
 
     initEvents() {
-        this.socket.on('engines:parse', ({ id, engines, url }) => this.parseURL(engines, url)
+        this.socket.on('engines:parse', ({ id, engines, type, value }) => this.parseURL(engines, type, value)
             .then(data => this.socket.emit('engines', { id, data }))
             .catch(() => this.socket.emit('engines:error', { id, error: 'No Engine Found' })))
     }
 
-    parseURL(engines, url) {
-        return new Promise((resolve, reject) => {
-            let foundEngine = false
-            _.forEach(engines, engine => {
-                let engineModule = require(engine.path)
-                engineModule = new engineModule({ url })
+    parseURL(engines, type, value) {
+        return new Promise((resolve, reject) => Promise.all([engines.map(::this.spawnEngine)]).then(compatible => {
 
-                engineModule.once('incompatible', () => engineModule.removeAllListeners('parsed'))
-                engineModule.once('parsed', data => {
-                    engineModule.removeAllListeners('incompatible')
-                    foundEngine = true
-                    this.log(data)
-                    resolve(data)
-                })
+
+
+
+
+
+        }))
+    }
+
+
+    spawnEngine(engine) {
+        return new Promise(resolve => {
+            let engineModule = require(engine.path)
+            const timeoutTimer = 
+            engineModule = new engineModule({ url })
+
+            engineModule.once('incompatible', () => {
+                engineModule.removeAllListeners('parsed')
+                resolve(false)
             })
+            engineModule.once('compatible', data => {
+                engineModule.removeAllListeners('incompatible')
+                foundEngine = true
+                resolve(data)
+            })
+
             _.delay(() => {
                 if (!foundEngine) reject()
             }, 5000)
