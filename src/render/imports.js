@@ -9,6 +9,7 @@ import async from 'async'
 import fs from 'fs'
 import localforage from 'localforage'
 import moment from 'moment'
+import { isUri } from 'valid-url'
 
 
 /* React */

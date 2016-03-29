@@ -1,4 +1,4 @@
-workers.engines = class {
+workers.engines = class engineWorker {
     constructor(port) {
         this.socket = socketClient(`http://localhost:${port}`)
 
@@ -18,29 +18,26 @@ workers.engines = class {
     });
 
     initEvents() {
-        this.socket.on('engines:parse', ({ id, engines, url }) => this.parseURL(engines, url)
-            .then(data => this.socket.emit('engines', { id, data }))
-            .catch(() => this.socket.emit('engines:error', { id, error: 'No Engine Found' })))
+        this.socket.on('engines:parse', ({ id, engines, type, value }) => Promise.all(engines.map(engine => this.spawnEngine(engine, type, value)))
+            .then(compatible => this.socket.emit('engines', { id, data: compatible.filter(engine => engine !== false) })))
     }
 
-    parseURL(engines, url) {
-        return new Promise((resolve, reject) => {
-            let foundEngine = false
-            _.forEach(engines, engine => {
-                let engineModule = require(engine.path)
-                engineModule = new engineModule({ url })
+    spawnEngine(engine, type, value) {
+        return new Promise(resolve => {
+            let engineModule = require(engine.path)
+            const timeoutTimer = setTimeout(() => resolve(false), 30000)
+            engineModule = new engineModule({ type, value })
 
-                engineModule.once('incompatible', () => engineModule.removeAllListeners('parsed'))
-                engineModule.once('parsed', data => {
-                    engineModule.removeAllListeners('incompatible')
-                    foundEngine = true
-                    this.log(data)
-                    resolve(data)
-                })
+            engineModule.once('incompatible', () => {
+                engineModule.removeAllListeners('parsed')
+                clearTimeout(timeoutTimer)
+                resolve(false)
             })
-            _.delay(() => {
-                if (!foundEngine) reject()
-            }, 5000)
+            engineModule.once('compatible', data => {
+                engineModule.removeAllListeners('incompatible')
+                clearTimeout(timeoutTimer)
+                resolve(data)
+            })
         })
     }
 }
