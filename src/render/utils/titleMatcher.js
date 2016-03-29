@@ -28,7 +28,8 @@ class titleMatcher extends EventEmitter {
                 if (settingsStore.adaptiveColorization) {
                     this.emit('status', `Extracting color palette for "${this.title}"`)
                     return this.getColors(data)
-                }
+                } else
+                    return {...data, palette: undefined }
             })
             .then(data => {
                 this.emit('status', `Detecting available players`)

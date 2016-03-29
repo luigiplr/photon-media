@@ -21,7 +21,6 @@ export default class Detail extends Component {
 
     componentDidMount() {
         this.mounted = true
-
         this._initURLParse()
     }
 
@@ -46,7 +45,7 @@ export default class Detail extends Component {
             })
             matcher.once('error', error => {
                 if (!this.mounted) return
-                this.setState({ error, loading: false })
+                this.setState({ error: 'There was a error during parsing', loading: false })
             })
         })
     }
@@ -61,12 +60,10 @@ export default class Detail extends Component {
         const id = uuid()
 
         sockets.emit('players:play', { id, url, playerID: player.id, subs })
-        workers.once(id, engine => {
-
+        workers.once(id, playing => {
             workers.removeAllListeners(`${id}:error`)
         })
         workers.once(`${id}:error`, error => {
-
             workers.removeAllListeners(id)
         })
     }

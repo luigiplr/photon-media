@@ -14,6 +14,11 @@ class LoadedDetail extends Component {
         overview: React.PropTypes.string.isRequired,
         homepage: React.PropTypes.string,
         play: React.PropTypes.func.isRequired,
+        players: React.PropTypes.object
+    };
+
+    static defaultProps = {
+        players: { name: 'No Players Detected', id: null }
     };
 
     componentWillUnmount() {
@@ -147,15 +152,6 @@ class LoadedDetail extends Component {
         return { color, textColor }
     }
 
-    _getPlayers() {
-        let playersArray = []
-        const { players } = this.props
-
-        _.forEach(players, (player, key) => playersArray.push(<paper-item onClick={() => this.setState({player})} key={key}>{player.name}</paper-item>))
-
-        return playersArray.length === 0 ? (<paper-item>No Players Detected</paper-item>) : playersArray
-    }
-
     _getPlayerIcon() {
         const { player } = this.state
 
@@ -227,7 +223,12 @@ class LoadedDetail extends Component {
                             <paper-icon-button className="icon" noink {...::this._getPlayerIcon()}/>
                             <paper-dropdown-menu no-label-float vertical-align="bottom" horizontal-align="right" className="meta-dropdown">
                                 <paper-listbox selected="0" className="dropdown-content">
-                                    {::this._getPlayers()}
+                                    {
+                                        Object.keys(this.props.players).map((player, key) => {
+                                            player = this.props.players[player]
+                                            return <paper-item onClick={() => this.setState({player})} key={key}>{player.name}</paper-item>
+                                        })
+                                    }
                                 </paper-listbox>
                             </paper-dropdown-menu>
                         </li>
