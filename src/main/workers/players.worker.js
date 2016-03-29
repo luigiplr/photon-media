@@ -12,6 +12,8 @@ workers.players = class players {
         this.definePaths()
     }
 
+    foundPlayers = {};
+
     playerScanQueue = async.queue((player, next) => {
         _.forEach(this.searchPaths, systemPath => _.forEach(player.paths, playerPath => _.forEach(player.execs, exec => {
             let checkPath = path.join(systemPath, playerPath, exec)
@@ -29,7 +31,8 @@ workers.players = class players {
     log = (message, type = 'log', source = 'Player Discovery Worker') => this.socket.emit('info', { source, type, message });
 
     initEvents() {
-        this.socket.on('players:get', ({ id }) => this.scanPlayers().then(players => this.socket.emit('players', { id, players })))
+        this.socket.on('players:get', ({ id }) => this.scanPlayers()
+            .then(players => this.socket.emit('players', { id, players })))
 
         this.socket.on('players:play', ({ id, playerID, castID, url, subs }) => {
             if (playerID) this.startPlayer({ playerID, url, subs }).then(() => this.socket.emit('players', { id, data: 'playing' })).catch(() => this.socket.emit('players', { id, data: 'error' }))
@@ -40,8 +43,8 @@ workers.players = class players {
     }
 
     scanPlayers() {
-        this.foundPlayers = {}
         return new Promise(resolve => {
+            this.playerScanQueue.kill()
             _.forEach(this.playerDefinitions, player => this.playerScanQueue.push(player))
             this.playerScanQueue.drain = () => resolve(this.foundPlayers)
         })
