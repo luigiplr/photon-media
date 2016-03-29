@@ -6,8 +6,7 @@ export default class SettingsSidebar extends Component {
     };
 
     tabs = [
-        { icon: 'settings', title: 'General' },
-        { icon: 'image:tune', title: 'UI' },
+        { icon: 'image:tune', title: 'General' },
         { icon: 'device:widgets', title: 'Plugins' },
         { icon: 'notification:network-check', title: 'Network' },
         { icon: 'info-outline', title: 'About' },
@@ -43,9 +42,7 @@ export default class SettingsSidebar extends Component {
             <div className="left-panel">
                 <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._tabStyles()}}/>
                 <paper-listbox className="settings-tab-container" selected="1">
-                   {
-                        this.tabs.map(::this._settingsTab)
-                   }
+                   {this.tabs.map(::this._settingsTab)}
                 </paper-listbox>
             </div>
         )

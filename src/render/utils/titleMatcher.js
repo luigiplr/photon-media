@@ -1,7 +1,7 @@
 const MATCHING_TIMEOUT = 10000 // 10 seconds
 
 class titleMatcher extends EventEmitter {
-    constructor(workers, name) {
+    constructor({ workers, settingsStore }, name) {
         super()
         this.workers = workers
 
@@ -25,8 +25,10 @@ class titleMatcher extends EventEmitter {
                 }))
             })
             .then(data => {
-                this.emit('status', `Extracting color palette for "${this.title}"`)
-                return this.getColors(data)
+                if (settingsStore.adaptiveColorization) {
+                    this.emit('status', `Extracting color palette for "${this.title}"`)
+                    return this.getColors(data)
+                }
             })
             .then(data => {
                 this.emit('status', `Detecting available players`)

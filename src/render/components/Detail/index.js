@@ -26,7 +26,7 @@ export default class Detail extends Component {
     }
 
     _initURLParse = () => {
-        const { workers, plugins, url } = this.props
+        const { workers, plugins, url, settingsStore } = this.props
         const parseRequest = uuid()
         const urlParse = new urlParser({ id: parseRequest, workers, plugins, url })
 
@@ -34,7 +34,7 @@ export default class Detail extends Component {
             if (!this.mounted) return
 
             this.setState({ status: `Parsing: "${name}"` })
-            const matcher = new titleMatcher(this.props.workers, name)
+            const matcher = new titleMatcher({ workers, settingsStore }, name)
 
             matcher.on('status', status => {
                 if (!this.mounted) return

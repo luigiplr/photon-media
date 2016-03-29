@@ -29,17 +29,17 @@ workers.players = class players {
     log = (message, type = 'log', source = 'Player Discovery Worker') => this.socket.emit('info', { source, type, message });
 
     initEvents() {
-        this.socket.on('players:get', ({ id }) => this.scan().then(players => this.socket.emit('players', { id, players })))
+        this.socket.on('players:get', ({ id }) => this.scanPlayers().then(players => this.socket.emit('players', { id, players })))
 
         this.socket.on('players:play', ({ id, playerID, castID, url, subs }) => {
-            if (playerID)
-                this.startPlayer({ playerID, url, subs }).then(() => this.socket.emit('players', { id, data: 'playing' })).catch(() => this.socket.emit('players', { id, data: 'error' }))
-                //else if (castID)
-                //la-la-ka
+            if (playerID) this.startPlayer({ playerID, url, subs }).then(() => this.socket.emit('players', { id, data: 'playing' })).catch(() => this.socket.emit('players', { id, data: 'error' }))
+
+            //else if (castID)
+            //la-la-ka
         })
     }
 
-    scan() {
+    scanPlayers() {
         this.foundPlayers = {}
         return new Promise(resolve => {
             _.forEach(this.playerDefinitions, player => this.playerScanQueue.push(player))

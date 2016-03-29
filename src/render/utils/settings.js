@@ -33,7 +33,8 @@ class Settings extends EventEmitter {
             'last-search-backdrop': null,
 
             /* Detail */
-            dontDisplayPirateWarning: false
+            dontDisplayPirateWarning: false,
+            adaptiveColorization: true
         }
     }
 }

@@ -9,20 +9,12 @@ export default class SettingsComponent extends Component {
         workers: React.PropTypes.object.isRequired,
         plugins: React.PropTypes.object.isRequired
     };
-
-    _changeTab(tab) {
-        console.log(`Switch settings tab to ${tab}`)
-        this.setState({ tab })
-    }
-
+    
     _getSettingsTab() {
         let TabContents = null
         switch (this.state.tab) {
             case 'general':
                 TabContents = <SettingsTabGeneral {...this.props} />
-                break
-            case 'ui':
-                TabContents = <SettingsTabUI {...this.props} />
                 break
             case 'plugins':
                 TabContents = <SettingsTabPlugins {...this.props} />
@@ -47,7 +39,7 @@ export default class SettingsComponent extends Component {
                 <div className="container">
                     <h1>Settings</h1>
                     <div className="panel-container">
-                        <SettingsSidebar changeTab={::this._changeTab} tab={this.state.tab} />
+                        <SettingsSidebar changeTab={tab => this.setState({ tab })} tab={this.state.tab} />
                         <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._settingsTabStyles()}}/>
                         {::this._getSettingsTab()}
                     </div>
