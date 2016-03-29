@@ -61,6 +61,7 @@ workers.players = class players {
         return [{
             name: 'VLC',
             id: 'vlc',
+            urlswitch: null,
             subswitch: '--sub-file=',
             paths: ['VideoLAN/VLC'],
             execs: ['vlc.exe'],
@@ -68,6 +69,7 @@ workers.players = class players {
         }, {
             name: 'Powder Player',
             id: 'powder',
+            urlswitch: null,
             subswitch: '--sub-file=',
             paths: ['Powder Player'],
             execs: ['powder.exe'],
@@ -76,9 +78,10 @@ workers.players = class players {
             name: 'Windows Media Player',
             id: 'wmplayer',
             subswitch: null,
+            urlswitch: null,
             paths: ['Windows Media Player'],
             execs: ['wmplayer.exe'],
-            icon: null
+            srcIcon: 'images/players/windows-media-player-icon.png'
         }]
     }
 }
