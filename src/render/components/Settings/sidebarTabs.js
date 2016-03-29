@@ -19,7 +19,7 @@ export default class SettingsSidebar extends Component {
                 --paper-listbox-color: #fff;
             };
             paper-item {
-                --paper-item-selected-weight: 500;
+                --paper-item-selected-weight: 500 !important;
                 --paper-item-focused-before: {
                     opacity: 0;
                 }
@@ -41,7 +41,7 @@ export default class SettingsSidebar extends Component {
         return (
             <div className="left-panel">
                 <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._tabStyles()}}/>
-                <paper-listbox className="settings-tab-container" selected="1">
+                <paper-listbox className="settings-tab-container" selected="0">
                    {this.tabs.map(::this._settingsTab)}
                 </paper-listbox>
             </div>
