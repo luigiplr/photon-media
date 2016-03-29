@@ -66,6 +66,13 @@ workers.players = class players {
             execs: ['vlc.exe'],
             srcIcon: 'images/players/vlc-player-icon.png'
         }, {
+            name: 'Powder Player',
+            id: 'powder',
+            subswitch: '--sub-file=',
+            paths: ['Powder Player'],
+            execs: ['powder.exe'],
+            srcIcon: 'images/players/powder-player-icon.png'
+        }, {
             name: 'Windows Media Player',
             id: 'wmplayer',
             subswitch: null,
