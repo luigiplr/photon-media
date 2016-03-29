@@ -118,6 +118,7 @@ gulp.task('build-static-assets', () => {
         gulp.src('bower_components/**/*').pipe(gulp.dest('build/bower_components'))
 
     gulp.src('LICENSE').pipe(gulp.dest('build'))
+    
     gulp.src('src/main/**/*.html').pipe(htmlmin({ collapseWhitespace: true })).pipe(gulp.dest('build'))
     return gulp.src('src/images/**/*').pipe(gulp.dest('build/images'))
 })

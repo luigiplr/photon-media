@@ -2,7 +2,8 @@ class LoadedDetail extends Component {
 
     state = {
         backgroundImage: '',
-        posterImage: ''
+        posterImage: '',
+        player: this.props.players[Object.keys(this.props.players)[0]]
     };
 
     static propTypes = {
@@ -145,6 +146,24 @@ class LoadedDetail extends Component {
         return { color, textColor }
     }
 
+    _getPlayers() {
+        let playersArray = []
+        const { players } = this.props
+
+        _.forEach(players, (player, key) => playersArray.push(<paper-item onClick={() => this.setState({player})} key={key}>{player.name}</paper-item>))
+
+        return playersArray.length === 0 ? (<paper-item>No Players Detected</paper-item>) : playersArray
+    }
+
+    _getPlayerIcon() {
+        const { player } = this.state
+
+        if (player.icon) return { icon: player.icon }
+        else if (player.srcIcon) return { src: player.srcIcon }
+
+        return { icon: 'hardware:cast-connected' }
+    }
+
     render() {
         const { runtime, genres, overview, trailer, homepage, people, quality } = this.props
         const { color } = this._getColors()
@@ -204,10 +223,10 @@ class LoadedDetail extends Component {
                             </paper-dropdown-menu>
                         </li>
                         <li className="subtitles-dropdown">
-                            <paper-icon-button className="icon" noink icon="hardware:cast-connected"/>
+                            <paper-icon-button className="icon" noink {...::this._getPlayerIcon()}/>
                             <paper-dropdown-menu no-label-float vertical-align="bottom" horizontal-align="right" className="meta-dropdown">
                                 <paper-listbox selected="0" className="dropdown-content">
-                                    <paper-item>Piza Cast</paper-item>
+                                    {::this._getPlayers()}
                                 </paper-listbox>
                             </paper-dropdown-menu>
                         </li>

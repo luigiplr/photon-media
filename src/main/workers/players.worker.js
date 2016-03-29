@@ -63,13 +63,15 @@ workers.players = class players {
             id: 'vlc',
             subswitch: '--sub-file=',
             paths: ['VideoLAN/VLC'],
-            execs: ['vlc.exe']
+            execs: ['vlc.exe'],
+            srcIcon: 'images/players/vlc-player-icon.png'
         }, {
             name: 'Windows Media Player',
             id: 'wmplayer',
             subswitch: null,
             paths: ['Windows Media Player'],
-            execs: ['wmplayer.exe']
+            execs: ['wmplayer.exe'],
+            icon: null
         }]
     }
 }
