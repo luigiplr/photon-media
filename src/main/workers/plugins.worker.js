@@ -47,5 +47,10 @@ workers.plugins = class pluginsWorker {
         this.socket.on('plugin:install', ({ id, plugin }) => {
             this.log(plugin)
         })
+
+        this.socket.on('plugins:remove', ({ id, pluginID }) => {
+            const plugin = this.plugins[pluginID]
+            this.log(plugin)
+        })
     }
 }

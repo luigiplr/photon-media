@@ -39,10 +39,11 @@ class Plugins extends EventEmitter {
         return installerRequest
     }
 
-    remove(id) {
-        console.info(`Removing Plugin: ${id}`)
+    remove(pluginID) {
+        console.info(`Removing Plugin: ${pluginID}`)
         const removalRequest = uuid()
 
-        return removalRequest
+        this.sockets.emit('plugins:remove', { id: removalRequest, pluginID })
+        this.workers.once(removalRequest, () => this.emit(`${pluginID}:removed`))
     }
 }
