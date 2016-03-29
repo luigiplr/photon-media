@@ -42,7 +42,7 @@ export default class Detail extends Component {
             })
             matcher.once('success', detail => {
                 if (!this.mounted) return
-                this.setState({ detail })
+                this.setState({ detail: {...detail, url } })
             })
             matcher.once('error', error => {
                 if (!this.mounted) return
@@ -55,11 +55,27 @@ export default class Detail extends Component {
         _.defer(() => this.props.updatePage('home'))
     }
 
+    _play(player, url, subs) {
+        const { workers } = this.props
+        const { sockets } = workers.socket
+        const id = uuid()
+
+        sockets.emit('players:play', { id, url, playerID: player.id, subs })
+        workers.once(id, engine => {
+
+            workers.removeAllListeners(`${id}:error`)
+        })
+        workers.once(`${id}:error`, error => {
+
+            workers.removeAllListeners(id)
+        })
+    }
+
     _getSubDetail() {
         switch (this.state.detail.type) {
             case 'show':
             case 'movie':
-                return <LoadedDetail {...this.state.detail} />
+                return <LoadedDetail play={::this._play} {...this.state.detail} />
                 break
             default:
                 return null

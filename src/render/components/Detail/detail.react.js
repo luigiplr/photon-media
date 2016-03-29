@@ -13,6 +13,7 @@ class LoadedDetail extends Component {
         genres: React.PropTypes.array.isRequired,
         overview: React.PropTypes.string.isRequired,
         homepage: React.PropTypes.string,
+        play: React.PropTypes.func.isRequired,
     };
 
     componentWillUnmount() {
@@ -231,7 +232,7 @@ class LoadedDetail extends Component {
                             </paper-dropdown-menu>
                         </li>
                     </div>
-                    <paper-button style={{backgroundColor: color}} raised className="watchnow-btn">
+                    <paper-button onClick={() => this.props.play(this.state.player, this.props.url)} style={{backgroundColor: color}} raised className="watchnow-btn">
                         <paper-icon-button noink className="play-icon" icon="av:play-arrow"/> Watch Now
                     </paper-button>
                 </div>
