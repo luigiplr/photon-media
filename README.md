@@ -5,16 +5,14 @@
 [![license](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](LICENSE)
 
 
-
 ### What is Photon Media?
 
-Photon media was designed to be able to parse any local video files and supported urls<br>
-(supported urls can be expanded via engine plugins)<br><br>
-Photon media will parse, fetch subtitles and offer methods of playback (casting, local players etc) for supported filetypes
+Photon media was designed to be able to be a general purpose casting application, with the ability for expansion via sting/file engines & new player definition plugins<br><br>
+Please note its currently in a WIP phase.
 
-### Why did I make it?
-
-I enjoy pretty things.
+### What can Photon stream? 
+Out of the box photon will be able to parse local files along with a few common domains (youtube, vimeo etc).<br>
+Photons supported url's can be expanded through the installation of 3rd party engine plugins
 
 ### Requirements
 
