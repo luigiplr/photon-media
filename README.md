@@ -22,8 +22,11 @@ Photons supported url's can be expanded through the installation of 3rd party en
 ### [WIP] App Screenshots
 
 <img src="preview/home1.jpg" alt="Home 1" width="34%"/>
-<img src="preview/home2.jpg" alt="Home 2" width="34%"/>
+<img src="preview/series1.jpg" alt="Show 1" width="34%"/>
 <img src="preview/movie1.jpg" alt="Movie 1" width="30%"/>
+<br>
+<img src="preview/settings1.png" alt="Settings 1" width="34%"/>
+<img src="preview/settings2.png" alt="Settings 2" width="30%"/>
 
 ### Where's the beef!
 
