@@ -32,22 +32,29 @@ workers.plugins = class pluginsWorker {
 
     initEvents() {
         this.socket.on('plugins:verifyDefault', ({ id, installDir, pluginDir }) => {
-            if (fs.existsSync(installDir))
-                _.forEach(fs.readdirSync(installDir), zip => {
-                    const pluginInstallPath = path.join(pluginDir, path.parse(zip).name)
-                    if (!fs.existsSync(pluginInstallPath)) new admZip(path.join(installDir, zip)).extractAllTo(pluginInstallPath, true)
-                })
+            try {
+                if (fs.existsSync(installDir))
+                    _.forEach(fs.readdirSync(installDir), zip => {
+                        const pluginInstallPath = path.join(pluginDir, path.parse(zip).name)
+                        if (!fs.existsSync(pluginInstallPath)) new admZip(path.join(installDir, zip)).extractAllTo(pluginInstallPath, true)
+                    })
+            } catch (e) {}
             this.socket.emit('plugins', { id, data: null })
         })
 
         this.socket.on('plugins:get', ({ id, pluginDir, appVersion }) => {
-            _.forEach(fs.readdirSync(pluginDir).filter(file => fs.statSync(path.join(pluginDir, file)).isDirectory()), plugin => this.npmQueue.push(path.join(pluginDir, plugin)))
-            this.npmQueue.drain = () => this.socket.emit('plugins', { id, plugins: this.plugins })
+            const plugins = fs.readdirSync(pluginDir)
+            if (plugins.length > 0) {
+                _.forEach(plugins.filter(file => fs.statSync(path.join(pluginDir, file)).isDirectory()), plugin => this.npmQueue.push(path.join(pluginDir, plugin)))
+                this.npmQueue.drain = () => this.socket.emit('plugins', { id, plugins: this.plugins })
+            } else
+                this.socket.emit('plugins', { id, plugins: this.plugins })
         })
+
         this.socket.on('plugin:install', ({ id, plugin }) => {
             this.log(plugin)
         })
-
+        
         this.socket.on('plugins:remove', ({ id, pluginID }) => {
             const plugin = this.plugins[pluginID]
             this.log(plugin)
