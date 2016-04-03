@@ -7,7 +7,8 @@ export default class SettingsTabPlugins extends Component {
     };
 
     state = {
-        removePlugin: false
+        removePlugin: false,
+        installFromURL: false
     };
 
     _changeSetting(setting, checkbox) {
@@ -41,40 +42,50 @@ export default class SettingsTabPlugins extends Component {
         console.log(plugin)
     }
 
+    _installFromURL(url) {
+
+    }
+
+
     render() {
         const { settingsStore } = this.props
         return (
-            <div className="right-panel">
-                {this.state.removePlugin ? <WarningDialogPluginRemove dismiss={() => this.setState({removePlugin: {open: false, plugin: {}}})} {...this.state.removePlugin} /> : null}
-                <div className="setting plugins-list">
-                    <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._getStyles()}}/>
-                    <h2>Installed Plugins</h2>
-                    <div className="setting-inner">
-                        <paper-listbox>
-                            {
-                                this._formatPlugins().map((plugin, idx) => {
-                                    const {title, homepage, version, path} = plugin
-                                    return (
-                                        <paper-item key={idx}>
-                                            <div className="plugin-name">{title}</div>
-                                            <div className="plugin-btns">
-                                                <div className="btn">
-                                                    <paper-icon-button onClick={() => shell.openExternal(homepage)} icon="open-in-new"/>
-                                                    <paper-tooltip offset="-2" position="top">View plugin homepage</paper-tooltip>
+            <div>    
+                <div className="right-panel">
+                    {this.state.removePlugin ? <WarningDialogPluginRemove dismiss={() => this.setState({removePlugin: {open: false, plugin: {}}})} {...this.state.removePlugin} /> : null}
+                    <div className="setting plugins-list">
+                        <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._getStyles()}}/>
+                        <h2>Installed Plugins</h2>
+                        <div className="setting-inner">
+                            <paper-listbox>
+                                {
+                                    this._formatPlugins().map((plugin, idx) => {
+                                        const {title, homepage, version, path} = plugin
+                                        return (
+                                            <paper-item key={idx}>
+                                                <div className="plugin-name">{title}</div>
+                                                <div className="plugin-btns">
+                                                    <div className="btn">
+                                                        <paper-icon-button onClick={() => shell.openExternal(homepage)} icon="open-in-new"/>
+                                                        <paper-tooltip offset="-2" position="top">View plugin homepage</paper-tooltip>
+                                                    </div>
+                                                    <div className="btn">
+                                                        <paper-icon-button onClick={() => this._removePlugin(plugin)} icon="delete"/>
+                                                        <paper-tooltip offset="-2" position="top">Remove plugin</paper-tooltip>
+                                                    </div>
                                                 </div>
-                                                <div className="btn">
-                                                    <paper-icon-button onClick={() => this._removePlugin(plugin)} icon="delete"/>
-                                                    <paper-tooltip offset="-2" position="top">Remove plugin</paper-tooltip>
-                                                </div>
-                                            </div>
-                                        </paper-item>
-                                    )
-                                })
-                            }
-                        </paper-listbox>
-                        <paper-button raised className="install-plugin">Install</paper-button>
+                                            </paper-item>
+                                        )
+                                    })
+                                }
+                            </paper-listbox>
+                            <paper-button raised className="install-plugin">Install</paper-button>
+                            <paper-button raised onClick={() => this.setState({ installFromURL: true })} className="install-plugin">Install From URL</paper-button>
+                        </div>
                     </div>
+                    
                 </div>
+                {this.state.installFromURL ? <PluginsInstallFromURL install={::this._installFromURL} abort={() => _.delay(()=> this.setState({installFromURL: false}), 1000)}/> : null}
             </div>
         )
     }

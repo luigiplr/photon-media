@@ -9,7 +9,7 @@ import fs from 'fs'
 import vibrant from 'node-vibrant'
 import traktAPI from 'trakt-api'
 import http from 'http'
-import admZip from 'adm-zip'
+import decompressZip from 'decompress-zip'
 import child_process from 'child_process'
 
 
