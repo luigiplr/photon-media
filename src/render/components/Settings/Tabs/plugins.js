@@ -41,11 +41,6 @@ export default class SettingsTabPlugins extends Component {
     _removePlugin(plugin) {
         console.log(plugin)
     }
-        console.log(url)
-    _installFromURL(url) {
-
-    }
-
 
     render() {
         const { settingsStore } = this.props
@@ -83,9 +78,8 @@ export default class SettingsTabPlugins extends Component {
                             <paper-button raised onClick={() => this.setState({ installFromURL: true })} className="install-plugin">Install From URL</paper-button>
                         </div>
                     </div>
-                    
                 </div>
-                {this.state.installFromURL ? <PluginsInstallFromURL plugins={this.props.plugins} install={::this._installFromURL} close={() => _.delay(()=> this.setState({installFromURL: false}), 1000)}/> : null}
+                {this.state.installFromURL ? <PluginsInstallFromURL plugins={this.props.plugins} close={() => _.delay(()=> this.setState({installFromURL: false}), 1000)}/> : null}
             </div>
         )
     }
