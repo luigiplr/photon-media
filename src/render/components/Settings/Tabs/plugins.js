@@ -41,7 +41,7 @@ export default class SettingsTabPlugins extends Component {
     _removePlugin(plugin) {
         console.log(plugin)
     }
-
+        console.log(url)
     _installFromURL(url) {
 
     }
@@ -85,7 +85,7 @@ export default class SettingsTabPlugins extends Component {
                     </div>
                     
                 </div>
-                {this.state.installFromURL ? <PluginsInstallFromURL install={::this._installFromURL} abort={() => _.delay(()=> this.setState({installFromURL: false}), 1000)}/> : null}
+                {this.state.installFromURL ? <PluginsInstallFromURL plugins={this.props.plugins} install={::this._installFromURL} close={() => _.delay(()=> this.setState({installFromURL: false}), 1000)}/> : null}
             </div>
         )
     }

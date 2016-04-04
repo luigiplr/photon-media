@@ -19,33 +19,23 @@ workers.plugins = class pluginsWorker {
         message
     });
 
-    pluginQueue = async.queue(({ pluginPath, operation, installPath, installURL, pluginInstallPath }, next) => {
+    pluginQueue = async.queue(({ pluginPath, operation, installPath }, next) => {
         switch (operation) {
             case 'install':
+                const unzipper = new decompressZip(installPath)
+                unzipper.extract({ path: path.join(this.pluginDir, path.parse(installPath).name) })
 
-                function installLocal(zipPath) {
-                    const unzipper = new decompressZip(zipPath)
-                    unzipper.extract({ path: path.join(this.pluginDir, path.parse(zipPath).name) })
-
-                    unzipper.on('error', next)
-                    unzipper.on('extract', next)
-                }
-
-                if (installPath)
-                    return installLocal(installPath)
-
-                if (installURL) {
-
-                }
-
-
+                unzipper.on('error', next)
+                unzipper.on('extract', () => {
+                    this.pluginQueue.push({ pluginPath: path.join(this.pluginDir, path.parse(installPath).name), operation: 'query' })
+                    next()
+                })
                 break
             case 'remove':
 
 
                 break
             case 'query':
-
                 const pluginPackage = require(path.join(pluginPath, 'package.json'))
                 const { dependencies, name } = pluginPackage
 
@@ -82,8 +72,10 @@ workers.plugins = class pluginsWorker {
                 this.socket.emit('plugins', { id, plugins: this.plugins })
         })
 
-        this.socket.on('plugin:install', ({ id, installPath, installURL }) => {
-            this.log(plugin)
+        this.socket.on('plugins:install', ({ id, installPath }) => {
+            this.pluginQueue.kill()
+            this.pluginQueue.push({ installPath, operation: 'install' })
+            this.pluginQueue.drain = () => this.socket.emit('plugins', { id, plugins: this.plugins })
         })
 
         this.socket.on('plugins:remove', ({ id, pluginID }) => {

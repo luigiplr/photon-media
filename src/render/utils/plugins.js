@@ -32,11 +32,18 @@ class Plugins extends EventEmitter {
         })
     }
 
-    install(zip) {
-        console.info(`Installing: ${zip}`)
-        const installerRequest = uuid()
+    install(installPath) {
+        return new Promise(resolve => {
+            console.info(`Installing: ${installPath}`)
+            const id = uuid()
 
-        return installerRequest
+            this.sockets.emit('plugins:install', { installPath, id })
+            this.workers.once(id, plugins => {
+                this.plugins = plugins
+                this.emit('plugin:installed', plugins)
+                resolve()
+            })
+        })
     }
 
     remove(pluginID) {
