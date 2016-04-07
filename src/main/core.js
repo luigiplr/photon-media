@@ -42,7 +42,7 @@ app.on('ready', () => {
 
     mainWindowState.manage(mainWindow)
 
-    mainWindow.loadURL(`file://${path.join(__dirname, '../', 'app.html')}`)
+    mainWindow.loadURL(`file://${path.join(__dirname, '..', 'app.html')}`)
 
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.show()
