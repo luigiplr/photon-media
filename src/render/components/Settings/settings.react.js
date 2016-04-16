@@ -23,14 +23,12 @@ class SettingsComponent extends Component {
     return TabContents
   }
 
-  _settingsTabStyles() {
-    return `
-            paper-checkbox {
-                --paper-checkbox-label-color: #fff;
-                --paper-checkbox-unchecked-color: var(--paper-grey-500);
-            }
-        `
-  }
+  _settingsTabStyles = `
+    paper-checkbox {
+        --paper-checkbox-label-color: #fff;
+        --paper-checkbox-unchecked-color: var(--paper-grey-500);
+    }
+  `
 
   render = () => (
     <div className="settings">
@@ -39,7 +37,7 @@ class SettingsComponent extends Component {
         <h1>Settings</h1>
         <div className="panel-container">
           <SettingsSidebar changeTab={tab => this.setState({ tab })} tab={this.state.tab} />
-          <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._settingsTabStyles()}}/>
+          <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._settingsTabStyles}}/>
           {::this._getSettingsTab()}
         </div>
       </div>

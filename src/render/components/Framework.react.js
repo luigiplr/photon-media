@@ -99,8 +99,8 @@ class Framework extends Component {
 
   render = () => (
     <div className='app-framework'>
-      <Header />
-      {this.state.initializing ? this._getLoadingContents() : this._getContents() }
+      <Header/>
+      {this.state.initializing ? this._getLoadingContents() : this._getContents()}
     </div>
   )
 }

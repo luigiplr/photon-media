@@ -4,7 +4,7 @@ class LoadedDetail extends Component {
     backgroundImage: '',
     posterImage: '',
     player: this.props.players[Object.keys(this.props.players)[0]]
-  };
+  }
 
   static propTypes = {
     title: React.PropTypes.string.isRequired,
@@ -15,11 +15,11 @@ class LoadedDetail extends Component {
     homepage: React.PropTypes.string,
     play: React.PropTypes.func.isRequired,
     players: React.PropTypes.object
-  };
+  }
 
   static defaultProps = {
     players: { name: 'No Players Detected', id: null }
-  };
+  }
 
   componentWillUnmount() {
     this.mounted = false
@@ -60,24 +60,21 @@ class LoadedDetail extends Component {
     }
   }
 
-  _getDropUpStyle() {
-    return `
-            paper-dropdown-menu.meta-dropdown {
-                --primary-text-color: #fff;
-                --paper-input-container-input: {
-                    font-weight: 500;
-                    font-size: 15px;
-                }
-                --paper-dropdown-menu-icon: {
-                    color: #fff;
-                }
-                --paper-input-container-underline: {
-                    display: none;
-                }
-            }
-            `
-  }
-
+  _DropUpStyle = `
+    paper-dropdown-menu.meta-dropdown {
+        --primary-text-color: #fff;
+        --paper-input-container-input: {
+            font-weight: 500;
+            font-size: 15px;
+        }
+        --paper-dropdown-menu-icon: {
+            color: #fff;
+        }
+        --paper-input-container-underline: {
+            display: none;
+        }
+    }
+  `
   _getHumanTime(minutes) {
     let time = moment.duration(minutes, 'minutes')
     return (time.hours() !== 0) ? `${time.hours()} hour${(time.hours() > 1 ? 's' : '')} ${time.minutes()} minutes` : `${time.minutes()} min`
@@ -154,11 +151,10 @@ class LoadedDetail extends Component {
 
   _getPlayerIcon() {
     const { player } = this.state
-
-    if (player.icon) return { icon: player.icon }
-    else if (player.srcIcon) return { src: player.srcIcon }
-
-    return { icon: 'hardware:cast-connected' }
+    const { icon, srcIcon } = player
+    return {
+      [!srcIcon ? 'icon' : 'src']: !srcIcon ? (icon || 'hardware:cast-connected') : srcIcon
+    }
   }
 
   render() {
@@ -182,12 +178,8 @@ class LoadedDetail extends Component {
               <p>{this._getHumanTime(runtime)}</p>
             </div>
             <div className="meta-synop">{::this._getOverview()}</div>
-            <paper-button onClick={() => shell.openExternal(homepage)} className="meta-btn first">
-              homepage
-            </paper-button>
-            <paper-button onClick={() => shell.openExternal(trailer)} className="meta-btn">
-              Watch Trailer
-            </paper-button>
+            {homepage ? <paper-button onClick={() => shell.openExternal(homepage)} className="meta-btn first">homepage</paper-button> : null}
+            {trailer ? <paper-button onClick={() => shell.openExternal(trailer)} className="meta-btn">Watch Trailer</paper-button> : null}
             <paper-button className="meta-btn right first">
             </paper-button>
             <div className="meta-divider"/>
@@ -206,7 +198,7 @@ class LoadedDetail extends Component {
         </div>
         <div className="controls-container">
           <div className="meta-container-c">
-            <style is="custom-style" dangerouslySetInnerHTML={{ __html: this._getDropUpStyle()}}/>
+            <style is="custom-style" dangerouslySetInnerHTML={{ __html: this._DropUpStyle}}/>
             <li className="quality">
               <paper-icon-button className="icon" noink icon="av:high-quality"/>
               <span className="quality">{(quality ? quality : 'Unable to parse quality')}</span>
