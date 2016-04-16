@@ -8,13 +8,13 @@ class Detail extends Component {
     detail: {
       type: 'none'
     }
-  };
+  }
 
   static propTypes = {
     url: React.PropTypes.string.isRequired,
     workers: React.PropTypes.object.isRequired,
     settingsStore: React.PropTypes.object.isRequired
-  };
+  }
 
   componentWillUnmount() {
     this.mounted = false
