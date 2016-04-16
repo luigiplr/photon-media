@@ -50,6 +50,8 @@
 .settings .settings-tab-container {
     margin-top: 120px;
     position: relative;
+    background-color: transparent;
+    color: #fff;
 }
 
 .settings .setting-tab {
