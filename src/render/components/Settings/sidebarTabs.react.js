@@ -34,7 +34,7 @@ class SettingsSidebar extends Component {
   render() {
     return (
       <div className="left-panel">
-        <style is="custom-style" scoped dangerouslySetInnerHTML={{ __html: this._tabStyles()}}/>
+        <style is="custom-style" dangerouslySetInnerHTML={{ __html: this._tabStyles()}}/>
         <paper-listbox className="settings-tab-container" selected="0">
           {this.tabs.map(::this._settingsTab)}
         </paper-listbox>

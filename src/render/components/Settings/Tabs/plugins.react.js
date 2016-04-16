@@ -4,12 +4,12 @@ class SettingsTabPlugins extends Component {
     settingsStore: React.PropTypes.object.isRequired,
     workers: React.PropTypes.object.isRequired,
     plugins: React.PropTypes.object.isRequired
-  };
+  }
 
   state = {
     removePlugin: false,
     installFromURL: false
-  };
+  }
 
   _changeSetting(setting, checkbox) {
     const value = checkbox ? this.refs[setting].checked : this.refs[setting].value
@@ -18,11 +18,8 @@ class SettingsTabPlugins extends Component {
 
   _getStyles() {
     return `
-            paper-listbox {
-                --paper-listbox-background-color: rgba(45, 45, 45, 0.7);
-                --paper-listbox-color: #fff;
-            }
-        `
+
+      `
   }
 
   _formatPlugins() {
