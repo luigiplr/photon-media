@@ -61,7 +61,7 @@ class Framework extends Component {
     }, 400)
   }
 
-  _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
+  _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData })
 
   _getContents() {
     const { page } = this.state

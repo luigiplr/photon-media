@@ -12,7 +12,5 @@ import http from 'http'
 import decompressZip from 'decompress-zip'
 import child_process from 'child_process'
 
-
 const workers = {}
-
 self.onmessage = ({ data }) => new workers[data.worker](data.port)

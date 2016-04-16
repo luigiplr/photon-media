@@ -3,8 +3,6 @@ import windowStateKeeper from 'electron-window-state'
 import minimist from 'minimist'
 import path from 'path'
 
-const args = minimist(process.argv.slice(2))
-
 process.env.NODE_ENV = minimist(process.argv.slice(2)).dev ? 'development' : 'production'
 
 /* BEGIN CHROME FLAGS */
@@ -18,41 +16,38 @@ app.commandLine.appendSwitch('js-flags', '--es_staging')
 app.on('window-all-closed', () => app.quit())
 
 app.on('ready', () => {
-    const { workAreaSize } = require('screen').getPrimaryDisplay()
+  const { workAreaSize } = require('screen').getPrimaryDisplay()
 
-    const mainWindowState = windowStateKeeper({
-        defaultWidth: workAreaSize.width * 0.8,
-        defaultHeight: workAreaSize.height * 0.8
-    })
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: workAreaSize.width * 0.8,
+    defaultHeight: workAreaSize.height * 0.8
+  })
 
-    const mainWindow = new BrowserWindow({
-        resizable: true,
-        title: 'Photon Media',
-        center: true,
-        frame: false,
-        show: false,
-        x: mainWindowState.x,
-        y: mainWindowState.y,
-        width: mainWindowState.width,
-        height: mainWindowState.height,
-        minWidth: 768,
-        minHeight: 468,
-        backgroundColor: '#212121'
-    })
+  const mainWindow = new BrowserWindow({
+    resizable: true,
+    title: 'Photon Media',
+    center: true,
+    frame: false,
+    show: false,
+    minWidth: 768,
+    minHeight: 468,
+    backgroundColor: '#212121',
+    ...mainWindowState
+  })
 
-    mainWindowState.manage(mainWindow)
+  mainWindowState.manage(mainWindow)
 
-    mainWindow.loadURL(`file://${path.join(__dirname, '..', 'app.html')}`)
+  mainWindow.loadURL(`file://${path.join(__dirname, '..', 'app.html')}`)
 
-    mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.show()
-        mainWindow.focus()
-    })
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.show()
+    mainWindow.focus()
+  })
 
-    if (process.env.NODE_ENV === 'development') {
-        const { client } = require('electron-connect')
-        client.create(mainWindow)
-        mainWindow.toggleDevTools()
-        mainWindow.focus()
-    }
+  if (process.env.NODE_ENV === 'development') {
+    const { client } = require('electron-connect')
+    client.create(mainWindow)
+    mainWindow.toggleDevTools()
+    mainWindow.focus()
+  }
 })
