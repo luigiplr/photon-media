@@ -5,9 +5,7 @@ class Detail extends Component {
     errorReportable: false,
     status: `Parsing: "${this.props.url}"`,
     loading: true,
-    detail: {
-      type: 'none'
-    }
+    detail: { type: 'none' }
   }
 
   static propTypes = {

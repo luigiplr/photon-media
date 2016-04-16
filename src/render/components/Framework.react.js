@@ -64,19 +64,23 @@ class Framework extends Component {
   _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
 
   _getContents() {
-    let page = null
-    switch (this.state.page) {
+    const { page } = this.state
+    let contents = null
+    switch (page) {
       case 'home':
-        page = <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={this.settingsStore}/>
+        contents = <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={this.settingsStore}/>
+        break
       case 'detail':
-        page = <Detail settingsStore={this.settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
+        contents = <Detail settingsStore={this.settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
+        break
       case 'settings':
-        page = <SettingsComponent settingsStore={this.settingsStore} plugins={this.plugins} workers={this.workers} updatePage={this._changePage} />
+        contents = <SettingsComponent settingsStore={this.settingsStore} plugins={this.plugins} workers={this.workers} updatePage={this._changePage} />
+        break
     }
     return (
       <ReactCSSTransitionGroup transitionName="cross-fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-        <div className='transition-container' key={this.state.page}>
-          {page}
+        <div className='transition-container' key={page}>
+          {contents}
         </div>
       </ReactCSSTransitionGroup>
     )
@@ -93,12 +97,10 @@ class Framework extends Component {
     )
   }
 
-  render() {
-    return (
-      <div className='app-framework'>
-        <Header />
-        {this.state.initializing ? this._getLoadingContents() : this._getContents() }
-      </div>
-    )
-  }
+  render = () => (
+    <div className='app-framework'>
+      <Header />
+      {this.state.initializing ? this._getLoadingContents() : this._getContents() }
+    </div>
+  )
 }
