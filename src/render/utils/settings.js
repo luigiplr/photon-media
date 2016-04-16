@@ -19,7 +19,7 @@ class Settings extends EventEmitter {
       console.error(err)
       this[setting] = defaultValue
       next()
-    }));
+    }))
 
   setSetting(setting, value) {
     this[setting] = value

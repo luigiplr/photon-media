@@ -1,6 +1,6 @@
 workers.players = class players {
   constructor(port) {
-    this.socket = socketClient(`http://localhost:${port}`)
+    this.socket = socketClient(`http://127.0.0.1:${port}`)
 
     this.socket.on('connect', () => {
       this.log('Socket Connected!', 'info')
@@ -8,27 +8,31 @@ workers.players = class players {
     })
     this.socket.on('disconnect', () => this.log('Socket Disconnected!', 'info'))
 
-    this.initEvents()
     this.definePaths()
+    this.initEvents()
   }
 
   foundPlayers = {};
 
-  playerScanQueue = async.queue((player, next) => {
-    _.forEach(this.searchPaths, systemPath => _.forEach(player.paths, playerPath => _.forEach(player.execs, exec => {
-      let checkPath = path.join(systemPath, playerPath, exec)
-      try {
-        fs.accessSync(checkPath, fs.F_OK)
-        player.path = checkPath
-        delete player.paths
-        delete player.execs
-        this.foundPlayers[player.id] = player
-      } catch (e) {}
-    })))
-    next()
-  });
+  playerScanQueue = async.queue(({ player, caster }, next) => {
+    if (player) {
+      _.forEach(this.searchPaths, systemPath => _.forEach(player.paths, playerPath => _.forEach(player.execs, exec => {
+        let checkPath = path.join(systemPath, playerPath, exec)
+        try {
+          fs.accessSync(checkPath, fs.F_OK)
+          player.path = checkPath
+          delete player.paths
+          delete player.execs
+          this.foundPlayers[player.id] = player
+        } catch (e) {}
+      })))
+      next()
+    } else if (caster) {
+      next()
+    }
+  })
 
-  log = (message, type = 'log', source = 'Player Discovery Worker') => this.socket.emit('info', { source, type, message });
+  log = (message, type = 'log', source = 'Player Discovery Worker') => this.socket.emit('info', { source, type, message })
 
   initEvents() {
     this.socket.on('players:get', ({ id }) => this.scanPlayers()
@@ -42,13 +46,11 @@ workers.players = class players {
     })
   }
 
-  scanPlayers() {
-    return new Promise(resolve => {
-      this.playerScanQueue.kill()
-      _.forEach(this.playerDefinitions, player => this.playerScanQueue.push(player))
-      this.playerScanQueue.drain = () => resolve(this.foundPlayers)
-    })
-  }
+  scanPlayers = () => new Promise(resolve => {
+    this.playerScanQueue.kill()
+    _.forEach(this.playerDefinitions, player => this.playerScanQueue.push({ player }))
+    this.playerScanQueue.drain = () => resolve(this.foundPlayers)
+  })
 
   definePaths() {
     switch (process.platform) {
@@ -63,42 +65,40 @@ workers.players = class players {
     }
   }
 
-  startPlayer({ playerID, url, subs }) {
-    return new Promise((resolve, reject) => {
-      try {
-        const player = this.foundPlayers[playerID]
-        const playerArgs = []
+  startPlayer = ({ playerID, url, subs }) => new Promise((resolve, reject) => {
+    try {
+      const player = this.foundPlayers[playerID]
+      const playerArgs = []
 
-        if (player.urlswitch && url) playerArgs.push(urlswitch + url)
-        else if (url) playerArgs.push(url)
+      if (player.urlswitch && url) playerArgs.push(urlswitch + url)
+      else if (url) playerArgs.push(url)
 
-        if (player.subswitch && subs) playerArgs.push(player.subswitch + subs)
-        else if (subs) playerArgs.push(subs)
+      if (player.subswitch && subs) playerArgs.push(player.subswitch + subs)
+      else if (subs) playerArgs.push(subs)
 
-        const spawnedPlayer = child_process.spawn(player.path, playerArgs)
+      const spawnedPlayer = child_process.spawn(player.path, playerArgs)
 
-        spawnedPlayer.stdout.on('data', data => {
-          if (data) this.log(`[${player.name}] stdout: ${data.toString()}`, 'info', 'Player Worker')
-        })
+      spawnedPlayer.stdout.on('data', data => {
+        if (data) this.log(`[${player.name}] stdout: ${data.toString()}`, 'info', 'Player Worker')
+      })
 
-        spawnedPlayer.stderr.on('data', data => {
-          if (data) this.log(`[${player.name}] stderr: ${data.toString()}`, 'info', 'Player Worker')
-        })
+      spawnedPlayer.stderr.on('data', data => {
+        if (data) this.log(`[${player.name}] stderr: ${data.toString()}`, 'info', 'Player Worker')
+      })
 
-        spawnedPlayer.on('close', code => this.log(`[${player.name}] exited with: code ${code}`, 'info', 'Player Worker'))
+      spawnedPlayer.on('close', code => this.log(`[${player.name}] exited with: code ${code}`, 'info', 'Player Worker'))
 
-        resolve()
-      } catch (e) {
-        reject()
-      }
-    })
-  }
+      resolve()
+    } catch (e) {
+      reject()
+    }
+  })
 
   castingDefinitions = [{
     name: 'Chromecast',
     id: 'chromecast',
     srcIcon: 'images/players/vlc-player-icon.png'
-  }];
+  }]
 
   playerDefinitions = [{
     name: 'VLC',
@@ -107,8 +107,7 @@ workers.players = class players {
     subswitch: '--sub-file=',
     paths: ['VideoLAN/VLC'],
     execs: ['vlc.exe'],
-    srcIcon: 'images/players/vlc-player-icon.png',
-    cast: false
+    srcIcon: 'images/players/vlc-player-icon.png'
   }, {
     name: 'Powder Player',
     id: 'powder',
@@ -116,8 +115,7 @@ workers.players = class players {
     subswitch: '--sub-file=',
     paths: ['Powder Player'],
     execs: ['powder.exe'],
-    srcIcon: 'images/players/powder-player-icon.png',
-    cast: false
+    srcIcon: 'images/players/powder-player-icon.png'
   }, {
     name: 'Windows Media Player',
     id: 'wmplayer',
@@ -125,7 +123,6 @@ workers.players = class players {
     urlswitch: null,
     paths: ['Windows Media Player'],
     execs: ['wmplayer.exe'],
-    srcIcon: 'images/players/windows-media-player-icon.png',
-    cast: false
-  }];
+    srcIcon: 'images/players/windows-media-player-icon.png'
+  }]
 }

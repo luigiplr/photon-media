@@ -51,9 +51,14 @@ workers.plugins = class pluginsWorker {
   });
 
   initEvents() {
-    this.socket.on('plugins:verifyDefault', ({ id, installDir, pluginDir }) => {
-      this.pluginDir = pluginDir
 
+    this.socket.on('plugins:init', ({ id, pluginDir }) => {
+      this.pluginDir = pluginDir
+      if (!fs.existsSync(this.pluginDir)) fs.mkdirSync(this.pluginDir)
+      this.socket.emit('plugins', { id, data: null })
+    })
+
+    this.socket.on('plugins:verifyDefault', ({ id, installDir }) => {
       if (fs.existsSync(installDir)) {
         this.pluginQueue.kill()
         _.forEach(fs.readdirSync(installDir), zip => this.pluginQueue.push({ installPath: path.join(installDir, zip), operation: 'install' }))
@@ -62,7 +67,7 @@ workers.plugins = class pluginsWorker {
         this.socket.emit('plugins', { id, data: null })
     })
 
-    this.socket.on('plugins:get', ({ id, pluginDir, appVersion }) => {
+    this.socket.on('plugins:get', ({ id, appVersion }) => {
       const plugins = fs.readdirSync(this.pluginDir)
       if (plugins.length > 0) {
         this.pluginQueue.kill()
