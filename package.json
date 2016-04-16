@@ -44,7 +44,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.7.2",
-    "bower": "^1.7.7",
+    "bower": "^1.7.9",
     "electron-connect": "^0.3.7",
     "electron-packager": "^6.0.2",
     "electron-prebuilt": "^0.37.6",
