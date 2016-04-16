@@ -5,7 +5,6 @@ import babel from 'gulp-babel'
 import concat from 'gulp-concat'
 import rimraf from 'gulp-rimraf'
 import gutil from 'gulp-util'
-import uglify from 'gulp-uglify'
 import sourcemaps from 'gulp-sourcemaps'
 import symlink from 'gulp-sym'
 import gulpif from 'gulp-if'
@@ -17,19 +16,12 @@ import plumber from 'gulp-plumber'
 import electronPackager from 'electron-packager'
 import packageJson from './package.json'
 import runSequence from 'run-sequence'
+import electron from 'electron-prebuilt'
 import { server as electronConnect } from 'electron-connect'
 import fs from 'fs'
 
 /* setup electron connect server for live reloading */
-const electronDev = electronConnect.create({ path: 'build' })
-
-const uglifyOptions = {
-    options: {
-        compress: { screw_ie8: true },
-        mangle: { screw_ie8: true }
-    }
-}
-
+const electronDev = electronConnect.create({ path: 'build', electron })
 let PRODUCTION_BUILD = true
 
 /* Build Tasks */
