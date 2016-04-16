@@ -1,118 +1,104 @@
 class Framework extends Component {
 
-    state = {
-        initializing: 'App Initializing',
-        initializingDots: '',
-        page: 'home',
-        pageData: {}
-    };
+  state = {
+    initializing: 'App Initializing',
+    initializingDots: '',
+    page: 'home',
+    pageData: {}
+  }
 
-    componentWillMount() {
-        Promise.all([this._initSettings(), this._initWorkers()]).then(() => {
-            this.setState({ initializing: 'Loading Plugins' })
+  componentDidMount() {
+    this.setupContextMenus()
+    this.addDaDots()
 
-            this.plugins = new Plugins(this.workers)
-            this.plugins.once('initiated', () => this.setState({ initializing: false }))
-        })
+    Promise.all([this._initSettings(), this._initWorkers()]).then(() => {
+      this.setState({ initializing: 'Loading Plugins' })
 
-        this.setupContextMenus()
+      this.plugins = new Plugins(this.workers)
+      this.plugins.once('initiated', () => this.setState({ initializing: false }))
+    })
+  }
+
+  _initSettings = () => new Promise(resolve => {
+    this.settingsStore = new Settings()
+    this.settingsStore.once('initiated', resolve)
+  })
+
+  _initWorkers = () => new Promise(resolve => {
+    this.workers = new InitWorkers()
+    this.workers.once('initiated', resolve)
+  })
+
+  setupContextMenus() {
+    const buildEditorContextMenu = remote.require('electron-editor-context-menu');
+
+    window.addEventListener('contextmenu', ({ target }) => {
+      if (!target.closest('textarea, input, [contenteditable="true"]')) return
+
+      const menu = buildEditorContextMenu(null, [
+        { label: 'Cut', role: 'cut' },
+        { label: 'Copy', role: 'copy' },
+        { label: 'Paste', role: 'paste' }
+      ])
+
+      setTimeout(() => menu.popup(remote.getCurrentWindow()), 30)
+    })
+  }
+
+  addDaDots() {
+    const loadingDotsAdder = setInterval(() => {
+      const { initializing, initializingDots } = this.state
+      if (!initializing) return clearInterval(loadingDotsAdder)
+
+      let initializingDotsNew = initializingDots
+
+      if (initializingDots.length === 3)
+        initializingDotsNew = ''
+      else
+        initializingDotsNew = initializingDotsNew + '.'
+
+      this.setState({ initializingDots: initializingDotsNew })
+    }, 400)
+  }
+
+  _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
+
+  _getContents() {
+    let page = null
+    switch (this.state.page) {
+      case 'home':
+        page = <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={this.settingsStore}/>
+      case 'detail':
+        page = <Detail settingsStore={this.settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
+      case 'settings':
+        page = <SettingsComponent settingsStore={this.settingsStore} plugins={this.plugins} workers={this.workers} updatePage={this._changePage} />
     }
+    return (
+      <ReactCSSTransitionGroup transitionName="cross-fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+        <div className='transition-container' key={this.state.page}>
+          {page}
+        </div>
+      </ReactCSSTransitionGroup>
+    )
+  }
 
-    componentDidMount() {
-        this.addDaDots()
-    }
+  _getLoadingContents() {
+    const { initializing, initializingDots } = this.state
+    return (
+      <div className="loading-spinner-wrapper">
+        <style is="custom-style" dangerouslySetInnerHTML={{ __html: 'paper-spinner.thin {--paper-spinner-stroke-width: 2px;}'}}/>
+        <h1 className="status-text">{initializing + initializingDots}</h1>
+        <paper-spinner className="loading-spinner thin" active={true}/>
+      </div>
+    )
+  }
 
-    _initSettings() {
-        return new Promise(resolve => {
-            this.settingsStore = new Settings(localforage.createInstance({
-                name: 'photon-media',
-                version: 1.0
-            }))
-            this.settingsStore.once('initiated', resolve)
-        })
-    }
-
-    _initWorkers() {
-        return new Promise(resolve => {
-            this.workers = new InitWorkers()
-            this.workers.once('initiated', resolve)
-        })
-    }
-
-    setupContextMenus() {
-        const buildEditorContextMenu = remote.require('electron-editor-context-menu');
-
-        window.addEventListener('contextmenu', ({ target }) => {
-            if (!target.closest('textarea, input, [contenteditable="true"]')) return
-
-            const menu = buildEditorContextMenu(null, [
-                { label: 'Cut', role: 'cut' },
-                { label: 'Copy', role: 'copy' },
-                { label: 'Paste', role: 'paste' }
-            ])
-
-            setTimeout(() => menu.popup(remote.getCurrentWindow()), 30)
-        })
-    }
-
-    addDaDots() {
-        const loadingDotsAdder = setInterval(() => {
-            const { initializing, initializingDots } = this.state
-            if (!initializing) return clearInterval(loadingDotsAdder)
-
-            let initializingDotsNew = initializingDots
-
-            if (initializingDots.length === 3)
-                initializingDotsNew = ''
-            else
-                initializingDotsNew = initializingDotsNew + '.'
-
-            this.setState({ initializingDots: initializingDotsNew })
-        }, 400)
-    }
-
-    _changePage = (page = 'home', pageData = {}) => this.setState({ page, pageData });
-
-    _getContents() {
-        switch (this.state.page) {
-            case 'home':
-                return <MediaInput workers={this.workers} updatePage={this._changePage} plugins={this.plugins} settingsStore={this.settingsStore}/>
-            case 'detail':
-                return <Detail settingsStore={this.settingsStore} updatePage={this._changePage} {...this.state.pageData} plugins={this.plugins} workers={this.workers}/>
-            case 'settings':
-                return <SettingsComponent settingsStore={this.settingsStore} plugins={this.plugins} workers={this.workers} updatePage={this._changePage} />
-            default:
-                return null
-        }
-    }
-
-    _getCoreContents() {
-        const { initializing, initializingDots } = this.state
-        if (initializing) {
-            return (
-                <div className="loading-spinner-wrapper">
-                    <style is="custom-style" dangerouslySetInnerHTML={{ __html: 'paper-spinner.thin {--paper-spinner-stroke-width: 2px;}'}}/>
-                    <h1 className="status-text">{initializing + initializingDots}</h1>
-                    <paper-spinner className="loading-spinner thin" active={true}/>
-                </div>
-            )
-        } else {
-            return (
-                <ReactCSSTransitionGroup transitionName="cross-fade" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-                    <div className='transition-container' key={this.state.page}>
-                        {::this._getContents()}
-                    </div>
-                </ReactCSSTransitionGroup>
-            )
-        }
-    }
-
-    render() {
-        return (
-            <div className='app-framework'>
-                <Header />
-                {::this._getCoreContents()}
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div className='app-framework'>
+        <Header />
+        {this.state.initializing ? this._getLoadingContents() : this._getContents() }
+      </div>
+    )
+  }
 }

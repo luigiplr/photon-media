@@ -35,15 +35,13 @@ class titleMatcher extends EventEmitter {
                 this.emit('status', `Detecting available players`)
                 return this.getPlayers(data)
             })
-            .then(data => {
-                clearTimeout(this.timeout)
-                this.emit('success', {
-                    ...data,
-                    orginalTitle: name,
-                    quality: this.searchQuality(name),
-                    illegitimate: this.testIllegitimate(name)
-                })
-            })
+            .then(data =>   this.emit('success', {
+                  ...data,
+                  orginalTitle: name,
+                  quality: this.searchQuality(name),
+                  illegitimate: this.testIllegitimate(name)
+              }))
+            .then(() => clearTimeout(this.timeout))
             .catch(error => {
                 clearTimeout(this.timeout)
                 this.emit('error', 'Data Matching has run into a critical error!')
