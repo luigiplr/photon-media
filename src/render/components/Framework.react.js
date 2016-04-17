@@ -7,8 +7,11 @@ class Framework extends Component {
     pageData: {}
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.setupContextMenus()
+  }
+
+  componentDidMount() {
     this.addDaDots()
 
     Promise.all([this._initSettings(), this._initWorkers()]).then(() => {

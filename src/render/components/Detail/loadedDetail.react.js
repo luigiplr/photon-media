@@ -61,7 +61,7 @@ class LoadedDetail extends Component {
   }
 
   _DropUpStyle = `
-    paper-dropdown-menu.meta-dropdown {
+    paper-dropdown-menu-0.meta-dropdown {
         --primary-text-color: #fff;
         --paper-input-container-input: {
             font-weight: 500;
@@ -178,8 +178,8 @@ class LoadedDetail extends Component {
               <p>{this._getHumanTime(runtime)}</p>
             </div>
             <div className="meta-synop">{::this._getOverview()}</div>
-            {homepage ? <paper-button onClick={() => shell.openExternal(homepage)} className="meta-btn first">homepage</paper-button> : null}
-            {trailer ? <paper-button onClick={() => shell.openExternal(trailer)} className="meta-btn">Watch Trailer</paper-button> : null}
+            <paper-button disabled={(homepage === undefined || homepage === null)} onClick={() => shell.openExternal(homepage)} className="meta-btn first">homepage</paper-button>
+            <paper-button disabled={(trailer === undefined || trailer === null)} onClick={() => shell.openExternal(trailer)} className="meta-btn">Watch Trailer</paper-button>
             <paper-button className="meta-btn right first">
             </paper-button>
             <div className="meta-divider"/>

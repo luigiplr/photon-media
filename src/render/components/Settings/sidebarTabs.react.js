@@ -13,7 +13,7 @@ class SettingsSidebar extends Component {
   ]
 
   _tabStyles = `
-    paper-item {
+    .paper-item-0 {
       --paper-item-selected-weight: 500 !important;
       --paper-item-focused-before: {
         opacity: 0;
