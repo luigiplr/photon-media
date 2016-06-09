@@ -1,13 +1,21 @@
+@import 'vender/reset';
+
 body {
-  background-color: #212121;
   -webkit-font-smoothing: subpixel-antialiased;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
   cursor: default;
   text-rendering: optimizelegibility;
+  overflow: hidden;
 }
 
 img {
   pointer-events: none;
+}
+
+.app {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
 }
