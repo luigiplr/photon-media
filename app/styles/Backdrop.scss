@@ -1,0 +1,36 @@
+.cross-fade-leave {
+  opacity: 1;
+  &.cross-fade-leave-active {
+    opacity: 0;
+    transition: opacity 500ms ease-in;
+  }
+}
+.cross-fade-enter {
+  opacity: 0;
+  &.cross-fade-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+  }
+}
+.cross-fade-height {
+  transition: height 300ms ease-in-out;
+}
+.transition-container {
+  display: inline-block;
+  height: 100vh;
+  top: 0;
+  width: 100vw;
+  position: absolute !important;
+}
+.backdrop {
+  height: calc(100% + 10px);
+  width: calc(100% + 10px);
+  position: fixed;
+  display: block;
+  background-clip: content-box;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center;
+  margin: -5px;
+  -webkit-filter: blur(2px) brightness(45%);
+}

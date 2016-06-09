@@ -1,0 +1,76 @@
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 auto;
+  .search-box-contain {
+    width: 40%;
+    min-width: 450px;
+    background-color: rgba(255, 255, 255, 0.87);
+    height: 40px;
+    .search-btn {
+      position: absolute;
+      right: 0;
+      color: #4184F4;
+    }
+    .dropdown-trigger {
+      padding: 8px;
+      margin: 0;
+      top: -8px;
+      left: -5px;
+    }
+    .searchtext {
+      position: absolute;
+      padding-right: 0;
+      width: calc(100% - 60px);
+      font-weight: 400;
+      height: 38px;
+      font-size: 17px;
+      margin-left: 15px;
+      border: none;
+      color: #484848;
+      outline: 0;
+      background-color: transparent;
+    }
+  }
+  .bottom-info-container {
+    bottom: 20px;
+    left: 30px;
+    position: absolute;
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 12px;
+    font-weight: 500;
+    .title {
+      font-size: 17px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.35);
+      font-weight: 400;
+      float: left;
+      transition: border-bottom 0.5s;
+      &:hover {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+      }
+    }
+    .rating {
+      line-height: 20px;
+      height: 20px;
+      margin-left: 1px;
+    }
+    .year {
+      line-height: 21px;
+      height: 20px;
+      margin-left: 6px;
+    }
+  }
+  .bottom-button-container {
+    bottom: 20px;
+    right: 30px;
+    position: absolute;
+  }
+  .bottom-button-container .bottom-btn {
+    right: 0;
+    padding: 5px;
+    margin-left: 10px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+}

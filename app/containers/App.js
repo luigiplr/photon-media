@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Window } from 'react-desktop/windows'
 import Header from './Header'
+import Backdrop from './Backdrop'
 import styles from 'styles/App'
 
 export default class App extends Component {
@@ -17,7 +18,9 @@ export default class App extends Component {
     return (
       <div className={styles.app}>
         <Header />
-        {this.props.children}
+        <div className={styles.appContainer}>
+          {this.props.children}
+        </div>
         {
           (() => {
             if (process.env.NODE_ENV !== 'production') {
@@ -26,6 +29,7 @@ export default class App extends Component {
             }
           })()
         }
+        <Backdrop/>
       </div>
     )
   }
