@@ -1,22 +1,21 @@
 /* eslint strict: 0, no-shadow: 0, no-unused-vars: 0, no-console: 0 */
-'use strict';
 
-require('babel-polyfill');
-const os = require('os');
-const webpack = require('webpack');
-const electronCfg = require('./webpack.config.electron.js');
-const cfg = require('./webpack.config.production.js');
-const packager = require('electron-packager');
-const del = require('del');
-const exec = require('child_process').exec;
-const argv = require('minimist')(process.argv.slice(2));
-const pkg = require('./package.json');
-const deps = Object.keys(pkg.dependencies);
-const devDeps = Object.keys(pkg.devDependencies);
+import os from 'os'
+import webpack from 'webpack'
+import electronCfg from 'webpack.config.electron.js'
+import packager from 'electron-packager'
+import del from 'del'
+import { exec } from 'child_process'
+import minimist from 'minimist'
+import pkg from 'package.json'
 
-const appName = argv.name || argv.n || pkg.productName;
-const shouldUseAsar = argv.asar || argv.a || false;
-const shouldBuildAll = argv.all || false;
+const argv = minimist(process.argv.slice(2))
+const deps = Object.keys(pkg.dependencies)
+const devDeps = Object.keys(pkg.devDependencies)
+
+const appName = argv.name || argv.n || pkg.productName
+const shouldUseAsar = argv.asar || argv.a || false
+const shouldBuildAll = argv.all || false
 
 
 const DEFAULT_OPTS = {
@@ -56,18 +55,10 @@ if (version) {
     }
 
     startPack();
-  });
+  })
 }
 
-
-function build(cfg) {
-  return new Promise((resolve, reject) => {
-    webpack(cfg, (err, stats) => {
-      if (err) return reject(err);
-      resolve(stats);
-    });
-  });
-}
+const build = cfg = new Promise((resolve, reject) => webpack(cfg, (err, stats) => err ? reject(err) : resolve(stats)))
 
 function startPack() {
   console.log('start pack...');
@@ -77,39 +68,34 @@ function startPack() {
     .then(paths => {
       if (shouldBuildAll) {
         // build for all platforms
-        const archs = ['ia32', 'x64'];
-        const platforms = ['linux', 'win32', 'darwin'];
+        const archs = ['ia32', 'x64']
+        const platforms = ['linux', 'win32', 'darwin']
 
-        platforms.forEach(plat => {
-          archs.forEach(arch => {
-            pack(plat, arch, log(plat, arch));
-          });
-        });
+        platforms.forEach(plat => archs.forEach(arch => pack(plat, arch, log(plat, arch))))
       } else {
         // build for current platform only
-        pack(os.platform(), os.arch(), log(os.platform(), os.arch()));
+        pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
       }
     })
-    .catch(err => {
-      console.error(err);
-    });
+    .catch(err => console.error(err))
 }
 
 function pack(plat, arch, cb) {
   // there is no darwin ia32 electron
-  if (plat === 'darwin' && arch === 'ia32') return;
+  if (plat === 'darwin' && arch === 'ia32') return console.error('Darwin ia32 not supported!')
 
   const iconObj = {
     icon: DEFAULT_OPTS.icon + (() => {
-      let extension = '.png';
-      if (plat === 'darwin') {
-        extension = '.icns';
-      } else if (plat === 'win32') {
-        extension = '.ico';
+      switch (plat) {
+        case 'darwin':
+          return '.icns'
+        case 'win32':
+          return '.ico'
+        default:
+          return '.png'
       }
-      return extension;
     })()
-  };
+  }
 
   const opts = Object.assign({}, DEFAULT_OPTS, iconObj, {
     platform: plat,
@@ -117,15 +103,9 @@ function pack(plat, arch, cb) {
     prune: true,
     'app-version': pkg.version || DEFAULT_OPTS.version,
     out: `release/${plat}-${arch}`
-  });
+  })
 
-  packager(opts, cb);
+  packager(opts, cb)
 }
 
-
-function log(plat, arch) {
-  return (err, filepath) => {
-    if (err) return console.error(err);
-    console.log(`${plat}-${arch} finished!`);
-  };
-}
+const log = (plat, arch) => (err, filepath) => err ? console.error(err) : console.log(`${plat}-${arch} finished!`)

@@ -1,8 +1,7 @@
 // for babel-plugin-webpack-loaders
-require('babel-register')
-const devConfigs = require('./webpack.config.development')
+import devConfigs from './webpack.config.development'
 
-module.exports = {
+export default {
   output: {
     libraryTarget: 'commonjs2'
   },
