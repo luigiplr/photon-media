@@ -15,7 +15,7 @@ export default class Header extends Component {
   }
 
   static defaultProps = {
-    color: '#212121',
+    color: 'transparent',
     theme: 'dark'
   }
 

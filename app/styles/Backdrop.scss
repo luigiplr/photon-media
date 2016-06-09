@@ -19,6 +19,7 @@
   display: inline-block;
   height: 100vh;
   top: 0;
+  z-index: -1;
   width: 100vw;
   position: absolute !important;
 }
@@ -33,4 +34,33 @@
   background-position: top center;
   margin: -5px;
   -webkit-filter: blur(2px) brightness(45%);
+}
+.bottom-info-container {
+  bottom: 20px;
+  left: 30px;
+  position: absolute;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 12px;
+  font-weight: 500;
+  .title {
+    font-size: 17px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 400;
+    float: left;
+    transition: border-bottom 0.5s;
+    &:hover {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    }
+  }
+  .rating {
+    line-height: 20px;
+    height: 20px;
+    margin-left: 1px;
+  }
+  .year {
+    line-height: 21px;
+    height: 20px;
+    margin-left: 6px;
+  }
 }

@@ -29,7 +29,7 @@ export default class App extends Component {
             }
           })()
         }
-        <Backdrop/>
+        <Backdrop />
       </div>
     )
   }

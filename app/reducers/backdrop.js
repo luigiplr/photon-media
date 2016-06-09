@@ -3,7 +3,7 @@ import { CHANGE, DISABLE_INFO, ENABLE_INFO } from 'actions/backdrop'
 const defaultState = {
   infoIsEnabled: true,
   url: null,
-  info: { title: null, url: null, rating: null, year: null }
+  info: { title: null, homepage: null, certification: null, year: null }
 }
 
 export default function backdrop(state = defaultState, action) {
