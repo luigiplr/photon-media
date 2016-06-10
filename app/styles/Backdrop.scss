@@ -49,13 +49,15 @@
   font-weight: 500;
   .title {
     font-size: 17px;
-    cursor: pointer;
     color: rgba(255, 255, 255, 0.35);
     font-weight: 400;
     float: left;
     transition: border-bottom 0.5s;
-    &:hover {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    &.link {
+      cursor: pointer;
+      &:hover {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+      }
     }
   }
   .rating {

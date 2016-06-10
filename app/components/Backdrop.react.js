@@ -46,7 +46,7 @@ export default class Backdrop extends Component {
           {
             infoIsEnabled ? (
               <div className={styles['bottom-info-container']}>
-                <h1 onClick={() => info.homepage && shell.openExternal(info.homepage)} className={styles.title}>{info.title}</h1>
+                <h1 onClick={() => info.homepage && shell.openExternal(info.homepage)} className={`${styles.title} ${info.homepage ? styles.link : ''}`}>{info.title}</h1>
                 <span className={styles.year}>{info.year}</span>
                 <p className={styles.rating}>{info.certification}</p>
               </div>
