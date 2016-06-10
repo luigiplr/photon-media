@@ -7,8 +7,6 @@ export default class Home extends Component {
     backdrop: PropTypes.object.isRequired
   }
 
-  state = {}
-
   componentWillUnmount() {
     this.mounted = false
   }

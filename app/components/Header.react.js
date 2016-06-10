@@ -3,6 +3,8 @@ import { TitleBar } from 'react-desktop/windows'
 import { remote } from 'electron'
 import { defer } from 'lodash'
 import { Link } from 'react-router'
+import styles from 'styles/Header'
+
 
 export default class Header extends Component {
   static propTypes = {
@@ -30,17 +32,19 @@ export default class Header extends Component {
 
   render() {
     return (
-      <TitleBar
-        title=' '
-        controls
-        isMaximized={this.props.isMaximized}
-        theme={this.props.theme}
-        background={this.props.color}
-        onCloseClick={this.props.close}
-        onMinimizeClick={() => this.props.minimize()}
-        onMaximizeClick={() => this.props.maximize()}
-        onResizeClick={() => this.props.restore()}
-      />
+      <div className={styles.header}>
+        <TitleBar
+          title=' '
+          controls
+          isMaximized={this.props.isMaximized}
+          theme={this.props.theme}
+          background={this.props.color}
+          onCloseClick={this.props.close}
+          onMinimizeClick={() => this.props.minimize()}
+          onMaximizeClick={() => this.props.maximize()}
+          onResizeClick={() => this.props.restore()}
+        />
+      </div>
     )
   }
 }

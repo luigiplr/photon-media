@@ -8,7 +8,8 @@ export default class Backdrop extends Component {
   static propTypes = {
     url: PropTypes.string,
     info: PropTypes.object,
-    infoIsEnabled: PropTypes.bool.isRequired
+    infoIsEnabled: PropTypes.bool.isRequired,
+    isEnabled: PropTypes.bool.isRequired
   }
 
   defaultDelay = 20000
@@ -23,9 +24,10 @@ export default class Backdrop extends Component {
   }
 
   render() {
-    console.log('BACKDROP RENDER')
-    const { info, url, infoIsEnabled } = this.props
+    const { info, url, infoIsEnabled, isEnabled } = this.props
+    const backgroundStyle = url ? { backgroundImage: `url(${url})` } : {}
     return (
+      isEnabled ?
       <ReactCSSTransitionGroup
         component='div'
         className={styles['transition-container']}
@@ -40,7 +42,7 @@ export default class Backdrop extends Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}>
         <div name='sasa' className='transition-container' key={url || 'none'}>
-          <div style={{ backgroundImage: `url(${url})` }} className={styles.backdrop} />
+          <div style={backgroundStyle} className={styles.backdrop} />
           {
             infoIsEnabled ? (
               <div className={styles['bottom-info-container']}>
@@ -51,7 +53,7 @@ export default class Backdrop extends Component {
             ): null
           }
         </div>
-      </ReactCSSTransitionGroup>
+      </ReactCSSTransitionGroup> : null
     )
   }
 }
