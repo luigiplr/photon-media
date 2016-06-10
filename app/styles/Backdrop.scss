@@ -20,6 +20,7 @@
   }
 }
 .transition-container {
+  will-change: transform;
   display: inline-block;
   height: 100vh;
   top: 0;
@@ -36,6 +37,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top center;
+  background-color: transparent;
   margin: -5px;
   -webkit-filter: blur(2px) brightness(45%);
 }
