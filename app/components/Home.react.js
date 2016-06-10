@@ -25,9 +25,9 @@ export default class Home extends Component {
   render() {
     return (
       <div className={styles['search-container']}>
-        <div className={styles['bottom-button-container']}>
+        <Link to='/settings' className={styles['bottom-button-container']}>
           <paper-icon-button className={styles['bottom-btn']} icon="settings"/>
-        </div>
+        </Link>
 
         <paper-material className={styles['search-box-contain']} elevation="1">
           <input ref="searchtext" className={styles.searchtext}/>

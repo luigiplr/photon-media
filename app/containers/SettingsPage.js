@@ -1,13 +1,11 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import Settings from '../components/Settings'
+import Settings from '../components/Settings.react'
 import * as SettingsActions from '../actions/settings'
 
 
-function mapStateToProps({ settings }) {
-  return {
-    ...settings
-  }
-}
+const mapStateToProps = ({ settings }) => ({ settings })
 
-export default connect(mapStateToProps, dispatch => bindActionCreators(SettingsActions, dispatch))(Settings)
+const mapDispatchToProps = dispatch => bindActionCreators(SettingsActions, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings)

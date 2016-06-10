@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { Window } from 'react-desktop/windows'
 import Header from './Header'
 import Backdrop from './Backdrop'
@@ -6,7 +7,8 @@ import styles from 'styles/App'
 
 export default class App extends Component {
   static propTypes = {
-    children: PropTypes.element.isRequired
+    children: PropTypes.element.isRequired,
+    location: PropTypes.object.isRequired
   }
 
   static defaultProps = {
@@ -15,11 +17,13 @@ export default class App extends Component {
   }
 
   render() {
+    const { location, children } = this.props
     return (
       <div className={styles.app}>
         <Header />
+        <Backdrop key={location.pathname} />
         <div className={styles.appContainer}>
-          {this.props.children}
+          {React.cloneElement(children, { key: location.pathname })}
         </div>
         {
           (() => {
@@ -29,7 +33,7 @@ export default class App extends Component {
             }
           })()
         }
-        <Backdrop />
+
       </div>
     )
   }

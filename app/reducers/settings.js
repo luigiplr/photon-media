@@ -1,5 +1,12 @@
 import { INCREMENT_COUNTER, DECREMENT_COUNTER } from 'actions/settings'
 
+const defaultSettings = {
+
+
+
+}
+
+
 export default function counter(state = 0, action) {
   switch (action.type) {
     case INCREMENT_COUNTER:

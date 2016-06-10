@@ -6,6 +6,7 @@ import { Link } from 'react-router'
 
 export default class Header extends Component {
   static propTypes = {
+    isMinimized: PropTypes.bool.isRequired,
     isMaximized: PropTypes.bool.isRequired,
     isClosed: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,
@@ -22,6 +23,7 @@ export default class Header extends Component {
   componentDidMount() {
     const browserWindow = remote.getCurrentWindow()
 
+    browserWindow.on('minimize', () => defer(() => !this.props.isMinimized && this.props.minimize(true)))
     browserWindow.on('maximize', () => defer(() => !this.props.isMaximized && this.props.maximize(true)))
     browserWindow.on('unmaximize', () => defer(() => this.props.isMaximized && this.props.restore(true)))
   }
@@ -35,7 +37,7 @@ export default class Header extends Component {
         theme={this.props.theme}
         background={this.props.color}
         onCloseClick={this.props.close}
-        onMinimizeClick={this.props.minimize}
+        onMinimizeClick={() => this.props.minimize()}
         onMaximizeClick={() => this.props.maximize()}
         onResizeClick={() => this.props.restore()}
       />

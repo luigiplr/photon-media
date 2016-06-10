@@ -1,19 +1,23 @@
+.cross-fade-appear {
+  opacity: 0;
+  &.cross-fade-appear-active {
+    opacity: 1;
+    transition: opacity 400ms ease-in;
+  }
+}
 .cross-fade-leave {
   opacity: 1;
   &.cross-fade-leave-active {
     opacity: 0;
-    transition: opacity 500ms ease-in;
+    transition: opacity 400ms ease-in;
   }
 }
 .cross-fade-enter {
   opacity: 0;
   &.cross-fade-enter-active {
     opacity: 1;
-    transition: opacity 500ms ease-in;
+    transition: opacity 400ms ease-in;
   }
-}
-.cross-fade-height {
-  transition: height 300ms ease-in-out;
 }
 .transition-container {
   display: inline-block;

@@ -23,10 +23,23 @@ export default class Backdrop extends Component {
   }
 
   render() {
+    console.log('BACKDROP RENDER')
     const { info, url, infoIsEnabled } = this.props
     return (
-      <ReactCSSTransitionGroup className={styles['transition-container']} transitionName={styles['cross-fade']} transitionEnterTimeout={500} transitionLeaveTimeout={500}>
-        <div className='transition-container' key={url}>
+      <ReactCSSTransitionGroup
+        component='div'
+        className={styles['transition-container']}
+        transitionName={{
+          enter: styles['cross-fade-enter'],
+          enterActive: styles['cross-fade-enter-active'],
+          leave: styles['cross-fade-leave'],
+          leaveActive: styles['cross-fade-leave-active'],
+          appear: styles['cross-fade-appear'],
+          appearActive: styles['cross-fade-appear-active']
+        }}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}>
+        <div name='sasa' className='transition-container' key={url || 'none'}>
           <div style={{ backgroundImage: `url(${url})` }} className={styles.backdrop} />
           {
             infoIsEnabled ? (
