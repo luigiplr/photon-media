@@ -41,7 +41,7 @@ export default class Backdrop extends Component {
         }}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}>
-        <div name='sasa' className='transition-container' key={url || 'none'}>
+        <div className='transition-container' key={url || 'none'}>
           <div style={backgroundStyle} className={styles.backdrop} />
           {
             infoIsEnabled ? (
