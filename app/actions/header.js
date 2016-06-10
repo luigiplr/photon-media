@@ -1,14 +1,13 @@
 import { remote } from 'electron'
 
-const browserWindow = remote.getCurrentWindow()
-export const MAXIMIZE = 'MAXIMIZE'
-export const CLOSE = 'CLOSE'
-export const RESTORE = 'RESTORE'
-export const MINIMIZE = 'MINIMIZE'
+export const MAXIMIZE = 'WINDOW_MAXIMIZE'
+export const CLOSE = 'WINDOW_CLOSE'
+export const RESTORE = 'WINDOW_RESTORE'
+export const MINIMIZE = 'WINDOW_MINIMIZE'
 
 export function maximize(isEvent) {
   if (!isEvent)
-    browserWindow.maximize()
+    remote.getCurrentWindow().maximize()
   return { type: MAXIMIZE }
 }
 
@@ -18,12 +17,12 @@ export function close() {
 
 export function minimize(isEvent) {
   if (!isEvent)
-    browserWindow.minimize()
+    remote.getCurrentWindow().minimize()
   return { type: MINIMIZE }
 }
 
 export function restore(isEvent = false) {
   if (!isEvent)
-    browserWindow.unmaximize()
+    remote.getCurrentWindow().unmaximize()
   return { type: RESTORE }
 }

@@ -23,11 +23,12 @@ export default class Header extends Component {
   }
 
   componentDidMount() {
-    const browserWindow = remote.getCurrentWindow()
-
-    browserWindow.on('minimize', () => defer(() => !this.props.isMinimized && this.props.minimize(true)))
-    browserWindow.on('maximize', () => defer(() => !this.props.isMaximized && this.props.maximize(true)))
-    browserWindow.on('unmaximize', () => defer(() => this.props.isMaximized && this.props.restore(true)))
+    if (process.env.NODE_ENV === 'production') {
+      const browserWindow = remote.getCurrentWindow()
+      browserWindow.on('minimize', () => defer(() => !this.props.isMinimized && this.props.minimize(true)))
+      browserWindow.on('maximize', () => defer(() => !this.props.isMaximized && this.props.maximize(true)))
+      browserWindow.on('unmaximize', () => defer(() => this.props.isMaximized && this.props.restore(true)))
+    }
   }
 
   render() {

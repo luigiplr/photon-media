@@ -20,11 +20,15 @@ img {
   display: flex;
   position: absolute;
   flex-flow: column;
-  height: 100%;
-  width: 100%;
+  height:calc(100vh - 2px);
+  width: calc(100vw - 2px);
   font-family: 'Roboto', sans-serif;
+  border: 1px solid transparent;
   .appContainer {
     display: flex;
     flex: 1 1 auto;
+  }
+  &.focused{
+    border: 1px solid rgba(33, 33, 33, 0.32);
   }
 }

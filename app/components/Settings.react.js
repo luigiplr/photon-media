@@ -36,7 +36,7 @@ export default class Settings extends Component {
         <div className={styles.container}>
           <h1>Settings</h1>
           <div className={styles['panel-container']}>
-            {settingTabs()}
+            {settingTabs(this.state.tab)}
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@ export default class Settings extends Component {
   }
 }
 
-const settingTabs = () => {
+const settingTabs = selectedTab => {
   const tabStyles = `
     .paper-item-0 {
       --paper-item-selected-weight: 500 !important;
@@ -53,6 +53,8 @@ const settingTabs = () => {
       }
     };
   `
+
+
   return (
     <div className={styles['left-panel']}>
       <style is="custom-style" dangerouslySetInnerHTML={{ __html: tabStyles}}/>
